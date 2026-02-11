@@ -1,0 +1,31 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "success": "Operación exitosa",
+    "cancel": "Cancelar",
+    "accept": "Aceptar",
+    "save": "Guardar"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "dontHaveAccount": "¿No tienes cuenta?",
+    "loginSuccess": "Inicio de sesión exitoso",
+    "registerSuccess": "Registro exitoso"
+  },
+  "errors": {
+    "invalidCredentials": "Credenciales inválidas",
+    "emailAlreadyExists": "El correo electrónico ya existe",
+    "tokenExpired": "La sesión ha expirado",
+    "unauthorized": "No autorizado",
+    "networkError": "Error de conexión"
+  }
+}

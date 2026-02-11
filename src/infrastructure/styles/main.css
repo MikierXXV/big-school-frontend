@@ -1,0 +1,28 @@
+/**
+ * ============================================
+ * MAIN CSS - Tailwind + Custom Styles
+ * ============================================
+ *
+ * Estilos globales de la aplicacion.
+ * Tailwind CSS como framework base.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* TODO: Agregar estilos de componentes reutilizables */
+}

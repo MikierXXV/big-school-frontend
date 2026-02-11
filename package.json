@@ -1,0 +1,53 @@
+{
+  "name": "big-school-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Big School - Vue 3 + Clean Architecture + DDD",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:unit": "vitest run --dir tests/unit",
+    "test:integration": "vitest run --dir tests/integration",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts,.vue",
+    "lint:fix": "eslint src --ext .ts,.vue --fix",
+    "format": "prettier --write src",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.0",
+    "@heroicons/vue": "^2.1.0",
+    "@sentry/vue": "^7.91.0",
+    "@vueuse/core": "^10.7.0",
+    "axios": "^1.6.0",
+    "pinia": "^2.1.0",
+    "vue": "^3.5.25",
+    "vue-i18n": "^9.9.0",
+    "vue-router": "^4.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vitejs/plugin-vue": "^6.0.2",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "@vue/tsconfig": "^0.8.1",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.55.0",
+    "eslint-plugin-vue": "^9.19.0",
+    "jsdom": "^23.0.0",
+    "postcss": "^8.4.0",
+    "prettier": "^3.1.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^1.0.0",
+    "vue-tsc": "^3.1.5"
+  }
+}
