@@ -1,6 +1,7 @@
 <template>
   <Menu as="div" class="relative inline-block text-left">
     <MenuButton
+      data-testid="theme-toggle-button"
       aria-label="Toggle theme"
       class="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
     >
@@ -67,6 +68,7 @@
         <div class="py-1">
           <MenuItem v-slot="{ active }">
             <button
+              data-testid="theme-option-light"
               :class="[
                 active ? 'bg-gray-100 dark:bg-gray-700' : '',
                 theme === 'light' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-200',
@@ -88,6 +90,7 @@
 
           <MenuItem v-slot="{ active }">
             <button
+              data-testid="theme-option-dark"
               :class="[
                 active ? 'bg-gray-100 dark:bg-gray-700' : '',
                 theme === 'dark' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-200',
@@ -109,6 +112,7 @@
 
           <MenuItem v-slot="{ active }">
             <button
+              data-testid="theme-option-system"
               :class="[
                 active ? 'bg-gray-100 dark:bg-gray-700' : '',
                 theme === 'system' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-200',

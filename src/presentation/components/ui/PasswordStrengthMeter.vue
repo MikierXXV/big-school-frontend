@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-2">
+  <div data-testid="password-strength-meter" class="space-y-2">
     <!-- Progress Bar -->
     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
       <div
