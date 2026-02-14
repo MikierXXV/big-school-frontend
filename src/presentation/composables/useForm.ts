@@ -67,6 +67,8 @@ export function useForm<T extends Record<string, any>>(
       const fieldIsValid = validateField(fieldName);
       if (!fieldIsValid) {
         isValid = false;
+        // Mark field as touched so error displays
+        touched.value[fieldName as string] = true;
       }
     }
 
@@ -81,23 +83,30 @@ export function useForm<T extends Record<string, any>>(
   }
 
   /**
-   * Handle form submission
+   * Handle form submission - returns a function that can be used as @submit handler
    */
-  async function handleSubmit(
-    onSubmit: (values: T) => Promise<void>
-  ): Promise<void> {
-    const isValid = validateForm();
+  function handleSubmit(
+    submitFn: () => void | Promise<void>
+  ): (event?: Event) => Promise<void> {
+    return async (event?: Event) => {
+      if (event) {
+        event.preventDefault();
+      }
 
-    if (!isValid) {
-      return;
-    }
+      const isValid = validateForm();
+      if (!isValid) {
+        return;
+      }
 
-    try {
-      isSubmitting.value = true;
-      await onSubmit(values.value);
-    } finally {
-      isSubmitting.value = false;
-    }
+      try {
+        isSubmitting.value = true;
+        await submitFn();
+      } catch (error) {
+        console.error('Form submission error:', error);
+      } finally {
+        isSubmitting.value = false;
+      }
+    };
   }
 
   /**

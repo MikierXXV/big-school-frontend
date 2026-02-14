@@ -63,10 +63,15 @@ export function maxLength(max: number, message?: string) {
 
 /**
  * Returns a validator that checks if password matches a reference password
+ * Supports reactive validation by accepting a getter function
  */
-export function passwordMatch(password: string, message = 'Passwords do not match') {
+export function passwordMatch(
+  getPassword: string | (() => string),
+  message = 'Passwords do not match'
+) {
   return (value: string): string => {
-    if (value !== password) {
+    const passwordValue = typeof getPassword === 'function' ? getPassword() : getPassword;
+    if (value !== passwordValue) {
       return message;
     }
     return '';
