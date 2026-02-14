@@ -3,30 +3,34 @@
  * COMPOSABLE: useNotification
  * ============================================
  *
- * Composable para mostrar notificaciones.
- *
- * TODO: Implementar composable completo
+ * Composable wrapper for notification store.
  */
 
+import { useNotificationStore } from '@presentation/stores/notification.store.js';
+
 export function useNotification() {
-  function success(message: string): void {
-    // TODO: Implementar notificacion success
-    console.log('Success:', message);
+  const store = useNotificationStore();
+
+  function success(message: string, duration?: number): void {
+    store.success(message, duration);
   }
 
-  function error(message: string): void {
-    // TODO: Implementar notificacion error
-    console.error('Error:', message);
+  function error(message: string, duration?: number): void {
+    store.error(message, duration);
   }
 
-  function info(message: string): void {
-    // TODO: Implementar notificacion info
-    console.info('Info:', message);
+  function warning(message: string, duration?: number): void {
+    store.warning(message, duration);
+  }
+
+  function info(message: string, duration?: number): void {
+    store.info(message, duration);
   }
 
   return {
     success,
     error,
+    warning,
     info,
   };
 }

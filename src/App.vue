@@ -8,12 +8,15 @@
 -->
 
 <script setup lang="ts">
-// TODO: Setup global providers si es necesario
+import NotificationContainer from '@presentation/components/NotificationContainer.vue';
 </script>
 
 <template>
   <div id="app-container" class="min-h-screen flex flex-col">
     <router-view />
+
+    <!-- Global Notification Container -->
+    <NotificationContainer />
   </div>
 </template>
 
