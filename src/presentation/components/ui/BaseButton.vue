@@ -1,5 +1,6 @@
 <template>
   <button
+    ref="buttonRef"
     :type="type"
     :disabled="isDisabled"
     :class="buttonClasses"
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { SizeVariant } from '@shared/constants/design-tokens.constants.js';
 import BaseSpinner from './BaseSpinner.vue';
 
@@ -33,6 +34,7 @@ interface Props {
   loading?: boolean;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  ripple?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,7 +43,10 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   type: 'button',
+  ripple: true,
 });
+
+const buttonRef = ref<HTMLButtonElement | null>(null);
 
 const emit = defineEmits<{
   click: [event: MouseEvent];
@@ -140,9 +145,59 @@ const buttonClasses = computed(() => {
   ];
 });
 
+function createRipple(event: MouseEvent) {
+  if (!props.ripple || !buttonRef.value) return;
+
+  const button = buttonRef.value;
+  const circle = document.createElement('span');
+  const diameter = Math.max(button.clientWidth, button.clientHeight);
+  const radius = diameter / 2;
+
+  const rect = button.getBoundingClientRect();
+  circle.style.width = circle.style.height = `${diameter}px`;
+  circle.style.left = `${event.clientX - rect.left - radius}px`;
+  circle.style.top = `${event.clientY - rect.top - radius}px`;
+  circle.classList.add('ripple');
+
+  const ripple = button.querySelector('.ripple');
+  if (ripple) {
+    ripple.remove();
+  }
+
+  button.appendChild(circle);
+
+  // Remove ripple after animation
+  setTimeout(() => {
+    circle.remove();
+  }, 600);
+}
+
 function handleClick(event: MouseEvent) {
   if (!isDisabled.value) {
+    createRipple(event);
     emit('click', event);
   }
 }
 </script>
+
+<style scoped>
+button {
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple-animation 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+</style>
