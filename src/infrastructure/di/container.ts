@@ -47,7 +47,7 @@ export function createContainer(): Container {
   }
 
   // Get API base URL from environment or use default
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
   // Infrastructure Layer - Create adapters
   const httpClient = new AxiosHttpClient(apiBaseUrl);

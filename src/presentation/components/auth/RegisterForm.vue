@@ -140,7 +140,7 @@ import BaseButton from '@presentation/components/ui/BaseButton.vue';
 import BaseAlert from '@presentation/components/ui/BaseAlert.vue';
 import PasswordStrengthMeter from '@presentation/components/ui/PasswordStrengthMeter.vue';
 
-const { register, error, clearError } = useAuth();
+const { registerAndRedirect, error, clearError } = useAuth();
 
 // Custom validator for terms acceptance
 function acceptTermsValidator(value: boolean): string {
@@ -177,7 +177,7 @@ const {
 );
 
 async function onSubmit() {
-  await register({
+  await registerAndRedirect({
     email: values.value.email,
     password: values.value.password,
     passwordConfirmation: values.value.passwordConfirmation,

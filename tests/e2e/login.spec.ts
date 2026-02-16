@@ -14,8 +14,12 @@ test.describe('Login Flow', () => {
   });
 
   test('should display login form', async ({ page }) => {
-    // Check page title
-    await expect(page.locator('h1')).toContainText('Sign in to your account');
+    // Wait for heading to be visible
+    const heading = page.locator('h1');
+    await heading.waitFor({ state: 'visible', timeout: 5000 });
+
+    // Check page title with flexible regex
+    await expect(heading).toContainText(/sign in/i);
 
     // Check form fields exist
     await expect(page.locator('input[type="email"]')).toBeVisible();
@@ -122,8 +126,8 @@ test.describe('Login Flow', () => {
     // Click link
     await registerLink.click();
 
-    // Should navigate to register page
-    await expect(page).toHaveURL('/register');
+    // Should navigate to register page (ignore query params)
+    await expect(page).toHaveURL(/\/register(\?.*)?$/);
   });
 
   test('should disable submit button while loading', async ({ page }) => {

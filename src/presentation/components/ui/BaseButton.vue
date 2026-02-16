@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   type: 'button',
-  ripple: true,
+  ripple: false,
 });
 
 const buttonRef = ref<HTMLButtonElement | null>(null);
@@ -159,9 +159,19 @@ function createRipple(event: MouseEvent) {
   circle.style.top = `${event.clientY - rect.top - radius}px`;
   circle.classList.add('ripple');
 
-  const ripple = button.querySelector('.ripple');
-  if (ripple) {
-    ripple.remove();
+  // Adapt ripple color based on variant
+  const rippleColors = {
+    primary: 'rgba(255, 255, 255, 0.3)',
+    secondary: 'rgba(255, 255, 255, 0.3)',
+    outline: 'rgba(99, 102, 241, 0.15)',
+    ghost: 'rgba(107, 114, 128, 0.15)',
+    danger: 'rgba(255, 255, 255, 0.3)',
+  };
+  circle.style.backgroundColor = rippleColors[props.variant];
+
+  const existingRipple = button.querySelector('.ripple');
+  if (existingRipple) {
+    existingRipple.remove();
   }
 
   button.appendChild(circle);
@@ -169,7 +179,7 @@ function createRipple(event: MouseEvent) {
   // Remove ripple after animation
   setTimeout(() => {
     circle.remove();
-  }, 600);
+  }, 500);
 }
 
 function handleClick(event: MouseEvent) {
@@ -183,20 +193,31 @@ function handleClick(event: MouseEvent) {
 <style scoped>
 button {
   overflow: hidden;
+  position: relative;
 }
 
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.3);
   transform: scale(0);
-  animation: ripple-animation 0.6s ease-out;
+  animation: ripple-animation 0.5s ease-out;
   pointer-events: none;
+  z-index: 0;
+}
+
+.button-content {
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes ripple-animation {
-  to {
-    transform: scale(4);
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
     opacity: 0;
   }
 }

@@ -73,37 +73,40 @@ test.describe('Theme Switching', () => {
     expect(classList).toContain('dark');
   });
 
-  test('should use system preference when system option is selected', async ({ page, context }) => {
-    // Set color scheme preference to dark
-    await context.emulateMedia({ colorScheme: 'dark' });
+  test('should use system preference when system option is selected', async ({ page }) => {
+    // Set color scheme preference to dark BEFORE navigation
+    await page.emulateMedia({ colorScheme: 'dark' });
+
+    // Reload page to apply system preference
+    await page.goto('/');
 
     // Click system option
     await page.click('[data-testid="theme-toggle-button"]');
     await page.click('[data-testid="theme-option-system"]');
 
+    // Wait for DOM to react to matchMedia listener
+    await page.waitForTimeout(200);
+
     // Should apply dark mode based on system preference
     const html = page.locator('html');
-    const classList = await html.getAttribute('class');
-    expect(classList).toContain('dark');
+    await expect(html).toHaveClass(/dark/);
   });
 
-  test('should update when system preference changes (system mode)', async ({ page, context }) => {
-    // Set to system mode
+  test('should update when system preference changes (system mode)', async ({ page }) => {
+    // Set to system mode first
     await page.click('[data-testid="theme-toggle-button"]');
     await page.click('[data-testid="theme-option-system"]');
 
     // Start with light system preference
-    await context.emulateMedia({ colorScheme: 'light' });
-    await page.waitForTimeout(100);
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.waitForTimeout(200);
 
-    let classList = await page.locator('html').getAttribute('class');
-    expect(classList).not.toContain('dark');
+    await expect(page.locator('html')).not.toHaveClass(/dark/);
 
     // Change system preference to dark
-    await context.emulateMedia({ colorScheme: 'dark' });
-    await page.waitForTimeout(100);
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.waitForTimeout(200);
 
-    classList = await page.locator('html').getAttribute('class');
-    expect(classList).toContain('dark');
+    await expect(page.locator('html')).toHaveClass(/dark/);
   });
 });

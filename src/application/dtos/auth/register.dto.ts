@@ -9,6 +9,8 @@
 export interface RegisterDTO {
   readonly email: string;
   readonly password: string;
+  readonly passwordConfirmation: string;
   readonly firstName: string;
   readonly lastName: string;
+  readonly acceptTerms: boolean;
 }

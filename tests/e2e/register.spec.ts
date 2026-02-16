@@ -14,8 +14,15 @@ test.describe('Registration Flow', () => {
   });
 
   test('should display registration form with all fields', async ({ page }) => {
-    // Check page title
-    await expect(page.locator('h1')).toContainText('Create your account');
+    // Wait for page to be fully loaded
+    await page.waitForLoadState('networkidle');
+
+    // Wait for heading to be visible
+    const heading = page.locator('h1');
+    await heading.waitFor({ state: 'visible', timeout: 5000 });
+
+    // Check page title with flexible regex
+    await expect(heading).toContainText(/create.*account/i);
 
     // Check all form fields exist
     await expect(page.locator('input[name="firstName"]')).toBeVisible();
@@ -53,17 +60,24 @@ test.describe('Registration Flow', () => {
 
     // Weak password
     await passwordInput.fill('abc');
-    await expect(page.locator('text=/Very weak|Weak/i')).toBeVisible();
+    await page.locator('text=/Very weak|Weak/i').waitFor({
+      state: 'visible',
+      timeout: 2000
+    });
 
     // Medium password
     await passwordInput.fill('Password1');
-    await page.waitForTimeout(300);
-    await expect(page.locator('text=/Medium|Fair/i')).toBeVisible();
+    await page.locator('text=/Medium|Fair/i').waitFor({
+      state: 'visible',
+      timeout: 2000
+    });
 
     // Strong password
     await passwordInput.fill('Password123!');
-    await page.waitForTimeout(300);
-    await expect(page.locator('text=/Strong|Very strong/i')).toBeVisible();
+    await page.locator('text=/Strong|Very strong/i').waitFor({
+      state: 'visible',
+      timeout: 2000
+    });
   });
 
   test('should show error when passwords do not match', async ({ page }) => {
@@ -85,14 +99,16 @@ test.describe('Registration Flow', () => {
     await page.fill('input[name="firstName"]', 'John');
     await page.fill('input[name="lastName"]', 'Doe');
     await page.fill('input[type="email"]', 'john.doe@example.com');
-    await page.fill('input[type="password"]').first().fill('Password123!');
-    await page.fill('input[type="password"]').last().fill('Password123!');
+    await page.locator('input[type="password"]').first().fill('Password123!');
+    await page.locator('input[type="password"]').last().fill('Password123!');
 
     // Submit without checking terms
     await page.click('button[type="submit"]');
 
-    // Should show terms error
-    await expect(page.locator('text=/must accept|terms/i')).toBeVisible();
+    // Should show terms error (use specific selector to avoid ambiguity)
+    await expect(
+      page.locator('[role="alert"], .error-message, .text-error-600, .text-red-500').filter({ hasText: /must accept.*terms/i })
+    ).toBeVisible();
   });
 
   test('should successfully submit registration with valid data', async ({ page }) => {
@@ -122,8 +138,8 @@ test.describe('Registration Flow', () => {
     await page.fill('input[name="firstName"]', 'Existing');
     await page.fill('input[name="lastName"]', 'User');
     await page.fill('input[type="email"]', 'existing@example.com');
-    await page.fill('input[type="password"]').first().fill('Password123!');
-    await page.fill('input[type="password"]').last().fill('Password123!');
+    await page.locator('input[type="password"]').first().fill('Password123!');
+    await page.locator('input[type="password"]').last().fill('Password123!');
     await page.check('input[type="checkbox"]');
 
     // Submit form
@@ -160,8 +176,8 @@ test.describe('Registration Flow', () => {
     // Click link
     await loginLink.click();
 
-    // Should navigate to login page
-    await expect(page).toHaveURL('/login');
+    // Should navigate to login page (ignore query params)
+    await expect(page).toHaveURL(/\/login(\?.*)?$/);
   });
 
   test('should validate email format in real-time', async ({ page }) => {

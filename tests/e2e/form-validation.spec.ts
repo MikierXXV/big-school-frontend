@@ -74,11 +74,17 @@ test.describe('Form Validation', () => {
     });
 
     test('should validate all required fields', async ({ page }) => {
+      // Wait for form to be interactive
+      await page.waitForSelector('button[type="submit"]:not([disabled])', {
+        state: 'visible',
+        timeout: 10000
+      });
+
       // Submit empty form
       await page.click('button[type="submit"]');
 
-      // Should show all required errors
-      await expect(page.locator('text=First name is required')).toBeVisible();
+      // Should show all required errors with explicit timeout
+      await expect(page.locator('text=First name is required')).toBeVisible({ timeout: 5000 });
       await expect(page.locator('text=Last name is required')).toBeVisible();
       await expect(page.locator('text=Email is required')).toBeVisible();
       await expect(page.locator('text=Password is required')).toBeVisible();
@@ -107,13 +113,20 @@ test.describe('Form Validation', () => {
       const passwordInput = page.locator('input[type="password"]').first();
       const confirmPasswordInput = page.locator('input[type="password"]').last();
 
+      // Wait for fields to be visible
+      await passwordInput.waitFor({ state: 'visible' });
+      await confirmPasswordInput.waitFor({ state: 'visible' });
+
       // Enter mismatched passwords
       await passwordInput.fill('Password123!');
       await confirmPasswordInput.fill('DifferentPassword123!');
       await confirmPasswordInput.blur();
 
+      // Wait for validation to trigger (debounce)
+      await page.waitForTimeout(500);
+
       // Should show mismatch error
-      await expect(page.locator('text=Passwords must match')).toBeVisible();
+      await expect(page.locator('text=Passwords must match')).toBeVisible({ timeout: 3000 });
 
       // Fix confirmation
       await confirmPasswordInput.fill('Password123!');
@@ -128,17 +141,24 @@ test.describe('Form Validation', () => {
 
       // Very weak password
       await passwordInput.fill('abc');
-      await expect(page.locator('text=/very weak|weak/i')).toBeVisible();
+      await page.locator('text=/very weak|weak/i').waitFor({
+        state: 'visible',
+        timeout: 2000
+      });
 
       // Medium password
       await passwordInput.fill('Password1');
-      await page.waitForTimeout(300);
-      await expect(page.locator('text=/medium|fair/i')).toBeVisible();
+      await page.locator('text=/medium|fair/i').waitFor({
+        state: 'visible',
+        timeout: 2000
+      });
 
       // Strong password
       await passwordInput.fill('StrongPassword123!');
-      await page.waitForTimeout(300);
-      await expect(page.locator('text=/strong|very strong/i')).toBeVisible();
+      await page.locator('text=/strong|very strong/i').waitFor({
+        state: 'visible',
+        timeout: 2000
+      });
     });
 
     test('should validate terms acceptance', async ({ page }) => {
@@ -147,8 +167,10 @@ test.describe('Form Validation', () => {
       // Submit without checking terms
       await page.click('button[type="submit"]');
 
-      // Should show terms error
-      await expect(page.locator('text=/must accept|terms/i')).toBeVisible();
+      // Should show terms error - use specific selector to avoid ambiguity
+      await expect(
+        page.locator('[role="alert"], .error-message, .text-error-600, .text-red-500').filter({ hasText: /must accept.*terms/i })
+      ).toBeVisible();
 
       // Check terms
       await termsCheckbox.check();
@@ -158,7 +180,7 @@ test.describe('Form Validation', () => {
       await page.waitForTimeout(100);
 
       // Terms error should not be shown anymore (other required fields will show)
-      const termsErrors = await page.locator('text=/must accept.*terms/i').count();
+      const termsErrors = await page.locator('[role="alert"]').filter({ hasText: /must accept.*terms/i }).count();
       expect(termsErrors).toBe(0);
     });
 
@@ -325,8 +347,8 @@ test.describe('Form Validation', () => {
       await page.click('button[type="submit"]');
 
       // Form should not submit (validation errors present)
-      // Should still be on login page
-      await expect(page).toHaveURL('/login');
+      // Should still be on login page (ignore query params)
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
       await expect(page.locator('text=Invalid email format')).toBeVisible();
     });
   });

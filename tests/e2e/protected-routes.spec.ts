@@ -14,8 +14,8 @@ test.describe('Protected Routes & Auth Guards', () => {
       // Try to access dashboard without being logged in
       await page.goto('/dashboard');
 
-      // Should redirect to login
-      await expect(page).toHaveURL('/login');
+      // Should redirect to login (ignore query params like ?redirect=/dashboard)
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
     });
 
     test('should allow access to public routes without auth', async ({ page }) => {
@@ -95,7 +95,7 @@ test.describe('Protected Routes & Auth Guards', () => {
       await page.goto('/login');
 
       // Should redirect to dashboard (guest-only route)
-      await expect(page).toHaveURL('/dashboard');
+      await expect(page).toHaveURL(/\/dashboard/);
     });
 
     test('should redirect to dashboard when authenticated user visits register', async ({ page }) => {
@@ -110,7 +110,7 @@ test.describe('Protected Routes & Auth Guards', () => {
       await page.goto('/register');
 
       // Should redirect to dashboard (guest-only route)
-      await expect(page).toHaveURL('/dashboard');
+      await expect(page).toHaveURL(/\/dashboard/);
     });
   });
 
@@ -131,8 +131,8 @@ test.describe('Protected Routes & Auth Guards', () => {
       if (await logoutButton.isVisible()) {
         await logoutButton.click();
 
-        // Should redirect to login
-        await expect(page).toHaveURL('/login');
+        // Should redirect to login (ignore query params)
+        await expect(page).toHaveURL(/\/login(\?.*)?$/);
 
         // Tokens should be cleared
         const accessToken = await page.evaluate(() => localStorage.getItem('accessToken'));
@@ -160,8 +160,8 @@ test.describe('Protected Routes & Auth Guards', () => {
       // Try to access dashboard again
       await page.goto('/dashboard');
 
-      // Should redirect to login
-      await expect(page).toHaveURL('/login');
+      // Should redirect to login (ignore query params)
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
     });
   });
 
@@ -169,7 +169,7 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should respect requiresAuth meta field', async ({ page }) => {
       // Dashboard has requiresAuth: true
       await page.goto('/dashboard');
-      await expect(page).toHaveURL('/login');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
     });
 
     test('should respect requiresGuest meta field', async ({ page }) => {
@@ -182,13 +182,13 @@ test.describe('Protected Routes & Auth Guards', () => {
 
       // Login/register have requiresGuest: true
       await page.goto('/login');
-      await expect(page).toHaveURL('/dashboard');
+      await expect(page).toHaveURL(/\/dashboard/);
 
       await page.goto('/register');
-      await expect(page).toHaveURL('/dashboard');
+      await expect(page).toHaveURL(/\/dashboard/);
 
       await page.goto('/reset-password');
-      await expect(page).toHaveURL('/dashboard');
+      await expect(page).toHaveURL(/\/dashboard/);
     });
   });
 
@@ -201,7 +201,7 @@ test.describe('Protected Routes & Auth Guards', () => {
       await page.goto('/dashboard');
 
       // Should end up at login (last protected route without auth)
-      await expect(page).toHaveURL('/login');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
     });
 
     test('should handle invalid routes', async ({ page }) => {

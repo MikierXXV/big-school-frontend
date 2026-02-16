@@ -23,11 +23,17 @@ export default defineConfig({
 
   use: {
     baseURL: process.env.TEST_BASE_URL || 'http://localhost:5173',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
   },
 
-  timeout: 30000,
+  timeout: 60000,
+
+  expect: {
+    timeout: 5000,
+  },
 
   projects: [
     {

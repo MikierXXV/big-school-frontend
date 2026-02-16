@@ -78,7 +78,7 @@ import BaseInput from '@presentation/components/ui/BaseInput.vue';
 import BaseButton from '@presentation/components/ui/BaseButton.vue';
 import BaseAlert from '@presentation/components/ui/BaseAlert.vue';
 
-const { login, error, clearError } = useAuth();
+const { loginAndRedirect, error, clearError } = useAuth();
 
 const {
   values,
@@ -100,7 +100,7 @@ const {
 );
 
 async function onSubmit() {
-  await login({
+  await loginAndRedirect({
     email: values.value.email,
     password: values.value.password,
     rememberMe: values.value.rememberMe,
