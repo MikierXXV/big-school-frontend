@@ -38,3 +38,8 @@ if (import.meta.env.PROD) {
 
 // Mount
 app.mount('#app');
+
+// Initialize theme after mount
+import { useThemeStore } from '@presentation/stores/theme.store.js';
+const themeStore = useThemeStore();
+themeStore.initialize();

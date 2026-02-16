@@ -34,10 +34,14 @@ export class HttpAuthRepository implements IAuthRepository {
       acceptTerms: data.acceptTerms,
     });
 
-    const { user: userData, requiresEmailVerification, verificationToken } = response.data;
+    // Extract from nested data structure (server returns { success, data: { user } })
+    const { user: userData } = response.data.data;
+
+    // Extract requiresEmailVerification and verificationToken from user object
+    const { requiresEmailVerification, verificationToken, ...userFields } = userData;
 
     return {
-      user: UserMapper.fromApi(userData),
+      user: UserMapper.fromApi(userFields),
       requiresEmailVerification,
       verificationToken,
     };
@@ -50,7 +54,8 @@ export class HttpAuthRepository implements IAuthRepository {
       ...(credentials.rememberMe !== undefined && { rememberMe: credentials.rememberMe }),
     });
 
-    const { user: userData, tokens } = response.data;
+    // Extract from nested data structure (server returns { success, data: { user, tokens } })
+    const { user: userData, tokens } = response.data.data;
 
     return {
       user: UserMapper.fromApi(userData),
@@ -70,7 +75,8 @@ export class HttpAuthRepository implements IAuthRepository {
       refreshToken: refreshToken.value,
     });
 
-    const { tokens } = response.data;
+    // Extract from nested data structure (server returns { success, data: { tokens } })
+    const { tokens } = response.data.data;
 
     return {
       tokens: {
@@ -89,7 +95,8 @@ export class HttpAuthRepository implements IAuthRepository {
       token,
     });
 
-    const { user: userData } = response.data;
+    // Extract from nested data structure (server returns { success, data: { user } })
+    const { user: userData } = response.data.data;
 
     return {
       user: UserMapper.fromApi(userData),

@@ -25,6 +25,15 @@ export class AxiosHttpClient implements IHttpClient {
         'Content-Type': 'application/json',
       },
     });
+
+    // Request interceptor: attach Authorization header from stored token
+    this.axiosInstance.interceptors.request.use((config) => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
   }
 
   async get<T>(url: string, config?: HttpRequestConfig): Promise<HttpResponse<T>> {
