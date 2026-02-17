@@ -150,18 +150,21 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = true;
       error.value = null;
 
-      await useCases.logoutUseCase.execute();
-
+      // Try server-side logout, but don't block on failure
+      try {
+        await useCases.logoutUseCase.execute();
+      } catch {
+        // Server logout failed (expired token, network error, etc.)
+        // Still proceed with local cleanup
+      }
+    } finally {
+      // Always clear local session regardless of server response
       user.value = null;
       accessToken.value = null;
       refreshToken.value = null;
-
-      // Clear persisted user data (tokens cleared by LogoutUseCase)
       clearPersistedUser();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Logout failed';
-      throw err;
-    } finally {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       isLoading.value = false;
     }
   }
