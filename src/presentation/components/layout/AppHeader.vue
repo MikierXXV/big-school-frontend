@@ -5,7 +5,7 @@
         <!-- Logo -->
         <div class="flex items-center">
           <a href="/" class="text-2xl font-bold text-primary-600 dark:text-primary-400">
-            Big School
+            Health Care Suite
           </a>
         </div>
 
@@ -17,13 +17,6 @@
             class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
           >
             Dashboard
-          </a>
-          <a
-            v-if="isAuthenticated"
-            href="/courses"
-            class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-          >
-            Courses
           </a>
         </nav>
 
@@ -152,13 +145,6 @@
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
               Dashboard
-            </a>
-            <a
-              v-if="isAuthenticated"
-              href="/courses"
-              class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              Courses
             </a>
             <a
               v-if="isAuthenticated"

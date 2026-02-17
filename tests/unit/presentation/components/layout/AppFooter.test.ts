@@ -22,7 +22,7 @@ describe('AppFooter', () => {
       const currentYear = new Date().getFullYear();
 
       expect(wrapper.text()).toContain(`© ${currentYear}`);
-      expect(wrapper.text()).toContain('Big School');
+      expect(wrapper.text()).toContain('Health Care Suite');
     });
 
     it('should render footer links', () => {

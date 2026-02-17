@@ -32,7 +32,7 @@
 
         <!-- Copyright -->
         <div class="text-sm text-gray-600 dark:text-gray-400">
-          © {{ currentYear }} Big School. All rights reserved.
+          © {{ currentYear }} Health Care Suite. All rights reserved.
         </div>
       </div>
     </div>
