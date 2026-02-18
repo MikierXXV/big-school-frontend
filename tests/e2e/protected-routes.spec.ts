@@ -36,6 +36,31 @@ test.describe('Protected Routes & Auth Guards', () => {
       await expect(page).toHaveURL('/forgot-password');
     });
 
+    test('should redirect to login when accessing surgical-block without auth', async ({ page }) => {
+      await page.goto('/surgical-block');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
+    });
+
+    test('should redirect to login when accessing emergency without auth', async ({ page }) => {
+      await page.goto('/emergency');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
+    });
+
+    test('should redirect to login when accessing data-analytics without auth', async ({ page }) => {
+      await page.goto('/data-analytics');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
+    });
+
+    test('should redirect to login when accessing wristband-printing without auth', async ({ page }) => {
+      await page.goto('/wristband-printing');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
+    });
+
+    test('should redirect to login when accessing label-printing without auth', async ({ page }) => {
+      await page.goto('/label-printing');
+      await expect(page).toHaveURL(/\/login(\?.*)?$/);
+    });
+
     test('should preserve intended route after login redirect', async ({ page }) => {
       // Try to access dashboard
       await page.goto('/dashboard');

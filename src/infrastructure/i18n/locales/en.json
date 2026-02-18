@@ -27,5 +27,94 @@
     "tokenExpired": "Session has expired",
     "unauthorized": "Unauthorized",
     "networkError": "Network error"
+  },
+  "home": {
+    "hero": {
+      "title": "Health Care Suite",
+      "subtitle": "Comprehensive platform for hospital and healthcare management",
+      "getStarted": "Get Started",
+      "signIn": "Sign In",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "features": {
+      "title": "System Modules",
+      "surgicalBlock": {
+        "title": "Surgical Block",
+        "description": "Scheduling and management of surgical interventions and operating rooms"
+      },
+      "emergency": {
+        "title": "Emergency",
+        "description": "Monitoring and tracking of patients in the emergency department"
+      },
+      "dataAnalytics": {
+        "title": "Data & Analytics",
+        "description": "Clinical data analysis, statistics, and hospital indicators"
+      },
+      "wristbandPrinting": {
+        "title": "Wristband Printing",
+        "description": "Patient identification wristband printing"
+      },
+      "labelPrinting": {
+        "title": "Label Printing",
+        "description": "Label printing for samples, medication, and documentation"
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Access the hospital management system",
+      "createAccount": "Create Account",
+      "continueToDashboard": "Continue to Dashboard"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": {
+      "greeting": "Welcome back",
+      "subtitle": "Select a module to continue"
+    },
+    "modules": {
+      "surgicalBlock": {
+        "title": "Surgical Block",
+        "description": "Operating rooms and interventions management"
+      },
+      "emergency": {
+        "title": "Emergency",
+        "description": "Emergency and urgent care area"
+      },
+      "dataAnalytics": {
+        "title": "Data & Analytics",
+        "description": "Statistics and indicators"
+      },
+      "wristbandPrinting": {
+        "title": "Wristband Printing",
+        "description": "Patient identification wristbands"
+      },
+      "labelPrinting": {
+        "title": "Label Printing",
+        "description": "Labels for samples and documents"
+      }
+    }
+  },
+  "modules": {
+    "surgicalBlock": {
+      "title": "Surgical Block",
+      "placeholder": "Surgical Block module under construction"
+    },
+    "emergency": {
+      "title": "Emergency",
+      "placeholder": "Emergency module under construction"
+    },
+    "dataAnalytics": {
+      "title": "Data & Analytics",
+      "placeholder": "Data & Analytics module under construction"
+    },
+    "wristbandPrinting": {
+      "title": "Wristband Printing",
+      "placeholder": "Wristband Printing module under construction"
+    },
+    "labelPrinting": {
+      "title": "Label Printing",
+      "placeholder": "Label Printing module under construction"
+    }
   }
 }

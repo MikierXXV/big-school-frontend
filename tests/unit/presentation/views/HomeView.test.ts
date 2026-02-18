@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { createRouter, createMemoryHistory } from 'vue-router';
+import { i18n } from '@infrastructure/i18n/i18n.config.js';
 import HomeView from '@presentation/views/HomeView.vue';
 import { useAuthStore } from '@presentation/stores/auth.store.js';
 
@@ -15,26 +16,10 @@ const createMockRouter = () => {
   return createRouter({
     history: createMemoryHistory(),
     routes: [
-      {
-        path: '/',
-        name: 'home',
-        component: HomeView,
-      },
-      {
-        path: '/login',
-        name: 'login',
-        component: { template: '<div>Login</div>' },
-      },
-      {
-        path: '/register',
-        name: 'register',
-        component: { template: '<div>Register</div>' },
-      },
-      {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: { template: '<div>Dashboard</div>' },
-      },
+      { path: '/', name: 'home', component: HomeView },
+      { path: '/login', name: 'login', component: { template: '<div>Login</div>' } },
+      { path: '/register', name: 'register', component: { template: '<div>Register</div>' } },
+      { path: '/dashboard', name: 'dashboard', component: { template: '<div>Dashboard</div>' } },
     ],
   });
 };
@@ -50,43 +35,39 @@ describe('HomeView', () => {
       await router.push('/');
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
       expect(wrapper.find('.home-view').exists()).toBe(true);
     });
 
-    it('should render hero section', async () => {
+    it('should render hero section with Health Care Suite branding', async () => {
       const router = createMockRouter();
       await router.push('/');
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
       expect(wrapper.find('.hero').exists()).toBe(true);
-      expect(wrapper.text()).toContain('Welcome to Big School');
+      expect(wrapper.text()).toContain('Health Care Suite');
     });
 
-    it('should render features section', async () => {
+    it('should render features section with 5 module cards', async () => {
       const router = createMockRouter();
       await router.push('/');
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
       expect(wrapper.find('.features').exists()).toBe(true);
-      expect(wrapper.text()).toContain('Why Choose Big School?');
-      expect(wrapper.text()).toContain('Expert Courses');
-      expect(wrapper.text()).toContain('Track Progress');
-      expect(wrapper.text()).toContain('Learn at Your Pace');
+      expect(wrapper.text()).toContain('Módulos del Sistema');
+      expect(wrapper.text()).toContain('Bloque Quirúrgico');
+      expect(wrapper.text()).toContain('Urgencias');
+      expect(wrapper.text()).toContain('Datos y Análisis');
+      expect(wrapper.text()).toContain('Impresión de Pulseras');
+      expect(wrapper.text()).toContain('Impresión de Etiquetas');
     });
 
     it('should render CTA section', async () => {
@@ -94,13 +75,11 @@ describe('HomeView', () => {
       await router.push('/');
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
       expect(wrapper.find('.cta').exists()).toBe(true);
-      expect(wrapper.text()).toContain('Ready to Start Learning?');
+      expect(wrapper.text()).toContain('¿Listo para comenzar?');
     });
   });
 
@@ -113,14 +92,12 @@ describe('HomeView', () => {
       authStore.user = null;
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
-      expect(wrapper.text()).toContain('Get Started');
-      expect(wrapper.text()).toContain('Sign In');
-      expect(wrapper.text()).toContain('Create Free Account');
+      expect(wrapper.text()).toContain('Comenzar');
+      expect(wrapper.text()).toContain('Iniciar Sesión');
+      expect(wrapper.text()).toContain('Crear Cuenta');
     });
 
     it('should show authenticated CTAs when logged in', async () => {
@@ -142,13 +119,11 @@ describe('HomeView', () => {
       authStore.accessToken = 'valid-access-token';
 
       const wrapper = mount(HomeView, {
-        global: {
-          plugins: [router],
-        },
+        global: { plugins: [router, i18n] },
       });
 
-      expect(wrapper.text()).toContain('Go to Dashboard');
-      expect(wrapper.text()).toContain('Continue Learning');
+      expect(wrapper.text()).toContain('Ir al Panel');
+      expect(wrapper.text()).toContain('Continuar al Panel');
     });
   });
 });

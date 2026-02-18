@@ -15,6 +15,11 @@
  *
  * RUTAS PROTEGIDAS:
  * - /dashboard
+ * - /surgical-block
+ * - /emergency
+ * - /data-analytics
+ * - /wristband-printing
+ * - /label-printing
  */
 
 import type { RouteRecordRaw } from 'vue-router';
@@ -58,6 +63,36 @@ export const routes: RouteRecordRaw[] = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@presentation/views/dashboard/DashboardView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/surgical-block',
+    name: 'surgical-block',
+    component: () => import('@presentation/views/dashboard/SurgicalBlockView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/emergency',
+    name: 'emergency',
+    component: () => import('@presentation/views/dashboard/EmergencyView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/data-analytics',
+    name: 'data-analytics',
+    component: () => import('@presentation/views/dashboard/DataAnalyticsView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/wristband-printing',
+    name: 'wristband-printing',
+    component: () => import('@presentation/views/dashboard/WristbandPrintingView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/label-printing',
+    name: 'label-printing',
+    component: () => import('@presentation/views/dashboard/LabelPrintingView.vue'),
     meta: { requiresAuth: true },
   },
   {

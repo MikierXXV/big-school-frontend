@@ -25,7 +25,7 @@ describe('AppHeader', () => {
     it('should render logo/brand name', () => {
       const wrapper = mount(AppHeader);
 
-      expect(wrapper.text()).toContain('Big School');
+      expect(wrapper.text()).toContain('Health Care Suite');
     });
 
     it('should render theme toggle component', () => {

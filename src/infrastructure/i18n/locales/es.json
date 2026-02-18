@@ -27,5 +27,94 @@
     "tokenExpired": "La sesión ha expirado",
     "unauthorized": "No autorizado",
     "networkError": "Error de conexión"
+  },
+  "home": {
+    "hero": {
+      "title": "Health Care Suite",
+      "subtitle": "Plataforma integral para la gestión hospitalaria y asistencial",
+      "getStarted": "Comenzar",
+      "signIn": "Iniciar Sesión",
+      "goToDashboard": "Ir al Panel"
+    },
+    "features": {
+      "title": "Módulos del Sistema",
+      "surgicalBlock": {
+        "title": "Bloque Quirúrgico",
+        "description": "Gestión y programación de intervenciones quirúrgicas y quirófanos"
+      },
+      "emergency": {
+        "title": "Urgencias",
+        "description": "Control y seguimiento de pacientes en el área de urgencias"
+      },
+      "dataAnalytics": {
+        "title": "Datos y Análisis",
+        "description": "Análisis de datos clínicos, estadísticas e indicadores hospitalarios"
+      },
+      "wristbandPrinting": {
+        "title": "Impresión de Pulseras",
+        "description": "Impresión de pulseras de identificación de pacientes"
+      },
+      "labelPrinting": {
+        "title": "Impresión de Etiquetas",
+        "description": "Impresión de etiquetas para muestras, medicación y documentación"
+      }
+    },
+    "cta": {
+      "title": "¿Listo para comenzar?",
+      "subtitle": "Acceda al sistema de gestión hospitalaria",
+      "createAccount": "Crear Cuenta",
+      "continueToDashboard": "Continuar al Panel"
+    }
+  },
+  "dashboard": {
+    "title": "Panel Principal",
+    "welcome": {
+      "greeting": "Bienvenido de nuevo",
+      "subtitle": "Seleccione un módulo para continuar"
+    },
+    "modules": {
+      "surgicalBlock": {
+        "title": "Bloque Quirúrgico",
+        "description": "Gestión de quirófanos e intervenciones"
+      },
+      "emergency": {
+        "title": "Urgencias",
+        "description": "Área de urgencias y emergencias"
+      },
+      "dataAnalytics": {
+        "title": "Datos y Análisis",
+        "description": "Estadísticas e indicadores"
+      },
+      "wristbandPrinting": {
+        "title": "Impresión de Pulseras",
+        "description": "Pulseras de identificación"
+      },
+      "labelPrinting": {
+        "title": "Impresión de Etiquetas",
+        "description": "Etiquetas para muestras y documentos"
+      }
+    }
+  },
+  "modules": {
+    "surgicalBlock": {
+      "title": "Bloque Quirúrgico",
+      "placeholder": "Módulo de Bloque Quirúrgico en construcción"
+    },
+    "emergency": {
+      "title": "Urgencias",
+      "placeholder": "Módulo de Urgencias en construcción"
+    },
+    "dataAnalytics": {
+      "title": "Datos y Análisis",
+      "placeholder": "Módulo de Datos y Análisis en construcción"
+    },
+    "wristbandPrinting": {
+      "title": "Impresión de Pulseras",
+      "placeholder": "Módulo de Impresión de Pulseras en construcción"
+    },
+    "labelPrinting": {
+      "title": "Impresión de Etiquetas",
+      "placeholder": "Módulo de Impresión de Etiquetas en construcción"
+    }
   }
 }
