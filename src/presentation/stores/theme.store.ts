@@ -21,6 +21,11 @@ export const useThemeStore = defineStore('theme', () => {
    * Initialize theme from localStorage and apply system preference
    */
   function initialize() {
+    // Ensure class attribute always exists on <html> (getAttribute returns null if absent)
+    if (!document.documentElement.hasAttribute('class')) {
+      document.documentElement.setAttribute('class', '');
+    }
+
     // Load from localStorage
     const stored = localStorage.getItem('theme') as Theme | null;
     if (stored) {

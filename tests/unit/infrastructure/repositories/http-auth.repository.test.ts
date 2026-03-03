@@ -63,7 +63,7 @@ describe('HttpAuthRepository', () => {
         acceptTerms: true,
       });
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/register', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/register', {
         email: 'newuser@example.com',
         password: 'Password123!',
         passwordConfirmation: 'Password123!',
@@ -117,7 +117,7 @@ describe('HttpAuthRepository', () => {
         password: 'Password123!',
       });
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/login', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/login', {
         email: 'user@example.com',
         password: 'Password123!',
       });
@@ -167,7 +167,7 @@ describe('HttpAuthRepository', () => {
         rememberMe: true,
       });
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/login', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/login', {
         email: 'user@example.com',
         password: 'Password123!',
         rememberMe: true,
@@ -200,7 +200,7 @@ describe('HttpAuthRepository', () => {
       const refreshToken = RefreshToken.create('refresh_token_123');
       const result = await repository.refreshSession(refreshToken);
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/refresh', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/refresh', {
         refreshToken: 'refresh_token_123',
       });
 
@@ -236,7 +236,7 @@ describe('HttpAuthRepository', () => {
 
       const result = await repository.verifyEmail('verification_token_123');
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/verify-email', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/verify-email', {
         token: 'verification_token_123',
       });
 
@@ -261,7 +261,7 @@ describe('HttpAuthRepository', () => {
       const email = Email.create('user@example.com');
       await repository.requestPasswordReset(email);
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/password-reset', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/password-reset', {
         email: 'user@example.com',
       });
     });
@@ -286,7 +286,7 @@ describe('HttpAuthRepository', () => {
         passwordConfirmation: 'NewPassword123!',
       });
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/password-reset/confirm', {
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/password-reset/confirm', {
         token: 'reset_token_123',
         newPassword: 'NewPassword123!',
         passwordConfirmation: 'NewPassword123!',
@@ -309,7 +309,7 @@ describe('HttpAuthRepository', () => {
 
       await repository.logout();
 
-      expect(mockHttpClient.post).toHaveBeenCalledWith('/api/auth/logout');
+      expect(mockHttpClient.post).toHaveBeenCalledWith('/auth/logout');
     });
   });
 });

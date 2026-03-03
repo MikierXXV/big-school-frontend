@@ -8,6 +8,17 @@
 
 import { test, expect } from '@playwright/test';
 
+const MOCK_AUTH_USER = JSON.stringify({
+  id: 'mock-user-id',
+  email: 'test@example.com',
+  firstName: 'Test',
+  lastName: 'User',
+  fullName: 'Test User',
+  status: 'ACTIVE',
+  systemRole: 'user',
+  emailVerified: true,
+});
+
 test.describe('Protected Routes & Auth Guards', () => {
   test.describe('Unauthenticated Access', () => {
     test('should redirect to login when accessing protected route without auth', async ({ page }) => {
@@ -76,29 +87,13 @@ test.describe('Protected Routes & Auth Guards', () => {
 
   test.describe('Authenticated Access (Mocked)', () => {
     test('should allow access to protected routes when authenticated', async ({ page }) => {
-      // Mock authentication by setting localStorage
+      // Mock authentication by setting localStorage (auth store needs auth_user + tokens)
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
-
-      // Also set Pinia state (if needed)
-      await page.addInitScript(() => {
-        // @ts-ignore
-        window.__MOCK_AUTH__ = {
-          user: {
-            id: 'mock-user-id',
-            email: 'test@example.com',
-            firstName: 'Test',
-            lastName: 'User',
-            fullName: 'Test User',
-            emailVerified: true,
-            status: 'ACTIVE',
-          },
-          accessToken: 'mock-access-token',
-        };
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Navigate to dashboard
       await page.goto('/dashboard');
@@ -111,10 +106,11 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should redirect to dashboard when authenticated user visits login', async ({ page }) => {
       // Mock authentication
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Try to visit login page while authenticated
       await page.goto('/login');
@@ -126,10 +122,11 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should redirect to dashboard when authenticated user visits register', async ({ page }) => {
       // Mock authentication
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Try to visit register page while authenticated
       await page.goto('/register');
@@ -143,10 +140,11 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should redirect to login after logout', async ({ page }) => {
       // Mock authentication
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Navigate to dashboard
       await page.goto('/dashboard');
@@ -168,10 +166,11 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should not access protected routes after logout', async ({ page }) => {
       // Mock authentication
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Navigate to dashboard
       await page.goto('/dashboard');
@@ -180,6 +179,7 @@ test.describe('Protected Routes & Auth Guards', () => {
       await page.evaluate(() => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('auth_user');
       });
 
       // Try to access dashboard again
@@ -200,10 +200,11 @@ test.describe('Protected Routes & Auth Guards', () => {
     test('should respect requiresGuest meta field', async ({ page }) => {
       // Mock authentication
       await page.goto('/');
-      await page.evaluate(() => {
+      await page.evaluate((authUser) => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
-      });
+        localStorage.setItem('auth_user', authUser);
+      }, MOCK_AUTH_USER);
 
       // Login/register have requiresGuest: true
       await page.goto('/login');
@@ -233,7 +234,7 @@ test.describe('Protected Routes & Auth Guards', () => {
       await page.goto('/non-existent-route');
 
       // Should show 404 page
-      await expect(page.locator('text=/404|not found/i')).toBeVisible();
+      await expect(page.getByRole('heading', { name: '404' })).toBeVisible();
     });
 
     test('should preserve query parameters during redirects', async ({ page }) => {

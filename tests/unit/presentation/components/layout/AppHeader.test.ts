@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import AppHeader from '@presentation/components/layout/AppHeader.vue';
+import { useAuthStore } from '@presentation/stores/auth.store.js';
 
 describe('AppHeader', () => {
   beforeEach(() => {
@@ -89,6 +90,82 @@ describe('AppHeader', () => {
 
       const loginLink = wrapper.find('a[href="/login"]');
       expect(loginLink.exists()).toBe(true);
+    });
+  });
+
+  describe('Admin Link', () => {
+    it('should show admin link for admin user', () => {
+      const authStore = useAuthStore();
+      authStore.user = {
+        id: '1',
+        email: 'admin@example.com',
+        firstName: 'Admin',
+        lastName: 'User',
+        status: 'ACTIVE',
+        fullName: 'Admin User',
+        emailVerified: true,
+        systemRole: 'admin',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const wrapper = mount(AppHeader, {
+        props: { isAuthenticated: true },
+      });
+
+      expect(wrapper.find('[data-testid="admin-link"]').exists()).toBe(true);
+    });
+
+    it('should show admin link for super_admin user', () => {
+      const authStore = useAuthStore();
+      authStore.user = {
+        id: '1',
+        email: 'super@example.com',
+        firstName: 'Super',
+        lastName: 'Admin',
+        status: 'ACTIVE',
+        fullName: 'Super Admin',
+        emailVerified: true,
+        systemRole: 'super_admin',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const wrapper = mount(AppHeader, {
+        props: { isAuthenticated: true },
+      });
+
+      expect(wrapper.find('[data-testid="admin-link"]').exists()).toBe(true);
+    });
+
+    it('should hide admin link for regular user', () => {
+      const authStore = useAuthStore();
+      authStore.user = {
+        id: '1',
+        email: 'user@example.com',
+        firstName: 'Regular',
+        lastName: 'User',
+        status: 'ACTIVE',
+        fullName: 'Regular User',
+        emailVerified: true,
+        systemRole: 'user',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const wrapper = mount(AppHeader, {
+        props: { isAuthenticated: true },
+      });
+
+      expect(wrapper.find('[data-testid="admin-link"]').exists()).toBe(false);
+    });
+
+    it('should hide admin link when not authenticated', () => {
+      const wrapper = mount(AppHeader, {
+        props: { isAuthenticated: false },
+      });
+
+      expect(wrapper.find('[data-testid="admin-link"]').exists()).toBe(false);
     });
   });
 });

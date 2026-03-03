@@ -132,9 +132,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import { useForm } from '@presentation/composables/useForm.js';
 import { useAuth } from '@presentation/composables/useAuth.js';
-import { required, email, passwordStrength, passwordMatch } from '@shared/utils/validation.util.js';
+import { required, email, minLength, passwordStrength, passwordMatch } from '@shared/utils/validation.util.js';
 import BaseInput from '@presentation/components/ui/BaseInput.vue';
 import BaseButton from '@presentation/components/ui/BaseButton.vue';
 import BaseAlert from '@presentation/components/ui/BaseAlert.vue';
@@ -149,6 +150,10 @@ function acceptTermsValidator(value: boolean): string {
   }
   return '';
 }
+
+// Break circular reference: passwordMatch needs to read the password value,
+// but values is destructured from useForm which receives the rules.
+const currentPassword = ref('');
 
 const {
   values,
@@ -167,14 +172,16 @@ const {
     acceptTerms: false,
   },
   {
-    firstName: [required],
-    lastName: [required],
-    email: [required, email],
-    password: [required, passwordStrength],
-    passwordConfirmation: [required, passwordMatch(() => values.value.password)],
+    firstName: [(v: string) => required(v, 'First name is required'), minLength(2)],
+    lastName: [(v: string) => required(v, 'Last name is required'), minLength(2)],
+    email: [(v: string) => required(v, 'Email is required'), email],
+    password: [(v: string) => required(v, 'Password is required'), passwordStrength],
+    passwordConfirmation: [(v: string) => required(v, 'Password confirmation is required'), passwordMatch(() => currentPassword.value)],
     acceptTerms: [acceptTermsValidator],
   }
 );
+
+watch(() => values.value.password, (v) => { currentPassword.value = v; }, { flush: 'sync' });
 
 async function onSubmit() {
   await registerAndRedirect({

@@ -112,6 +112,12 @@ test.describe('Registration Flow', () => {
   });
 
   test('should successfully submit registration with valid data', async ({ page }) => {
+    // Intercept register API to delay response (keeps isSubmitting=true for assertion)
+    await page.route('**/api/auth/register', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await route.abort();
+    });
+
     // Fill all fields
     await page.fill('input[name="firstName"]', 'Jane');
     await page.fill('input[name="lastName"]', 'Smith');
@@ -134,6 +140,18 @@ test.describe('Registration Flow', () => {
   });
 
   test('should show error for already registered email', async ({ page }) => {
+    // Mock register API to return 409 conflict
+    await page.route('**/api/auth/register', async (route) => {
+      await route.fulfill({
+        status: 409,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error: { code: 'AUTH_EMAIL_EXISTS', message: 'Email already registered' },
+        }),
+      });
+    });
+
     // Fill form with existing email
     await page.fill('input[name="firstName"]', 'Existing');
     await page.fill('input[name="lastName"]', 'User');

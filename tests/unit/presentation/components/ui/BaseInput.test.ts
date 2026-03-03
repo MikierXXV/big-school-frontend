@@ -216,6 +216,26 @@ describe('BaseInput', () => {
     });
   });
 
+  describe('Name Attribute', () => {
+    it('should set name attribute from id prop by default', () => {
+      const wrapper = mount(BaseInput, {
+        props: { id: 'firstName' },
+      });
+      const input = wrapper.find('input');
+
+      expect(input.attributes('name')).toBe('firstName');
+    });
+
+    it('should use explicit name prop when provided', () => {
+      const wrapper = mount(BaseInput, {
+        props: { id: 'firstName', name: 'first_name' },
+      });
+      const input = wrapper.find('input');
+
+      expect(input.attributes('name')).toBe('first_name');
+    });
+  });
+
   describe('Dark Mode', () => {
     it('should have dark mode classes', () => {
       const wrapper = mount(BaseInput);

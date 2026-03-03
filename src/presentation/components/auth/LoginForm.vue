@@ -67,6 +67,14 @@
     >
       Sign in
     </BaseButton>
+
+    <!-- Register Link -->
+    <div class="text-center text-sm">
+      <span class="text-gray-600 dark:text-gray-400">Don't have an account?</span>
+      <a href="/register" class="ml-1 font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+        Create account
+      </a>
+    </div>
   </form>
 </template>
 
@@ -94,8 +102,8 @@ const {
     rememberMe: false,
   },
   {
-    email: [required, email],
-    password: [required],
+    email: [(v: string) => required(v, 'Email is required'), email],
+    password: [(v: string) => required(v, 'Password is required')],
   }
 );
 

@@ -49,6 +49,18 @@ test.describe('Login Flow', () => {
   });
 
   test('should show error message for invalid credentials', async ({ page }) => {
+    // Mock login API to return 401
+    await page.route('**/api/auth/login', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error: { code: 'AUTH_INVALID_CREDENTIALS', message: 'Invalid email or password' },
+        }),
+      });
+    });
+
     // Fill form with invalid credentials
     await page.fill('input[type="email"]', 'wrong@example.com');
     await page.fill('input[type="password"]', 'WrongPassword123!');
@@ -63,8 +75,11 @@ test.describe('Login Flow', () => {
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
-    // Note: This test requires a test user in the backend
-    // For now, we'll test the UI behavior (submission)
+    // Intercept login API to delay response (keeps isSubmitting=true for assertion)
+    await page.route('**/api/auth/login', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await route.abort();
+    });
 
     await page.fill('input[type="email"]', 'test@example.com');
     await page.fill('input[type="password"]', 'Password123!');
@@ -131,6 +146,12 @@ test.describe('Login Flow', () => {
   });
 
   test('should disable submit button while loading', async ({ page }) => {
+    // Intercept login API to delay response (keeps isSubmitting=true for assertion)
+    await page.route('**/api/auth/login', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await route.abort();
+    });
+
     await page.fill('input[type="email"]', 'test@example.com');
     await page.fill('input[type="password"]', 'Password123!');
 

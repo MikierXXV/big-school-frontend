@@ -21,7 +21,8 @@ const hasToken = computed(() => !!token.value);
 
 <template>
   <div class="reset-password-view">
-    <BaseCard title="Reset Password" class="max-w-md mx-auto">
+    <BaseCard class="max-w-md mx-auto">
+      <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6">Reset Password</h1>
       <!-- No Token Error -->
       <div v-if="!hasToken" class="text-center py-8">
         <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">

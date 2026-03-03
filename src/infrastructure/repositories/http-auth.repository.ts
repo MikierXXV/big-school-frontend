@@ -25,7 +25,7 @@ export class HttpAuthRepository implements IAuthRepository {
   constructor(private readonly httpClient: IHttpClient) {}
 
   async register(data: RegisterData): Promise<RegisterResult> {
-    const response = await this.httpClient.post<any>('/api/auth/register', {
+    const response = await this.httpClient.post<any>('/auth/register', {
       email: data.email,
       password: data.password,
       passwordConfirmation: data.passwordConfirmation,
@@ -48,7 +48,7 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async login(credentials: LoginCredentials): Promise<LoginResult> {
-    const response = await this.httpClient.post<any>('/api/auth/login', {
+    const response = await this.httpClient.post<any>('/auth/login', {
       email: credentials.email,
       password: credentials.password,
       ...(credentials.rememberMe !== undefined && { rememberMe: credentials.rememberMe }),
@@ -71,7 +71,7 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async refreshSession(refreshToken: RefreshToken): Promise<RefreshResult> {
-    const response = await this.httpClient.post<any>('/api/auth/refresh', {
+    const response = await this.httpClient.post<any>('/auth/refresh', {
       refreshToken: refreshToken.value,
     });
 
@@ -91,7 +91,7 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async verifyEmail(token: string): Promise<VerifyEmailResult> {
-    const response = await this.httpClient.post<any>('/api/auth/verify-email', {
+    const response = await this.httpClient.post<any>('/auth/verify-email', {
       token,
     });
 
@@ -104,13 +104,13 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async requestPasswordReset(email: Email): Promise<void> {
-    await this.httpClient.post('/api/auth/password-reset', {
+    await this.httpClient.post('/auth/password-reset', {
       email: email.value,
     });
   }
 
   async confirmPasswordReset(data: PasswordResetData): Promise<void> {
-    await this.httpClient.post('/api/auth/password-reset/confirm', {
+    await this.httpClient.post('/auth/password-reset/confirm', {
       token: data.token,
       newPassword: data.newPassword,
       passwordConfirmation: data.passwordConfirmation,
@@ -118,6 +118,6 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async logout(): Promise<void> {
-    await this.httpClient.post('/api/auth/logout');
+    await this.httpClient.post('/auth/logout');
   }
 }

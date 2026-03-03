@@ -10,6 +10,7 @@ import { User } from '@domain/entities/user.entity.js';
 import { UserId } from '@domain/value-objects/user-id.value-object.js';
 import { Email } from '@domain/value-objects/email.value-object.js';
 import { UserStatus } from '@domain/value-objects/user-status.value-object.js';
+import { SystemRole } from '@domain/value-objects/system-role.value-object.js';
 import type { UserDTO } from '../dtos/user.dto.js';
 
 /**
@@ -22,6 +23,7 @@ interface ApiUserData {
   lastName?: string;
   fullName?: string;
   status: string;
+  systemRole?: string;
   createdAt: string;
   updatedAt?: string;
   emailVerifiedAt?: string | null;
@@ -91,12 +93,16 @@ export class UserMapper {
     const createdAt = this.normalizeDate(data.createdAt) || new Date();
     const updatedAt = this.normalizeDate(data.updatedAt) || createdAt;
 
+    // Map systemRole with backward-compat default
+    const systemRole = (data.systemRole as SystemRole) || SystemRole.USER;
+
     return User.fromPersistence({
       id: UserId.create(data.id),
       email: Email.create(data.email),
       firstName,
       lastName,
       status: UserStatus[data.status as keyof typeof UserStatus],
+      systemRole,
       createdAt,
       updatedAt,
       emailVerifiedAt: this.normalizeDate(data.emailVerifiedAt),
@@ -116,6 +122,7 @@ export class UserMapper {
       firstName: user.firstName,
       lastName: user.lastName,
       status: user.status.toString(),
+      systemRole: user.systemRole,
       emailVerified: user.isEmailVerified(),
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),

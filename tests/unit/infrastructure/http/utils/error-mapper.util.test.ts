@@ -25,6 +25,12 @@ import {
   PasswordResetTokenAlreadyUsedError,
   TermsNotAcceptedError,
 } from '@domain/errors/auth.errors.js';
+import { ForbiddenError, InsufficientPermissionsError } from '@domain/errors/authorization.errors.js';
+import {
+  OrganizationNotFoundError,
+  MemberAlreadyExistsError,
+  MemberNotFoundError,
+} from '@domain/errors/organization.errors.js';
 import { AxiosError } from 'axios';
 
 describe('mapHttpErrorToDomainError', () => {
@@ -265,6 +271,69 @@ describe('mapHttpErrorToDomainError', () => {
 
     expect(result).toBeInstanceOf(InternalServerError);
     expect(result.message).toBe('Regular error');
+  });
+
+  // RBAC Error Mappings
+
+  it('should map 403 with DOMAIN_FORBIDDEN to ForbiddenError', () => {
+    const axiosError = createAxiosError(403, 'DOMAIN_FORBIDDEN', 'Access denied');
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(ForbiddenError);
+  });
+
+  it('should map 403 with DOMAIN_INSUFFICIENT_PERMISSIONS to InsufficientPermissionsError', () => {
+    const axiosError = createAxiosError(
+      403,
+      'DOMAIN_INSUFFICIENT_PERMISSIONS',
+      'Insufficient permissions',
+      { requiredPermission: 'manage_users' }
+    );
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(InsufficientPermissionsError);
+    expect((result as InsufficientPermissionsError).requiredPermission).toBe('manage_users');
+  });
+
+  it('should map 403 with unknown code to ForbiddenError', () => {
+    const axiosError = createAxiosError(403, 'SOME_UNKNOWN_CODE', 'Some forbidden message');
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(ForbiddenError);
+  });
+
+  it('should map 404 with DOMAIN_ORGANIZATION_NOT_FOUND to OrganizationNotFoundError', () => {
+    const axiosError = createAxiosError(
+      404,
+      'DOMAIN_ORGANIZATION_NOT_FOUND',
+      'Organization not found',
+      { organizationId: 'org-1' }
+    );
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(OrganizationNotFoundError);
+    expect((result as OrganizationNotFoundError).organizationId).toBe('org-1');
+  });
+
+  it('should map 404 with DOMAIN_MEMBER_NOT_FOUND to MemberNotFoundError', () => {
+    const axiosError = createAxiosError(
+      404,
+      'DOMAIN_MEMBER_NOT_FOUND',
+      'Member not found',
+      { userId: 'user-1', organizationId: 'org-1' }
+    );
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(MemberNotFoundError);
+    expect((result as MemberNotFoundError).userId).toBe('user-1');
+    expect((result as MemberNotFoundError).organizationId).toBe('org-1');
+  });
+
+  it('should map 409 with DOMAIN_MEMBER_ALREADY_EXISTS to MemberAlreadyExistsError', () => {
+    const axiosError = createAxiosError(
+      409,
+      'DOMAIN_MEMBER_ALREADY_EXISTS',
+      'Member already exists',
+      { userId: 'user-1', organizationId: 'org-1' }
+    );
+    const result = mapHttpErrorToDomainError(axiosError);
+    expect(result).toBeInstanceOf(MemberAlreadyExistsError);
+    expect((result as MemberAlreadyExistsError).userId).toBe('user-1');
   });
 });
 

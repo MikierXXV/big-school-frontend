@@ -6,7 +6,7 @@
  * Composable for form management with validation.
  */
 
-import { ref } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 
 export type ValidationRule<T = any> = (value: T) => string;
 export type ValidationRules<T> = {
@@ -20,7 +20,7 @@ export function useForm<T extends Record<string, any>>(
   // Store a copy of initial values to reset to later
   const storedInitialValues = { ...initialValues };
 
-  const values = ref<T>({ ...initialValues }) as typeof ref<T>;
+  const values = ref<T>({ ...initialValues }) as Ref<T>;
   const errors = ref<Record<string, string>>({});
   const touched = ref<Record<string, boolean>>({});
   const isSubmitting = ref(false);
@@ -80,6 +80,9 @@ export function useForm<T extends Record<string, any>>(
    */
   function setFieldTouched(fieldName: keyof T, isTouched: boolean): void {
     touched.value[fieldName as string] = isTouched;
+    if (isTouched) {
+      validateField(fieldName);
+    }
   }
 
   /**
@@ -120,6 +123,15 @@ export function useForm<T extends Record<string, any>>(
     errors.value = {};
     touched.value = {};
   }
+
+  // Re-validate touched fields reactively when values change
+  watch(values, () => {
+    for (const fieldName in touched.value) {
+      if (touched.value[fieldName]) {
+        validateField(fieldName as keyof T);
+      }
+    }
+  }, { deep: true });
 
   return {
     values,

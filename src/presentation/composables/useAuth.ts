@@ -18,7 +18,7 @@ export function useAuth() {
   const notificationStore = useNotificationStore();
   const router = useRouter();
 
-  const { user, isAuthenticated, isLoading, error } = storeToRefs(authStore);
+  const { user, isAuthenticated, isLoading, error, isSuperAdmin, isAdmin, hasElevatedRole } = storeToRefs(authStore);
 
   /**
    * Login and redirect to dashboard
@@ -68,6 +68,11 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     error,
+
+    // Role getters
+    isSuperAdmin,
+    isAdmin,
+    hasElevatedRole,
 
     // Store actions
     login: authStore.login,

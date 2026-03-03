@@ -10,6 +10,8 @@
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@presentation/composables/useAuth.js';
 import { BaseButton } from '@presentation/components/ui/index.js';
+import AppHeader from '@presentation/components/layout/AppHeader.vue';
+import AppFooter from '@presentation/components/layout/AppFooter.vue';
 
 const { t } = useI18n();
 const { isAuthenticated } = useAuth();
@@ -17,6 +19,8 @@ const { isAuthenticated } = useAuth();
 
 <template>
   <div class="home-view">
+    <AppHeader />
+
     <!-- Hero Section -->
     <section class="hero bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-800 dark:to-primary-900 text-white py-20">
       <div class="container mx-auto px-4 text-center">
@@ -122,6 +126,8 @@ const { isAuthenticated } = useAuth();
         </router-link>
       </div>
     </section>
+
+    <AppFooter />
   </div>
 </template>
 

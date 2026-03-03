@@ -47,17 +47,17 @@ describe('Validation Utilities', () => {
   describe('email', () => {
     it('should return error message when email is invalid', () => {
       const result = email('notanemail');
-      expect(result).toBe('Please enter a valid email address');
+      expect(result).toBe('Invalid email format');
     });
 
     it('should return error message when email has no @', () => {
       const result = email('userdomain.com');
-      expect(result).toBe('Please enter a valid email address');
+      expect(result).toBe('Invalid email format');
     });
 
     it('should return error message when email has no domain', () => {
       const result = email('user@');
-      expect(result).toBe('Please enter a valid email address');
+      expect(result).toBe('Invalid email format');
     });
 
     it('should return empty string when email is valid', () => {
@@ -133,7 +133,7 @@ describe('Validation Utilities', () => {
   describe('passwordMatch', () => {
     it('should return error message when passwords do not match', () => {
       const result = passwordMatch('password123')('password456');
-      expect(result).toBe('Passwords do not match');
+      expect(result).toBe('Passwords must match');
     });
 
     it('should return empty string when passwords match', () => {

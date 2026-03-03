@@ -5,7 +5,19 @@
     "success": "Operación exitosa",
     "cancel": "Cancelar",
     "accept": "Aceptar",
-    "save": "Guardar"
+    "save": "Guardar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "actions": "Acciones",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "noResults": "No se encontraron resultados",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "showing": "Mostrando {from}-{to} de {total}"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -26,7 +38,130 @@
     "emailAlreadyExists": "El correo electrónico ya existe",
     "tokenExpired": "La sesión ha expirado",
     "unauthorized": "No autorizado",
-    "networkError": "Error de conexión"
+    "networkError": "Error de conexión",
+    "forbidden": "Acceso denegado",
+    "insufficientPermissions": "No tienes permisos suficientes para realizar esta acción",
+    "organizationNotFound": "Organización no encontrada",
+    "memberAlreadyExists": "El miembro ya pertenece a esta organización",
+    "memberNotFound": "Miembro no encontrado"
+  },
+  "roles": {
+    "super_admin": "Super Administrador",
+    "admin": "Administrador",
+    "user": "Usuario"
+  },
+  "permissions": {
+    "manage_users": "Gestionar usuarios",
+    "manage_organizations": "Gestionar organizaciones",
+    "assign_members": "Asignar miembros",
+    "view_all_data": "Ver todos los datos"
+  },
+  "organizations": {
+    "types": {
+      "hospital": "Hospital",
+      "clinic": "Clínica",
+      "health_center": "Centro de Salud",
+      "laboratory": "Laboratorio",
+      "pharmacy": "Farmacia",
+      "other": "Otro"
+    },
+    "roles": {
+      "org_admin": "Administrador",
+      "doctor": "Doctor",
+      "nurse": "Enfermero/a",
+      "specialist": "Especialista",
+      "staff": "Personal",
+      "guest": "Invitado"
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "dashboard": {
+      "title": "Panel de Administración",
+      "description": "Gestione usuarios, organizaciones y permisos del sistema"
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "promote": "Promover a Admin",
+      "demote": "Degradar a Usuario",
+      "search": "Buscar usuarios...",
+      "confirmDemote": "¿Estás seguro de que deseas degradar a este administrador?",
+      "promoteSuccess": "Usuario promovido exitosamente",
+      "demoteSuccess": "Administrador degradado exitosamente"
+    },
+    "organizations": {
+      "title": "Gestión de Organizaciones",
+      "create": "Crear Organización",
+      "edit": "Editar Organización",
+      "delete": "Eliminar Organización",
+      "deactivate": "Desactivar Organización",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar esta organización?",
+      "createSuccess": "Organización creada exitosamente",
+      "updateSuccess": "Organización actualizada exitosamente",
+      "deleteSuccess": "Organización eliminada exitosamente"
+    },
+    "members": {
+      "title": "Miembros",
+      "assign": "Asignar Miembro",
+      "changeRole": "Cambiar Rol",
+      "remove": "Eliminar Miembro",
+      "confirmRemove": "¿Estás seguro de que deseas eliminar a este miembro?",
+      "assignSuccess": "Miembro asignado exitosamente",
+      "removeSuccess": "Miembro eliminado exitosamente",
+      "changeRoleSuccess": "Rol actualizado exitosamente"
+    },
+    "permissions": {
+      "title": "Gestión de Permisos",
+      "grant": "Otorgar Permiso",
+      "revoke": "Revocar Permiso",
+      "grantSuccess": "Permisos otorgados exitosamente",
+      "revokeSuccess": "Permiso revocado exitosamente"
+    }
+  },
+  "nav": {
+    "adminPanel": "Admin"
+  },
+  "dashboard": {
+    "title": "Panel Principal",
+    "welcome": {
+      "greeting": "Bienvenido de nuevo",
+      "subtitle": "Seleccione un módulo para continuar"
+    },
+    "adminPanel": {
+      "title": "Panel de Administración",
+      "description": "Gestione usuarios, organizaciones y permisos"
+    },
+    "myOrganizations": {
+      "title": "Mis Organizaciones",
+      "viewAll": "Ver todas"
+    },
+    "modules": {
+      "surgicalBlock": {
+        "title": "Bloque Quirúrgico",
+        "description": "Gestión de quirófanos e intervenciones"
+      },
+      "emergency": {
+        "title": "Urgencias",
+        "description": "Área de urgencias y emergencias"
+      },
+      "dataAnalytics": {
+        "title": "Datos y Análisis",
+        "description": "Estadísticas e indicadores"
+      },
+      "wristbandPrinting": {
+        "title": "Impresión de Pulseras",
+        "description": "Pulseras de identificación"
+      },
+      "labelPrinting": {
+        "title": "Impresión de Etiquetas",
+        "description": "Etiquetas para muestras y documentos"
+      }
+    }
+  },
+  "forbidden": {
+    "title": "Acceso Denegado",
+    "message": "No tienes permisos para acceder a esta página",
+    "goBack": "Volver al Panel"
   },
   "home": {
     "hero": {
@@ -64,35 +199,6 @@
       "subtitle": "Acceda al sistema de gestión hospitalaria",
       "createAccount": "Crear Cuenta",
       "continueToDashboard": "Continuar al Panel"
-    }
-  },
-  "dashboard": {
-    "title": "Panel Principal",
-    "welcome": {
-      "greeting": "Bienvenido de nuevo",
-      "subtitle": "Seleccione un módulo para continuar"
-    },
-    "modules": {
-      "surgicalBlock": {
-        "title": "Bloque Quirúrgico",
-        "description": "Gestión de quirófanos e intervenciones"
-      },
-      "emergency": {
-        "title": "Urgencias",
-        "description": "Área de urgencias y emergencias"
-      },
-      "dataAnalytics": {
-        "title": "Datos y Análisis",
-        "description": "Estadísticas e indicadores"
-      },
-      "wristbandPrinting": {
-        "title": "Impresión de Pulseras",
-        "description": "Pulseras de identificación"
-      },
-      "labelPrinting": {
-        "title": "Impresión de Etiquetas",
-        "description": "Etiquetas para muestras y documentos"
-      }
     }
   },
   "modules": {

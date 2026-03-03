@@ -73,7 +73,7 @@ const {
     email: '',
   },
   {
-    email: [required, email],
+    email: [(v: string) => required(v, 'Email is required'), email],
   }
 );
 
