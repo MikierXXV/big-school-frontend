@@ -36,6 +36,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
   // Check length
   if (password.length < 8) {
     score = 1;
+    feedback.push('Very weak');
     feedback.push('Too short (minimum 8 characters)');
     return { score, feedback };
   }
@@ -75,14 +76,13 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
     feedback.push('Add special characters (!@#$%^&*...)');
   }
 
-  // Add strength description
+  // Add strength description (score 5 = all criteria met = Very strong,
+  // score 4 = one missing = Medium, score 2-3 = multiple missing = Weak)
   if (score === 5) {
     feedback.unshift('Very strong password!');
   } else if (score === 4) {
-    feedback.unshift('Strong password');
-  } else if (score === 3) {
     feedback.unshift('Medium strength');
-  } else if (score === 2) {
+  } else if (score <= 3) {
     feedback.unshift('Weak password');
   }
 

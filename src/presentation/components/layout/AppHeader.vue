@@ -18,6 +18,14 @@
           >
             Dashboard
           </a>
+          <a
+            v-if="isAuthenticated && rbac.hasElevatedRole.value"
+            href="/admin"
+            data-testid="admin-link"
+            class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+          >
+            Admin
+          </a>
         </nav>
 
         <!-- Right Side Actions -->
@@ -147,6 +155,14 @@
               Dashboard
             </a>
             <a
+              v-if="isAuthenticated && rbac.hasElevatedRole.value"
+              href="/admin"
+              data-testid="admin-link-mobile"
+              class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+            >
+              Admin
+            </a>
+            <a
               v-if="isAuthenticated"
               href="/profile"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
@@ -185,6 +201,7 @@
 import { ref, computed } from 'vue';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import { useAuth } from '@presentation/composables/useAuth.js';
+import { useRBAC } from '@presentation/composables/useRBAC.js';
 import ThemeToggle from '@presentation/components/ui/ThemeToggle.vue';
 
 interface Props {
@@ -196,6 +213,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const auth = useAuth();
+const rbac = useRBAC();
 const mobileMenuOpen = ref(false);
 
 // Use prop if provided, otherwise use auth store

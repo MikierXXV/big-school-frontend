@@ -43,6 +43,16 @@ test.describe('Password Reset Flow', () => {
     });
 
     test('should successfully submit password reset request', async ({ page }) => {
+      // Intercept password-reset API with delayed success response
+      await page.route('**/api/auth/password-reset', async (route) => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: {} }),
+        });
+      });
+
       // Fill email
       await page.fill('input[type="email"]', 'user@example.com');
 
@@ -72,6 +82,15 @@ test.describe('Password Reset Flow', () => {
     });
 
     test('should always show success message (security)', async ({ page }) => {
+      // Intercept password-reset API with success response (backend always returns 200)
+      await page.route('**/api/auth/password-reset', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: {} }),
+        });
+      });
+
       // Even for non-existent email, should show success (don't leak user existence)
       await page.fill('input[type="email"]', 'nonexistent@example.com');
       await page.click('button[type="submit"]');
@@ -158,6 +177,12 @@ test.describe('Password Reset Flow', () => {
     });
 
     test('should successfully submit password reset with valid data', async ({ page }) => {
+      // Intercept password-reset/confirm API to delay response
+      await page.route('**/api/auth/password-reset/confirm', async (route) => {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await route.abort();
+      });
+
       const passwordInput = page.locator('input[type="password"]').first();
       const confirmPasswordInput = page.locator('input[type="password"]').last();
 
@@ -173,6 +198,18 @@ test.describe('Password Reset Flow', () => {
     });
 
     test('should show error for invalid/expired token', async ({ page }) => {
+      // Mock password-reset/confirm API to return 400 for invalid token
+      await page.route('**/api/auth/password-reset/confirm', async (route) => {
+        await route.fulfill({
+          status: 400,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: false,
+            error: { code: 'AUTH_INVALID_TOKEN', message: 'Invalid or expired token' },
+          }),
+        });
+      });
+
       await page.goto('/reset-password?token=invalid-or-expired-token');
 
       const passwordInput = page.locator('input[type="password"]').first();

@@ -30,6 +30,7 @@ export interface AuthUser {
   readonly lastName: string;
   readonly fullName: string;
   readonly status: string;
+  readonly systemRole: string;
   readonly emailVerified: boolean;
 }
 
@@ -44,6 +45,7 @@ function toAuthUser(dto: UserDTO): AuthUser {
     lastName: dto.lastName,
     fullName: `${dto.firstName} ${dto.lastName}`,
     status: dto.status,
+    systemRole: dto.systemRole || 'user',
     emailVerified: dto.emailVerified,
   };
 }
@@ -94,6 +96,9 @@ export const useAuthStore = defineStore('auth', () => {
   // Getters
   // ============================================
   const isAuthenticated = computed(() => !!user.value && !!accessToken.value);
+  const isSuperAdmin = computed(() => user.value?.systemRole === 'super_admin');
+  const isAdmin = computed(() => user.value?.systemRole === 'admin');
+  const hasElevatedRole = computed(() => isSuperAdmin.value || isAdmin.value);
 
   // ============================================
   // Actions
@@ -254,6 +259,9 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Getters
     isAuthenticated,
+    isSuperAdmin,
+    isAdmin,
+    hasElevatedRole,
 
     // Actions
     login,

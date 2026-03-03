@@ -16,7 +16,8 @@ import { RouterLink } from 'vue-router';
 
 <template>
   <div class="register-view">
-    <BaseCard title="Register" class="max-w-md mx-auto">
+    <BaseCard class="max-w-md mx-auto">
+      <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6">Create Account</h1>
       <RegisterForm />
 
       <p class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">

@@ -20,6 +20,15 @@
  * - /data-analytics
  * - /wristband-printing
  * - /label-printing
+ * - /my-organizations
+ * - /forbidden
+ *
+ * RUTAS ADMIN (requieren rol admin/super_admin):
+ * - /admin
+ * - /admin/organizations
+ * - /admin/organizations/:id
+ * - /admin/users (solo super_admin)
+ * - /admin/users/:userId/permissions (solo super_admin)
  */
 
 import type { RouteRecordRaw } from 'vue-router';
@@ -94,6 +103,48 @@ export const routes: RouteRecordRaw[] = [
     name: 'label-printing',
     component: () => import('@presentation/views/dashboard/LabelPrintingView.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/my-organizations',
+    name: 'my-organizations',
+    component: () => import('@presentation/views/dashboard/MyOrganizationsView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/forbidden',
+    name: 'forbidden',
+    component: () => import('@presentation/views/ForbiddenView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin',
+    name: 'admin-dashboard',
+    component: () => import('@presentation/views/admin/AdminDashboardView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin', 'admin'] },
+  },
+  {
+    path: '/admin/organizations',
+    name: 'admin-organizations',
+    component: () => import('@presentation/views/admin/OrganizationListView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin', 'admin'], requiresPermission: 'manage_organizations' },
+  },
+  {
+    path: '/admin/organizations/:id',
+    name: 'admin-organization-detail',
+    component: () => import('@presentation/views/admin/OrganizationDetailView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin', 'admin'] },
+  },
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('@presentation/views/admin/AdminUserListView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin'] },
+  },
+  {
+    path: '/admin/users/:userId/permissions',
+    name: 'admin-user-permissions',
+    component: () => import('@presentation/views/admin/AdminPermissionsView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin'] },
   },
   {
     path: '/:pathMatch(.*)*',

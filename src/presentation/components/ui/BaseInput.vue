@@ -9,6 +9,7 @@
     <div class="relative">
       <input
         :id="inputId"
+        :name="inputName"
         :value="modelValue"
         :type="currentType"
         :placeholder="placeholder"
@@ -16,6 +17,7 @@
         :aria-invalid="hasError ? 'true' : undefined"
         :class="inputClasses"
         @input="handleInput"
+        @blur="emit('blur')"
       />
 
       <!-- Password Toggle Button -->
@@ -83,6 +85,7 @@ interface Props {
   error?: string;
   success?: boolean;
   id?: string;
+  name?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -94,6 +97,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
+  'blur': [];
 }>();
 
 // Password visibility toggle
@@ -112,6 +116,11 @@ function togglePasswordVisibility() {
 // Input ID generation
 const inputId = computed(() => {
   return props.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+});
+
+// Input name — defaults to id when not explicitly provided
+const inputName = computed(() => {
+  return props.name || props.id;
 });
 
 // Error state

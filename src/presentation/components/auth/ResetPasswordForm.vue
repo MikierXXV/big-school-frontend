@@ -98,8 +98,8 @@ const {
     passwordConfirmation: '',
   },
   {
-    newPassword: [required, passwordStrength],
-    passwordConfirmation: [required, passwordMatch(() => values.value.newPassword)],
+    newPassword: [(v: string) => required(v, 'Password is required'), passwordStrength],
+    passwordConfirmation: [(v: string) => required(v, 'Password confirmation is required'), passwordMatch(() => values.value.newPassword)],
   }
 );
 

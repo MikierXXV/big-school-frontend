@@ -13,6 +13,7 @@ export interface UserDTO {
   readonly firstName: string;
   readonly lastName: string;
   readonly status: string;
+  readonly systemRole: string;
   readonly emailVerified: boolean;
   readonly createdAt: string;
   readonly updatedAt: string;

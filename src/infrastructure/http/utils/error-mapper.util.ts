@@ -26,6 +26,12 @@ import {
   PasswordResetTokenAlreadyUsedError,
   TermsNotAcceptedError,
 } from '@domain/errors/auth.errors.js';
+import { ForbiddenError, InsufficientPermissionsError } from '@domain/errors/authorization.errors.js';
+import {
+  OrganizationNotFoundError,
+  MemberAlreadyExistsError,
+  MemberNotFoundError,
+} from '@domain/errors/organization.errors.js';
 
 /**
  * Network error (no connection, timeout, etc.)
@@ -113,23 +119,53 @@ function mapByStatusAndCode(
 
   // 403 Forbidden
   if (status === 403) {
-    if (code === 'DOMAIN_USER_NOT_ACTIVE') {
-      const statusValue = (details as any)?.status || 'inactive';
-      return new UserNotActiveError(statusValue);
+    switch (code) {
+      case 'DOMAIN_USER_NOT_ACTIVE': {
+        const statusValue = (details as any)?.status || 'inactive';
+        return new UserNotActiveError(statusValue);
+      }
+      case 'DOMAIN_INSUFFICIENT_PERMISSIONS': {
+        const requiredPermission = (details as any)?.requiredPermission || 'unknown';
+        return new InsufficientPermissionsError(requiredPermission);
+      }
+      case 'DOMAIN_FORBIDDEN':
+        return new ForbiddenError(message);
+      default:
+        return new ForbiddenError(message);
     }
-    return new DomainError(message || 'Forbidden', code || 'FORBIDDEN');
+  }
+
+  // 404 Not Found
+  if (status === 404) {
+    switch (code) {
+      case 'DOMAIN_ORGANIZATION_NOT_FOUND': {
+        const orgId = (details as any)?.organizationId || 'unknown';
+        return new OrganizationNotFoundError(orgId);
+      }
+      case 'DOMAIN_MEMBER_NOT_FOUND': {
+        const userId = (details as any)?.userId || 'unknown';
+        const organizationId = (details as any)?.organizationId || 'unknown';
+        return new MemberNotFoundError(userId, organizationId);
+      }
+      default:
+        return new DomainError(message || 'Not found', code || 'NOT_FOUND');
+    }
   }
 
   // 409 Conflict
   if (status === 409) {
     if (code === 'DOMAIN_USER_ALREADY_EXISTS') {
-      // Extract email from error details or message
       const email = extractEmailFromDetails(details, message);
       return new UserAlreadyExistsError(email);
     }
     if (code === 'DOMAIN_EMAIL_ALREADY_VERIFIED') {
       const email = extractEmailFromDetails(details, message);
       return new EmailAlreadyVerifiedError(email);
+    }
+    if (code === 'DOMAIN_MEMBER_ALREADY_EXISTS') {
+      const userId = (details as any)?.userId || 'unknown';
+      const organizationId = (details as any)?.organizationId || 'unknown';
+      return new MemberAlreadyExistsError(userId, organizationId);
     }
   }
 

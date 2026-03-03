@@ -23,7 +23,7 @@ export function required(
 /**
  * Validates that a value is a valid email address
  */
-export function email(value: string, message = 'Please enter a valid email address'): string {
+export function email(value: string, message = 'Invalid email format'): string {
   if (!value) return '';
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,7 +67,7 @@ export function maxLength(max: number, message?: string) {
  */
 export function passwordMatch(
   getPassword: string | (() => string),
-  message = 'Passwords do not match'
+  message = 'Passwords must match'
 ) {
   return (value: string): string => {
     const passwordValue = typeof getPassword === 'function' ? getPassword() : getPassword;

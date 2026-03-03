@@ -156,6 +156,45 @@ describe('useForm', () => {
 
       expect(touched.value.name).toBe(false);
     });
+
+    it('should validate field when marking as touched with validation rules', () => {
+      const { setFieldTouched, touched, errors } = useForm(
+        { name: '' },
+        { name: [required] }
+      );
+
+      setFieldTouched('name', true);
+
+      expect(touched.value.name).toBe(true);
+      expect(errors.value.name).toBe('This field is required');
+    });
+
+    it('should NOT validate field when marking as untouched', () => {
+      const { setFieldTouched, errors } = useForm(
+        { name: '' },
+        { name: [required] }
+      );
+
+      setFieldTouched('name', false);
+
+      expect(errors.value.name).toBeUndefined();
+    });
+
+    it('should clear error when field value becomes valid on blur', () => {
+      const { values, setFieldTouched, errors } = useForm(
+        { name: '' },
+        { name: [required] }
+      );
+
+      // First blur with empty value → error
+      setFieldTouched('name', true);
+      expect(errors.value.name).toBe('This field is required');
+
+      // Update value and blur again → error clears
+      values.value.name = 'John';
+      setFieldTouched('name', true);
+      expect(errors.value.name).toBeUndefined();
+    });
   });
 
   describe('Submit Handling', () => {

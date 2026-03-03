@@ -15,6 +15,7 @@
 import { UserId } from '../value-objects/user-id.value-object.js';
 import { Email } from '../value-objects/email.value-object.js';
 import { UserStatus } from '../value-objects/user-status.value-object.js';
+import { SystemRole } from '../value-objects/system-role.value-object.js';
 
 /**
  * Propiedades completas de un usuario
@@ -25,6 +26,7 @@ export interface UserProps {
   readonly firstName: string;
   readonly lastName: string;
   readonly status: UserStatus;
+  readonly systemRole: SystemRole;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly lastLoginAt: Date | null;
@@ -68,6 +70,7 @@ export class User {
       firstName: data.firstName,
       lastName: data.lastName,
       status: UserStatus.PENDING_VERIFICATION,
+      systemRole: SystemRole.USER,
       createdAt: now,
       updatedAt: now,
       lastLoginAt: null,
@@ -110,6 +113,10 @@ export class User {
 
   public get status(): UserStatus {
     return this._props.status;
+  }
+
+  public get systemRole(): SystemRole {
+    return this._props.systemRole;
   }
 
   public get createdAt(): Date {
@@ -155,5 +162,33 @@ export class User {
    */
   public canLogin(): boolean {
     return this.isActive() && this.isEmailVerified();
+  }
+
+  /**
+   * Verifica si el usuario es super admin.
+   */
+  public isSuperAdmin(): boolean {
+    return this._props.systemRole === SystemRole.SUPER_ADMIN;
+  }
+
+  /**
+   * Verifica si el usuario es admin.
+   */
+  public isAdmin(): boolean {
+    return this._props.systemRole === SystemRole.ADMIN;
+  }
+
+  /**
+   * Verifica si el usuario es un usuario regular.
+   */
+  public isRegularUser(): boolean {
+    return this._props.systemRole === SystemRole.USER;
+  }
+
+  /**
+   * Verifica si el usuario tiene rol elevado (admin o super admin).
+   */
+  public hasElevatedRole(): boolean {
+    return this.isSuperAdmin() || this.isAdmin();
   }
 }

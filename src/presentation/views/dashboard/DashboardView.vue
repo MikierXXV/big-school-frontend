@@ -10,11 +10,14 @@
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { DashboardLayout } from '@presentation/components/layout/index.js';
+import OrganizationCard from '@presentation/components/dashboard/OrganizationCard.vue';
 import { useAuth } from '@presentation/composables/useAuth.js';
+import { useRBAC } from '@presentation/composables/useRBAC.js';
 
 const { t } = useI18n();
 const router = useRouter();
 const { user } = useAuth();
+const { hasElevatedRole, userOrganizations } = useRBAC();
 
 interface ModuleCard {
   id: string;
@@ -100,6 +103,54 @@ function navigateTo(routeName: string): void {
         <p class="text-gray-600 dark:text-gray-400">
           {{ t('dashboard.welcome.subtitle') }}
         </p>
+      </div>
+
+      <!-- Admin Panel Card -->
+      <div
+        v-if="hasElevatedRole"
+        data-testid="admin-panel-card"
+        class="bg-indigo-50 dark:bg-indigo-900 border border-indigo-200 dark:border-indigo-700 rounded-lg shadow p-6 mb-6 cursor-pointer hover:shadow-md transition-shadow"
+        @click="router.push('/admin')"
+      >
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-800 flex items-center justify-center">
+            <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-indigo-900 dark:text-indigo-100">
+              {{ t('dashboard.adminPanel.title') }}
+            </h3>
+            <p class="text-sm text-indigo-700 dark:text-indigo-300">
+              {{ t('dashboard.adminPanel.description') }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Organizations Section -->
+      <div v-if="userOrganizations.length > 0" class="mb-6" data-testid="my-organizations-section">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            {{ t('dashboard.myOrganizations.title') }}
+          </h2>
+          <a
+            href="/my-organizations"
+            data-testid="view-all-orgs"
+            class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
+          >
+            {{ t('dashboard.myOrganizations.viewAll') }}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <OrganizationCard
+            v-for="membership in userOrganizations.slice(0, 4)"
+            :key="membership.organizationId"
+            :membership="membership"
+          />
+        </div>
       </div>
 
       <!-- Module Navigation Cards Grid -->
