@@ -15,6 +15,9 @@ import type {
   RefreshResult,
   VerifyEmailResult,
   PasswordResetData,
+  OAuthInitiateData,
+  OAuthInitiateResult,
+  OAuthCallbackData,
 } from '@domain/repositories/auth.repository.interface.js';
 import type { IHttpClient } from '@application/ports/http-client.port.js';
 import type { Email } from '@domain/value-objects/email.value-object.js';
@@ -119,5 +122,33 @@ export class HttpAuthRepository implements IAuthRepository {
 
   async logout(): Promise<void> {
     await this.httpClient.post('/auth/logout');
+  }
+
+  async initiateOAuth(data: OAuthInitiateData): Promise<OAuthInitiateResult> {
+    const response = await this.httpClient.get<any>(
+      `/auth/oauth/${data.provider}/authorize?redirect_uri=${encodeURIComponent(data.redirectUri)}`
+    );
+    const { authorizationUrl, state } = response.data.data;
+    return { authorizationUrl, state };
+  }
+
+  async handleOAuthCallback(data: OAuthCallbackData): Promise<LoginResult> {
+    const response = await this.httpClient.post<any>('/auth/oauth/callback', {
+      provider: data.provider,
+      code: data.code,
+      redirectUri: data.redirectUri,
+    });
+    const { user: userData, tokens } = response.data.data;
+    return {
+      user: UserMapper.fromApi(userData),
+      tokens: {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        tokenType: tokens.tokenType,
+        expiresIn: tokens.expiresIn,
+        expiresAt: tokens.expiresAt,
+        refreshExpiresIn: tokens.refreshExpiresIn,
+      },
+    };
   }
 }

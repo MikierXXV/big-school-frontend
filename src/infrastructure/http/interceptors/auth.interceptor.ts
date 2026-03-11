@@ -17,6 +17,7 @@ const PUBLIC_ENDPOINTS = [
   '/api/auth/register',
   '/api/auth/password-reset',
   '/api/auth/password-reset/confirm',
+  '/api/auth/oauth/',
 ];
 
 /**

@@ -64,6 +64,22 @@ export interface PasswordResetData {
   readonly passwordConfirmation: string;
 }
 
+export interface OAuthInitiateData {
+  readonly provider: string;
+  readonly redirectUri: string;
+}
+
+export interface OAuthInitiateResult {
+  readonly authorizationUrl: string;
+  readonly state: string;
+}
+
+export interface OAuthCallbackData {
+  readonly provider: string;
+  readonly code: string;
+  readonly redirectUri: string;
+}
+
 // ============================================
 // REPOSITORY INTERFACE
 // ============================================
@@ -125,4 +141,14 @@ export interface IAuthRepository {
    * Cierra la sesión del usuario (revoca refresh token).
    */
   logout(): Promise<void>;
+
+  /**
+   * Inicia el flujo OAuth: obtiene URL de autorización y state.
+   */
+  initiateOAuth(data: OAuthInitiateData): Promise<OAuthInitiateResult>;
+
+  /**
+   * Completa el flujo OAuth: intercambia code por tokens de sesión.
+   */
+  handleOAuthCallback(data: OAuthCallbackData): Promise<LoginResult>;
 }

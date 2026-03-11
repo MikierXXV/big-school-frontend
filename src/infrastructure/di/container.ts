@@ -21,6 +21,7 @@ import { RefreshSessionUseCase } from '@application/use-cases/auth/refresh-sessi
 import { VerifyEmailUseCase } from '@application/use-cases/auth/verify-email.use-case.js';
 import { RequestPasswordResetUseCase } from '@application/use-cases/auth/request-password-reset.use-case.js';
 import { ConfirmPasswordResetUseCase } from '@application/use-cases/auth/confirm-password-reset.use-case.js';
+import { OAuthLoginUseCase } from '@application/use-cases/auth/oauth-login.use-case.js';
 
 import { CreateOrganizationUseCase } from '@application/use-cases/organization/create-organization.use-case.js';
 import { ListOrganizationsUseCase } from '@application/use-cases/organization/list-organizations.use-case.js';
@@ -55,6 +56,7 @@ export interface Container {
     verifyEmailUseCase: VerifyEmailUseCase;
     requestPasswordResetUseCase: RequestPasswordResetUseCase;
     confirmPasswordResetUseCase: ConfirmPasswordResetUseCase;
+    oauthLoginUseCase: OAuthLoginUseCase;
     // Organization
     createOrganizationUseCase: CreateOrganizationUseCase;
     listOrganizationsUseCase: ListOrganizationsUseCase;
@@ -135,6 +137,11 @@ export function createContainer(): Container {
     authRepository,
   });
 
+  const oauthLoginUseCase = new OAuthLoginUseCase({
+    authRepository,
+    storageService,
+  });
+
   // Application Layer - Organization use cases
   const createOrganizationUseCase = new CreateOrganizationUseCase({ organizationRepository });
   const listOrganizationsUseCase = new ListOrganizationsUseCase({ organizationRepository });
@@ -168,6 +175,7 @@ export function createContainer(): Container {
       verifyEmailUseCase,
       requestPasswordResetUseCase,
       confirmPasswordResetUseCase,
+      oauthLoginUseCase,
       createOrganizationUseCase,
       listOrganizationsUseCase,
       getOrganizationUseCase,
