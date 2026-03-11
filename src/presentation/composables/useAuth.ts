@@ -12,6 +12,7 @@ import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import type { LoginDTO } from '@application/dtos/auth/login.dto.js';
 import type { RegisterDTO } from '@application/dtos/auth/register.dto.js';
+import { createContainer } from '@infrastructure/di/container.js';
 
 export function useAuth() {
   const authStore = useAuthStore();
@@ -62,6 +63,21 @@ export function useAuth() {
     await router.push('/login');
   }
 
+  /**
+   * Initiates OAuth login:
+   * 1. Calls backend to get authorizationUrl + state
+   * 2. Saves state in sessionStorage for CSRF verification
+   * 3. Redirects browser to provider's authorization page
+   */
+  async function initiateOAuthLogin(provider: 'google' | 'microsoft'): Promise<void> {
+    const { useCases } = createContainer();
+    const redirectUri = `${window.location.origin}/oauth/callback`;
+    const result = await useCases.oauthLoginUseCase.initiateOAuth({ provider, redirectUri });
+    sessionStorage.setItem('oauth_state', result.state);
+    sessionStorage.setItem('oauth_provider', provider);
+    window.location.href = result.authorizationUrl;
+  }
+
   return {
     // State
     user,
@@ -88,5 +104,6 @@ export function useAuth() {
     loginAndRedirect,
     registerAndRedirect,
     logoutAndRedirect,
+    initiateOAuthLogin,
   };
 }

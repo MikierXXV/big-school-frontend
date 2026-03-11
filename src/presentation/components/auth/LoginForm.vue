@@ -68,6 +68,32 @@
       Sign in
     </BaseButton>
 
+    <!-- OAuth Divider -->
+    <div class="relative">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-300 dark:border-gray-600" />
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="bg-white dark:bg-gray-900 px-2 text-gray-500 dark:text-gray-400">Or continue with</span>
+      </div>
+    </div>
+
+    <!-- OAuth Buttons -->
+    <div class="grid grid-cols-2 gap-3">
+      <OAuthButton
+        provider="google"
+        label="Google"
+        :loading="oauthLoading === 'google'"
+        @click="handleOAuth('google')"
+      />
+      <OAuthButton
+        provider="microsoft"
+        label="Microsoft"
+        :loading="oauthLoading === 'microsoft'"
+        @click="handleOAuth('microsoft')"
+      />
+    </div>
+
     <!-- Register Link -->
     <div class="text-center text-sm">
       <span class="text-gray-600 dark:text-gray-400">Don't have an account?</span>
@@ -79,14 +105,29 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useForm } from '@presentation/composables/useForm.js';
 import { useAuth } from '@presentation/composables/useAuth.js';
 import { required, email } from '@shared/utils/validation.util.js';
 import BaseInput from '@presentation/components/ui/BaseInput.vue';
 import BaseButton from '@presentation/components/ui/BaseButton.vue';
 import BaseAlert from '@presentation/components/ui/BaseAlert.vue';
+import OAuthButton from '@presentation/components/auth/OAuthButton.vue';
 
-const { loginAndRedirect, error, clearError } = useAuth();
+const { loginAndRedirect, initiateOAuthLogin, error, clearError } = useAuth();
+
+const oauthLoading = ref<'google' | 'microsoft' | null>(null);
+
+async function handleOAuth(provider: 'google' | 'microsoft'): Promise<void> {
+  oauthLoading.value = provider;
+  try {
+    await initiateOAuthLogin(provider);
+  } catch (err) {
+    oauthLoading.value = null;
+    error.value = err instanceof Error ? err.message : 'OAuth login failed';
+  }
+  // Note: if successful, page navigates away — no need to reset oauthLoading
+}
 
 const {
   values,

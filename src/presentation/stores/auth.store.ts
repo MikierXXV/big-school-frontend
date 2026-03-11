@@ -249,6 +249,17 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
   }
 
+  /**
+   * Sets session state after a successful OAuth callback.
+   * Called by OAuthCallbackView after oauthLoginUseCase resolves.
+   */
+  function setOAuthSession(authUser: AuthUser, tokens: { accessToken: string; refreshToken: string }): void {
+    user.value = authUser;
+    accessToken.value = tokens.accessToken;
+    refreshToken.value = tokens.refreshToken;
+    persistUser(authUser);
+  }
+
   return {
     // State
     user,
@@ -272,5 +283,6 @@ export const useAuthStore = defineStore('auth', () => {
     requestPasswordReset,
     confirmPasswordReset,
     clearError,
+    setOAuthSession,
   };
 });

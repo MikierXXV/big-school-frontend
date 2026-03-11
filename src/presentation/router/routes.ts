@@ -69,6 +69,11 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@presentation/views/auth/VerifyEmailView.vue'),
   },
   {
+    path: '/oauth/callback',
+    name: 'oauth-callback',
+    component: () => import('@presentation/views/auth/OAuthCallbackView.vue'),
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@presentation/views/dashboard/DashboardView.vue'),

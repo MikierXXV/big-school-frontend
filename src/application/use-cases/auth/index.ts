@@ -11,3 +11,4 @@ export * from './refresh-session.use-case.js';
 export * from './verify-email.use-case.js';
 export * from './request-password-reset.use-case.js';
 export * from './confirm-password-reset.use-case.js';
+export * from './oauth-login.use-case.js';
