@@ -9,7 +9,7 @@ import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import AdminUserListView from '@presentation/views/admin/AdminUserListView.vue';
 
-const { mockRouterPush, mockAdminStore } = vi.hoisted(() => {
+const { mockRouterPush, mockAdminStore, mockIsSuperAdmin } = vi.hoisted(() => {
   const mockFetchAdmins = vi.fn();
   const mockFetchUsers = vi.fn();
   const mockDemoteUser = vi.fn();
@@ -22,17 +22,26 @@ const { mockRouterPush, mockAdminStore } = vi.hoisted(() => {
     fetchAdmins: mockFetchAdmins,
     fetchUsers: mockFetchUsers,
     demoteUser: mockDemoteUser,
+    deleteUsers: vi.fn(),
   };
 
   return {
     mockRouterPush: vi.fn(),
     mockAdminStore,
+    mockIsSuperAdmin: { value: true, __v_isRef: true },
   };
 });
 
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push: mockRouterPush }),
   useRoute: () => ({ params: {}, meta: {} }),
+}));
+
+vi.mock('@presentation/composables/useRBAC.js', () => ({
+  useRBAC: () => ({
+    isSuperAdmin: mockIsSuperAdmin,
+    hasPermission: vi.fn().mockReturnValue(true),
+  }),
 }));
 
 vi.mock('@presentation/components/layout/AdminLayout.vue', () => ({
@@ -86,7 +95,7 @@ const i18n = createI18n({
   messages: {
     en: {
       admin: {
-        users: { title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User', confirmDemote: 'Are you sure?', search: 'Search users...' },
+        users: { title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User', confirmDemote: 'Are you sure?', search: 'Search users...', selected: 'selected', deleteSelected: 'Delete selected', bulkDeleteTitle: 'Delete users', bulkDeleteMessage: 'Delete {count} users?' },
         permissions: { title: 'Permissions' },
       },
       common: {

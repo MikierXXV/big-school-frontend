@@ -7,7 +7,7 @@
 -->
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AdminLayout from '@presentation/components/layout/AdminLayout.vue';
@@ -17,11 +17,13 @@ import BaseSelect from '@presentation/components/ui/BaseSelect.vue';
 import ConfirmDialog from '@presentation/components/ui/ConfirmDialog.vue';
 import PromoteUserModal from '@presentation/components/admin/PromoteUserModal.vue';
 import { useAdminStore } from '@presentation/stores/admin.store.js';
-import { ShieldCheckIcon, KeyIcon, UserMinusIcon } from '@heroicons/vue/24/outline';
+import { useRBAC } from '@presentation/composables/useRBAC.js';
+import { ShieldCheckIcon, KeyIcon, UserMinusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
 const router = useRouter();
 const adminStore = useAdminStore();
+const { isSuperAdmin, hasPermission } = useRBAC();
 
 const PAGE_SIZE = 20;
 
@@ -30,6 +32,40 @@ const searchText = ref('');
 const currentPage = ref(1);
 const showPromoteModal = ref(false);
 const demotingUserId = ref<string | null>(null);
+
+// Bulk selection
+const selectedIds = ref<Set<string>>(new Set());
+const showBulkDeleteConfirm = ref(false);
+
+const canDeleteUsers = computed(() => isSuperAdmin.value || hasPermission('manage_users'));
+
+const allPageSelected = computed(() =>
+  pagedUsers.value.length > 0 && pagedUsers.value.every((u) => selectedIds.value.has(u.id))
+);
+
+function toggleSelectAll(): void {
+  if (allPageSelected.value) {
+    pagedUsers.value.forEach((u) => selectedIds.value.delete(u.id));
+  } else {
+    pagedUsers.value.forEach((u) => selectedIds.value.add(u.id));
+  }
+  selectedIds.value = new Set(selectedIds.value);
+}
+
+function toggleSelect(id: string): void {
+  const next = new Set(selectedIds.value);
+  if (next.has(id)) next.delete(id);
+  else next.add(id);
+  selectedIds.value = next;
+}
+
+async function handleBulkDelete(): Promise<void> {
+  const ids = Array.from(selectedIds.value);
+  await adminStore.deleteUsers(ids);
+  selectedIds.value = new Set();
+  showBulkDeleteConfirm.value = false;
+  await loadUsers(searchText.value.trim() || undefined);
+}
 
 const roleOptions = [
   { value: '', label: t('common.all') },
@@ -172,11 +208,48 @@ onMounted(() => {
         {{ adminStore.error }}
       </div>
 
-      <!-- User table -->
-      <div v-else-if="pagedUsers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <!-- Content area -->
+      <template v-else>
+        <!-- Bulk action bar -->
+        <div
+          v-if="canDeleteUsers && selectedIds.size > 0"
+          data-testid="bulk-action-bar"
+          class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+        >
+          <span class="text-sm text-red-700 dark:text-red-300 font-medium">
+            {{ selectedIds.size }} {{ t('admin.users.selected') }}
+          </span>
+          <button
+            data-testid="bulk-delete-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+            @click="showBulkDeleteConfirm = true"
+          >
+            <TrashIcon class="w-4 h-4" />
+            {{ t('admin.users.deleteSelected') }}
+          </button>
+          <button
+            class="text-sm text-red-600 dark:text-red-400 hover:underline"
+            @click="selectedIds = new Set()"
+          >
+            {{ t('common.cancel') }}
+          </button>
+        </div>
+
+        <!-- User table -->
+        <div v-if="pagedUsers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
+              <!-- Checkbox header -->
+              <th v-if="canDeleteUsers" class="px-4 py-3 w-10">
+                <input
+                  type="checkbox"
+                  :checked="allPageSelected"
+                  data-testid="select-all-checkbox"
+                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
+                  @change="toggleSelectAll"
+                />
+              </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {{ t('common.name') }}
               </th>
@@ -202,7 +275,18 @@ onMounted(() => {
               v-for="user in pagedUsers"
               :key="user.id"
               :data-testid="`user-row-${user.id}`"
+              :class="{ 'bg-red-50 dark:bg-red-900/10': selectedIds.has(user.id) }"
             >
+              <!-- Row checkbox -->
+              <td v-if="canDeleteUsers" class="px-4 py-4 w-10">
+                <input
+                  type="checkbox"
+                  :checked="selectedIds.has(user.id)"
+                  :data-testid="`select-${user.id}`"
+                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
+                  @change="toggleSelect(user.id)"
+                />
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                 {{ user.firstName }} {{ user.lastName }}
               </td>
@@ -287,10 +371,11 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Empty -->
-      <div v-else data-testid="users-empty" class="text-center py-8 text-gray-500">
-        {{ t('common.noResults') }}
-      </div>
+        <!-- Empty -->
+        <div v-else data-testid="users-empty" class="text-center py-8 text-gray-500">
+          {{ t('common.noResults') }}
+        </div>
+      </template>
 
       <!-- Promote Modal -->
       <PromoteUserModal
@@ -307,6 +392,16 @@ onMounted(() => {
         confirm-variant="danger"
         @confirm="handleDemote"
         @cancel="demotingUserId = null"
+      />
+
+      <!-- Bulk Delete Confirm -->
+      <ConfirmDialog
+        :open="showBulkDeleteConfirm"
+        :title="t('admin.users.bulkDeleteTitle')"
+        :message="t('admin.users.bulkDeleteMessage', { count: selectedIds.size })"
+        confirm-variant="danger"
+        @confirm="handleBulkDelete"
+        @cancel="showBulkDeleteConfirm = false"
       />
     </div>
   </AdminLayout>
