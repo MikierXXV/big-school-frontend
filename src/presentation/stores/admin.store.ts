@@ -117,6 +117,14 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
+  async function deleteUser(userId: string): Promise<void> {
+    await useCases.deleteUserUseCase.execute(userId);
+  }
+
+  async function deleteUsers(userIds: string[]): Promise<void> {
+    await Promise.allSettled(userIds.map((id) => useCases.deleteUserUseCase.execute(id)));
+  }
+
   function clearError(): void {
     error.value = null;
   }
@@ -134,6 +142,8 @@ export const useAdminStore = defineStore('admin', () => {
     fetchUsers,
     promoteUser,
     demoteUser,
+    deleteUser,
+    deleteUsers,
     fetchPermissions,
     grantPermissions,
     revokePermission,

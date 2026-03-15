@@ -22,4 +22,5 @@ export interface IAdminRepository {
   grantPermissions(data: GrantPermissionsDTO): Promise<AdminPermissionsDTO>;
   revokePermission(data: RevokePermissionDTO): Promise<AdminPermissionsDTO>;
   listUsers(query: { page?: number; limit?: number; search?: string }): Promise<PaginatedUsersDTO>;
+  deleteUser(userId: string): Promise<void>;
 }

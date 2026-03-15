@@ -58,4 +58,8 @@ export class HttpAdminRepository implements IAdminRepository {
     const response = await this.httpClient.get<any>('/api/users', { params });
     return response.data.data;
   }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.httpClient.delete(`/api/users/${userId}`);
+  }
 }
