@@ -7,7 +7,7 @@
 -->
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AdminLayout from '@presentation/components/layout/AdminLayout.vue';
@@ -19,6 +19,7 @@ import { useOrganizationStore } from '@presentation/stores/organization.store.js
 import { useRBAC } from '@presentation/composables/useRBAC.js';
 import { OrganizationType } from '@domain/value-objects/organization-type.value-object.js';
 import type { CreateOrganizationDTO } from '@application/dtos/organization/organization.dto.js';
+import { PlusIcon } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -26,7 +27,9 @@ const orgStore = useOrganizationStore();
 const { isSuperAdmin } = useRBAC();
 
 const filterType = ref('');
+const searchText = ref('');
 const showCreateModal = ref(false);
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
 const typeOptions = [
   { value: '', label: t('common.all') || 'All' },
@@ -41,9 +44,28 @@ function badgeVariant(active: boolean): 'success' | 'neutral' {
 }
 
 async function loadOrganizations(page = 1): Promise<void> {
-  const query: Record<string, any> = { page, limit: 20 };
+  const hasSearch = searchText.value.trim().length > 0;
+  // When searching, fetch all results so client-side filter covers all pages
+  const query: Record<string, any> = hasSearch ? { page: 1, limit: 500 } : { page, limit: 20 };
   if (filterType.value) query.type = filterType.value;
+  if (hasSearch) query.search = searchText.value.trim();
   await orgStore.fetchOrganizations(query);
+}
+
+// Client-side filter as fallback when backend hasn't applied search yet
+const filteredOrganizations = computed(() => {
+  if (!searchText.value.trim()) return orgStore.organizations;
+  const term = searchText.value.trim().toLowerCase();
+  return orgStore.organizations.filter(
+    (org) =>
+      org.name.toLowerCase().includes(term) ||
+      (org.contactEmail?.toLowerCase().includes(term) ?? false)
+  );
+});
+
+function handleSearchInput(): void {
+  if (searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => loadOrganizations(1), 300);
 }
 
 function handlePageChange(page: number): void {
@@ -79,15 +101,16 @@ onMounted(() => {
         <button
           v-if="isSuperAdmin"
           data-testid="create-org-btn"
-          class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
+          class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
           @click="showCreateModal = true"
         >
+          <PlusIcon class="w-4 h-4" />
           {{ t('admin.organizations.create') }}
         </button>
       </div>
 
       <!-- Filters -->
-      <div class="mb-4 flex gap-4">
+      <div class="mb-4 flex gap-4 items-end">
         <BaseSelect
           v-model="filterType"
           :options="typeOptions"
@@ -95,6 +118,19 @@ onMounted(() => {
           data-testid="filter-type"
           @update:model-value="handleFilterChange"
         />
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            {{ t('organizations.searchPlaceholder') }}
+          </label>
+          <input
+            v-model="searchText"
+            type="text"
+            data-testid="search-org-input"
+            :placeholder="t('organizations.searchPlaceholder')"
+            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            @input="handleSearchInput"
+          />
+        </div>
       </div>
 
       <!-- Loading -->
@@ -108,7 +144,7 @@ onMounted(() => {
       </div>
 
       <!-- Table -->
-      <div v-else-if="orgStore.organizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div v-else-if="filteredOrganizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
@@ -128,7 +164,7 @@ onMounted(() => {
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
             <tr
-              v-for="org in orgStore.organizations"
+              v-for="org in filteredOrganizations"
               :key="org.id"
               :data-testid="`org-row-${org.id}`"
               class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"

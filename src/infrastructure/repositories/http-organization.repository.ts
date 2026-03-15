@@ -30,9 +30,17 @@ export class HttpOrganizationRepository implements IOrganizationRepository {
     if (query.limit !== undefined) params.limit = query.limit;
     if (query.type !== undefined) params.type = query.type;
     if (query.active !== undefined) params.active = query.active;
+    if (query.search !== undefined) params.search = query.search;
 
     const response = await this.httpClient.get<any>('/api/organizations', { params });
-    return response.data.data;
+    const data = response.data.data;
+    const totalPages = data.totalPages ?? Math.ceil(data.total / data.limit);
+    return {
+      ...data,
+      totalPages,
+      hasNext: data.hasNext ?? (data.page < totalPages),
+      hasPrevious: data.hasPrevious ?? (data.page > 1),
+    };
   }
 
   async getById(id: string): Promise<OrganizationDTO> {

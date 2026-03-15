@@ -40,6 +40,7 @@ export interface ListOrganizationsQueryDTO {
   readonly limit?: number;
   readonly type?: string;
   readonly active?: boolean;
+  readonly search?: string;
 }
 
 export interface PaginatedOrganizationsDTO {

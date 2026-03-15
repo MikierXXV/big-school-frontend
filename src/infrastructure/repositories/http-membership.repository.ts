@@ -35,9 +35,9 @@ export class HttpMembershipRepository implements IMembershipRepository {
     userId: string,
     data: ChangeMemberRoleDTO,
   ): Promise<MembershipDTO> {
-    const response = await this.httpClient.put<any>(
+    const response = await this.httpClient.patch<any>(
       `/api/organizations/${organizationId}/members/${userId}/role`,
-      data,
+      { newRole: data.role },
     );
     return response.data.data;
   }
@@ -46,7 +46,7 @@ export class HttpMembershipRepository implements IMembershipRepository {
     const response = await this.httpClient.get<any>(
       `/api/organizations/${organizationId}/members`,
     );
-    return response.data.data;
+    return response.data.data.members ?? response.data.data;
   }
 
   async getUserOrganizations(userId: string): Promise<UserOrganizationDTO[]> {
