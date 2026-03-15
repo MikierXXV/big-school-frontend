@@ -43,6 +43,7 @@ vi.mock('@presentation/composables/useRBAC.js', () => ({
   useRBAC: () => ({
     isSuperAdmin: mockIsSuperAdmin,
     canAccess: mockCanAccess,
+    hasPermission: vi.fn().mockReturnValue(true),
   }),
 }));
 
@@ -96,9 +97,10 @@ const i18n = createI18n({
   messages: {
     en: {
       admin: {
-        organizations: { title: 'Organization Management', create: 'Create Organization' },
+        organizations: { title: 'Organization Management', create: 'Create Organization', selected: 'selected', deleteSelected: 'Delete selected', bulkDeleteTitle: 'Delete organizations', bulkDeleteMessage: 'Delete {count} organizations?' },
       },
       organizations: {
+        searchPlaceholder: 'Search organizations...',
         types: {
           hospital: 'Hospital',
           clinic: 'Clinic',

@@ -162,6 +162,11 @@ export const useOrganizationStore = defineStore('organization', () => {
     }
   }
 
+  async function deleteOrganizations(ids: string[]): Promise<void> {
+    await Promise.allSettled(ids.map((id) => useCases.deleteOrganizationUseCase.execute(id)));
+    organizations.value = organizations.value.filter((o) => !ids.includes(o.id));
+  }
+
   function clearError(): void {
     error.value = null;
   }
@@ -181,6 +186,7 @@ export const useOrganizationStore = defineStore('organization', () => {
     createOrganization,
     updateOrganization,
     deleteOrganization,
+    deleteOrganizations,
     fetchMembers,
     assignMember,
     changeMemberRole,

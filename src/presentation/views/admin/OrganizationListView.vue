@@ -14,22 +14,58 @@ import AdminLayout from '@presentation/components/layout/AdminLayout.vue';
 import BasePagination from '@presentation/components/ui/BasePagination.vue';
 import BaseSelect from '@presentation/components/ui/BaseSelect.vue';
 import BaseBadge from '@presentation/components/ui/BaseBadge.vue';
+import ConfirmDialog from '@presentation/components/ui/ConfirmDialog.vue';
 import OrganizationFormModal from '@presentation/components/admin/OrganizationFormModal.vue';
 import { useOrganizationStore } from '@presentation/stores/organization.store.js';
 import { useRBAC } from '@presentation/composables/useRBAC.js';
 import { OrganizationType } from '@domain/value-objects/organization-type.value-object.js';
 import type { CreateOrganizationDTO } from '@application/dtos/organization/organization.dto.js';
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
 const router = useRouter();
 const orgStore = useOrganizationStore();
-const { isSuperAdmin } = useRBAC();
+const { isSuperAdmin, hasPermission } = useRBAC();
 
 const filterType = ref('');
 const searchText = ref('');
 const showCreateModal = ref(false);
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
+
+// Bulk selection
+const selectedIds = ref<Set<string>>(new Set());
+const showBulkDeleteConfirm = ref(false);
+
+const canDeleteOrgs = computed(() => isSuperAdmin.value || hasPermission('manage_organizations'));
+
+const allPageSelected = computed(() =>
+  filteredOrganizations.value.length > 0 &&
+  filteredOrganizations.value.every((o) => selectedIds.value.has(o.id))
+);
+
+function toggleSelectAll(): void {
+  if (allPageSelected.value) {
+    filteredOrganizations.value.forEach((o) => selectedIds.value.delete(o.id));
+  } else {
+    filteredOrganizations.value.forEach((o) => selectedIds.value.add(o.id));
+  }
+  selectedIds.value = new Set(selectedIds.value);
+}
+
+function toggleSelect(id: string, event: Event): void {
+  event.stopPropagation();
+  const next = new Set(selectedIds.value);
+  if (next.has(id)) next.delete(id);
+  else next.add(id);
+  selectedIds.value = next;
+}
+
+async function handleBulkDelete(): Promise<void> {
+  const ids = Array.from(selectedIds.value);
+  await orgStore.deleteOrganizations(ids);
+  selectedIds.value = new Set();
+  showBulkDeleteConfirm.value = false;
+}
 
 const typeOptions = [
   { value: '', label: t('common.all') || 'All' },
@@ -143,11 +179,48 @@ onMounted(() => {
         {{ orgStore.error }}
       </div>
 
-      <!-- Table -->
-      <div v-else-if="filteredOrganizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <!-- Content area -->
+      <template v-else>
+        <!-- Bulk action bar -->
+        <div
+          v-if="canDeleteOrgs && selectedIds.size > 0"
+          data-testid="bulk-action-bar-orgs"
+          class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+        >
+          <span class="text-sm text-red-700 dark:text-red-300 font-medium">
+            {{ selectedIds.size }} {{ t('admin.organizations.selected') }}
+          </span>
+          <button
+            data-testid="bulk-delete-orgs-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+            @click="showBulkDeleteConfirm = true"
+          >
+            <TrashIcon class="w-4 h-4" />
+            {{ t('admin.organizations.deleteSelected') }}
+          </button>
+          <button
+            class="text-sm text-red-600 dark:text-red-400 hover:underline"
+            @click="selectedIds = new Set()"
+          >
+            {{ t('common.cancel') }}
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div v-if="filteredOrganizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
+              <!-- Checkbox header -->
+              <th v-if="canDeleteOrgs" class="px-4 py-3 w-10">
+                <input
+                  type="checkbox"
+                  :checked="allPageSelected"
+                  data-testid="select-all-orgs-checkbox"
+                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
+                  @change="toggleSelectAll"
+                />
+              </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {{ t('common.name') || 'Name' }}
               </th>
@@ -167,9 +240,19 @@ onMounted(() => {
               v-for="org in filteredOrganizations"
               :key="org.id"
               :data-testid="`org-row-${org.id}`"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+              :class="['hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer', { 'bg-red-50 dark:bg-red-900/10': selectedIds.has(org.id) }]"
               @click="goToDetail(org.id)"
             >
+              <!-- Row checkbox -->
+              <td v-if="canDeleteOrgs" class="px-4 py-4 w-10" @click.stop>
+                <input
+                  type="checkbox"
+                  :checked="selectedIds.has(org.id)"
+                  :data-testid="`select-org-${org.id}`"
+                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
+                  @change="toggleSelect(org.id, $event)"
+                />
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                 {{ org.name }}
               </td>
@@ -200,16 +283,27 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Empty state -->
-      <div v-else data-testid="org-empty" class="text-center py-8 text-gray-500">
-        {{ t('common.noResults') }}
-      </div>
+        <!-- Empty state -->
+        <div v-else data-testid="org-empty" class="text-center py-8 text-gray-500">
+          {{ t('common.noResults') }}
+        </div>
+      </template>
 
       <!-- Create Modal -->
       <OrganizationFormModal
         :open="showCreateModal"
         @close="showCreateModal = false"
         @submit="handleCreate"
+      />
+
+      <!-- Bulk Delete Confirm -->
+      <ConfirmDialog
+        :open="showBulkDeleteConfirm"
+        :title="t('admin.organizations.bulkDeleteTitle')"
+        :message="t('admin.organizations.bulkDeleteMessage', { count: selectedIds.size })"
+        confirm-variant="danger"
+        @confirm="handleBulkDelete"
+        @cancel="showBulkDeleteConfirm = false"
       />
     </div>
   </AdminLayout>

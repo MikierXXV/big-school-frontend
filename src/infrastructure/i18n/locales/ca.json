@@ -107,7 +107,11 @@
       "confirmDemote": "Esteu segur que voleu degradar aquest administrador?",
       "confirmPromote": "Esteu segur que voleu promocionar aquest usuari com a administrador?",
       "promoteSuccess": "Usuari promogut exitosament",
-      "demoteSuccess": "Administrador degradat exitosament"
+      "demoteSuccess": "Administrador degradat exitosament",
+      "selected": "seleccionat(s)",
+      "deleteSelected": "Eliminar seleccionats",
+      "bulkDeleteTitle": "Eliminar usuaris",
+      "bulkDeleteMessage": "Eliminaràs {count} usuari(s). Aquesta acció no es pot desfer."
     },
     "organizations": {
       "title": "Gestió d'Organitzacions",
@@ -118,7 +122,11 @@
       "confirmDelete": "Esteu segur que voleu eliminar aquesta organització?",
       "createSuccess": "Organització creada exitosament",
       "updateSuccess": "Organització actualitzada exitosament",
-      "deleteSuccess": "Organització eliminada exitosament"
+      "deleteSuccess": "Organització eliminada exitosament",
+      "selected": "seleccionada(es)",
+      "deleteSelected": "Eliminar seleccionades",
+      "bulkDeleteTitle": "Eliminar organitzacions",
+      "bulkDeleteMessage": "Eliminaràs {count} organització(ns). Aquesta acció no es pot desfer."
     },
     "members": {
       "title": "Membres",
