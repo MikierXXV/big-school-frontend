@@ -42,8 +42,9 @@
     "forgotPassword": "Has oblidat la contrasenya?",
     "alreadyHaveAccount": "Ja tens compte?",
     "dontHaveAccount": "No tens compte?",
-    "loginSuccess": "Inici de sessió exitós",
-    "registerSuccess": "Registre exitós"
+    "loginSuccess": "Inici de sessió exitós. Benvingut de nou!",
+    "registerSuccess": "Compte creat exitosament!",
+    "logoutSuccess": "Has tancat la sessió."
   },
   "errors": {
     "invalidCredentials": "Credencials invàlides",
@@ -141,6 +142,7 @@
   "nav": {
     "adminPanel": "Admin",
     "dashboard": "Tauler",
+    "myOrganizations": "Les meves Organitzacions",
     "profile": "Perfil",
     "settings": "Configuració"
   },
@@ -156,7 +158,11 @@
     },
     "myOrganizations": {
       "title": "Les meves Organitzacions",
-      "viewAll": "Veure totes"
+      "viewAll": "Veure totes",
+      "searchPlaceholder": "Cercar organització...",
+      "noOrganizations": "Encara no pertanys a cap organització.",
+      "yourRole": "El teu rol",
+      "memberSince": "Membre des de"
     },
     "modules": {
       "surgicalBlock": {
@@ -180,6 +186,16 @@
         "description": "Etiquetes per a mostres i documents"
       }
     }
+  },
+  "profile": {
+    "title": "El meu Perfil",
+    "emailVerified": "Correu verificat",
+    "emailNotVerified": "Correu no verificat"
+  },
+  "settings": {
+    "title": "Configuració",
+    "appearance": "Aparença",
+    "language": "Idioma"
   },
   "forbidden": {
     "title": "Accés Denegat",

@@ -42,8 +42,9 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "alreadyHaveAccount": "¿Ya tienes cuenta?",
     "dontHaveAccount": "¿No tienes cuenta?",
-    "loginSuccess": "Inicio de sesión exitoso",
-    "registerSuccess": "Registro exitoso"
+    "loginSuccess": "Inicio de sesión exitoso. ¡Bienvenido de nuevo!",
+    "registerSuccess": "¡Cuenta creada exitosamente!",
+    "logoutSuccess": "Has cerrado sesión."
   },
   "errors": {
     "invalidCredentials": "Credenciales inválidas",
@@ -141,6 +142,7 @@
   "nav": {
     "adminPanel": "Admin",
     "dashboard": "Panel",
+    "myOrganizations": "Mis Organizaciones",
     "profile": "Perfil",
     "settings": "Ajustes"
   },
@@ -156,7 +158,11 @@
     },
     "myOrganizations": {
       "title": "Mis Organizaciones",
-      "viewAll": "Ver todas"
+      "viewAll": "Ver todas",
+      "searchPlaceholder": "Buscar organización...",
+      "noOrganizations": "Aún no perteneces a ninguna organización.",
+      "yourRole": "Tu rol",
+      "memberSince": "Miembro desde"
     },
     "modules": {
       "surgicalBlock": {
@@ -180,6 +186,16 @@
         "description": "Etiquetas para muestras y documentos"
       }
     }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "emailVerified": "Correo verificado",
+    "emailNotVerified": "Correo no verificado"
+  },
+  "settings": {
+    "title": "Configuración",
+    "appearance": "Apariencia",
+    "language": "Idioma"
   },
   "forbidden": {
     "title": "Acceso Denegado",

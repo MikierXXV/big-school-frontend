@@ -42,8 +42,9 @@
     "forgotPassword": "Forgot your password?",
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
-    "loginSuccess": "Login successful",
-    "registerSuccess": "Registration successful"
+    "loginSuccess": "Login successful. Welcome back!",
+    "registerSuccess": "Account created successfully!",
+    "logoutSuccess": "You have been logged out."
   },
   "errors": {
     "invalidCredentials": "Invalid credentials",
@@ -141,6 +142,7 @@
   "nav": {
     "adminPanel": "Admin",
     "dashboard": "Dashboard",
+    "myOrganizations": "My Organizations",
     "profile": "Profile",
     "settings": "Settings"
   },
@@ -156,7 +158,11 @@
     },
     "myOrganizations": {
       "title": "My Organizations",
-      "viewAll": "View all"
+      "viewAll": "View all",
+      "searchPlaceholder": "Search organization...",
+      "noOrganizations": "You don't belong to any organization yet.",
+      "yourRole": "Your role",
+      "memberSince": "Member since"
     },
     "modules": {
       "surgicalBlock": {
@@ -180,6 +186,16 @@
         "description": "Labels for samples and documents"
       }
     }
+  },
+  "profile": {
+    "title": "My Profile",
+    "emailVerified": "Email verified",
+    "emailNotVerified": "Email not verified"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "language": "Language"
   },
   "forbidden": {
     "title": "Access Denied",
