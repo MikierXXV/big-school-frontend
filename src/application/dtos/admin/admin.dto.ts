@@ -56,6 +56,7 @@ export interface UserListItemDTO {
   readonly status: string;
   readonly emailVerified: boolean;
   readonly createdAt: string;
+  readonly authProvider: 'local' | 'google' | 'microsoft';
 }
 
 export interface PaginatedUsersDTO {
