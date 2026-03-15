@@ -116,6 +116,18 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@presentation/views/dashboard/UserProfileView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@presentation/views/dashboard/UserSettingsView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/forbidden',
     name: 'forbidden',
     component: () => import('@presentation/views/ForbiddenView.vue'),
