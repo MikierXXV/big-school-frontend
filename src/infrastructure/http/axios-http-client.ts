@@ -97,6 +97,11 @@ export class AxiosHttpClient implements IHttpClient {
     return this.mapAxiosResponse(response);
   }
 
+  async patch<T>(url: string, data?: unknown, config?: HttpRequestConfig): Promise<HttpResponse<T>> {
+    const response = await this.axiosInstance.patch<T>(url, data, config || {});
+    return this.mapAxiosResponse(response);
+  }
+
   async delete<T>(url: string, config?: HttpRequestConfig): Promise<HttpResponse<T>> {
     const response = await this.axiosInstance.delete<T>(url, config || {});
     return this.mapAxiosResponse(response);
