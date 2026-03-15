@@ -17,7 +17,19 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "create": "Crear",
-    "showing": "Mostrando {from}-{to} de {total}"
+    "showing": "Mostrando {from}-{to} de {total}",
+    "back": "Volver",
+    "user": "Usuario",
+    "name": "Nombre",
+    "role": "Rol",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "select": "Seleccionar",
+    "type": "Tipo",
+    "status": "Estado",
+    "description": "Descripción",
+    "address": "Dirección",
+    "phone": "Teléfono"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -57,6 +69,7 @@
     "view_all_data": "Ver todos los datos"
   },
   "organizations": {
+    "searchPlaceholder": "Buscar por nombre o email",
     "types": {
       "hospital": "Hospital",
       "clinic": "Clínica",
@@ -86,6 +99,7 @@
       "demote": "Degradar a Usuario",
       "search": "Buscar usuarios...",
       "confirmDemote": "¿Estás seguro de que deseas degradar a este administrador?",
+      "confirmPromote": "¿Estás seguro de que deseas promover a este usuario como administrador?",
       "promoteSuccess": "Usuario promovido exitosamente",
       "demoteSuccess": "Administrador degradado exitosamente"
     },
@@ -106,6 +120,7 @@
       "changeRole": "Cambiar Rol",
       "remove": "Eliminar Miembro",
       "confirmRemove": "¿Estás seguro de que deseas eliminar a este miembro?",
+      "confirmChangeRole": "¿Estás seguro de que deseas cambiar el rol de {name} a {role}?",
       "assignSuccess": "Miembro asignado exitosamente",
       "removeSuccess": "Miembro eliminado exitosamente",
       "changeRoleSuccess": "Rol actualizado exitosamente"
@@ -118,8 +133,16 @@
       "revokeSuccess": "Permiso revocado exitosamente"
     }
   },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
   "nav": {
-    "adminPanel": "Admin"
+    "adminPanel": "Admin",
+    "dashboard": "Panel",
+    "profile": "Perfil",
+    "settings": "Ajustes"
   },
   "dashboard": {
     "title": "Panel Principal",
