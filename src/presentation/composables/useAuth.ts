@@ -10,6 +10,7 @@ import { useAuthStore } from '@presentation/stores/auth.store.js';
 import { useNotificationStore } from '@presentation/stores/notification.store.js';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { i18n } from '@infrastructure/i18n/i18n.config.js';
 import type { LoginDTO } from '@application/dtos/auth/login.dto.js';
 import type { RegisterDTO } from '@application/dtos/auth/register.dto.js';
 import { createContainer } from '@infrastructure/di/container.js';
@@ -18,6 +19,7 @@ export function useAuth() {
   const authStore = useAuthStore();
   const notificationStore = useNotificationStore();
   const router = useRouter();
+  const t = i18n.global.t.bind(i18n.global);
 
   const { user, isAuthenticated, isLoading, error, isSuperAdmin, isAdmin, hasElevatedRole } = storeToRefs(authStore);
 
@@ -26,7 +28,7 @@ export function useAuth() {
    */
   async function loginAndRedirect(input: LoginDTO): Promise<void> {
     await authStore.login(input);
-    notificationStore.success('Login successful. Welcome back!');
+    notificationStore.success(t('auth.loginSuccess'));
     await router.push('/dashboard');
   }
 
@@ -37,7 +39,7 @@ export function useAuth() {
   async function registerAndRedirect(input: RegisterDTO): Promise<void> {
     const result = await authStore.register(input);
 
-    notificationStore.success('Account created successfully!');
+    notificationStore.success(t('auth.registerSuccess'));
 
     // If verification token is available (development mode), redirect to verify-email with token
     if (result.verificationToken) {
@@ -59,7 +61,7 @@ export function useAuth() {
    */
   async function logoutAndRedirect(): Promise<void> {
     await authStore.logout();
-    notificationStore.info('You have been logged out.');
+    notificationStore.info(t('auth.logoutSuccess'));
     await router.push('/login');
   }
 
