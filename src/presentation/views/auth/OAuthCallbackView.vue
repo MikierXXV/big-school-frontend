@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { createContainer } from '@infrastructure/di/container.js';
 import { useAuthStore } from '@presentation/stores/auth.store.js';
 import { useNotificationStore } from '@presentation/stores/notification.store.js';
@@ -31,6 +32,7 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const notificationStore = useNotificationStore();
+const { t } = useI18n();
 const error = ref<string | null>(null);
 
 onMounted(async () => {
@@ -91,7 +93,7 @@ onMounted(async () => {
       refreshToken: result.tokens.refreshToken,
     });
 
-    notificationStore.success('Login successful. Welcome back!');
+    notificationStore.success(t('auth.loginSuccess'));
     await router.push('/dashboard');
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'OAuth login failed.';

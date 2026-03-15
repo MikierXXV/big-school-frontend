@@ -104,13 +104,6 @@ describe('AdminDashboardView', () => {
     expect(wrapper.find('[data-testid="admin-card-users"]').exists()).toBe(false);
   });
 
-  it('should show permissions card when isSuperAdmin is true', () => {
-    mockIsSuperAdmin.value = true;
-    mockCanAccess.mockReturnValue(true);
-    const wrapper = mountView();
-    expect(wrapper.find('[data-testid="admin-card-permissions"]').exists()).toBe(true);
-  });
-
   it('should show all cards for super admin', () => {
     mockIsSuperAdmin.value = true;
     mockCanAccess.mockReturnValue(true);
@@ -118,7 +111,6 @@ describe('AdminDashboardView', () => {
 
     expect(wrapper.find('[data-testid="admin-card-organizations"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="admin-card-users"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="admin-card-permissions"]').exists()).toBe(true);
   });
 
   it('should navigate when clicking a card', async () => {

@@ -24,15 +24,20 @@ vi.mock('@presentation/composables/useRBAC.js', () => ({
   }),
 }));
 
-vi.mock('@presentation/components/layout/index.js', () => ({
-  DashboardLayout: { template: '<div data-testid="dashboard-layout"><slot /></div>' },
+vi.mock('@presentation/stores/rbac.store.js', () => ({
+  useRbacStore: () => ({
+    fetchUserOrganizations: vi.fn().mockResolvedValue(undefined),
+  }),
 }));
 
-vi.mock('@presentation/components/dashboard/OrganizationCard.vue', () => ({
-  default: {
-    template: '<div :data-testid="`org-card-${membership.organizationId}`">{{ membership.organizationName }}</div>',
-    props: ['membership'],
-  },
+vi.mock('@presentation/stores/auth.store.js', () => ({
+  useAuthStore: () => ({
+    user: { id: 'user-test-id' },
+  }),
+}));
+
+vi.mock('@presentation/components/layout/index.js', () => ({
+  DashboardLayout: { template: '<div data-testid="dashboard-layout"><slot /></div>' },
 }));
 
 const mockOrgs = [
@@ -41,7 +46,7 @@ const mockOrgs = [
     organizationName: 'Hospital Central',
     organizationType: 'hospital',
     role: 'doctor',
-    joinedAt: '2024-01-01',
+    joinedAt: '2024-01-01T00:00:00.000Z',
     isActive: true,
   },
   {
@@ -49,7 +54,7 @@ const mockOrgs = [
     organizationName: 'Clinic Norte',
     organizationType: 'clinic',
     role: 'nurse',
-    joinedAt: '2024-02-01',
+    joinedAt: '2024-02-01T00:00:00.000Z',
     isActive: true,
   },
 ];
@@ -59,8 +64,21 @@ const i18n = createI18n({
   locale: 'en',
   messages: {
     en: {
-      dashboard: { myOrganizations: { title: 'My Organizations', viewAll: 'View all' } },
-      common: { loading: 'Loading...', noResults: 'No results' },
+      dashboard: {
+        myOrganizations: {
+          title: 'My Organizations',
+          viewAll: 'View all',
+          searchPlaceholder: 'Search organization...',
+          noOrganizations: 'You don\'t belong to any organization yet.',
+          yourRole: 'Your role',
+          memberSince: 'Member since',
+        },
+      },
+      common: { loading: 'Loading...', noResults: 'No results', active: 'Active', inactive: 'Inactive' },
+      organizations: {
+        types: { hospital: 'Hospital', clinic: 'Clinic', health_center: 'Health Center', laboratory: 'Laboratory', pharmacy: 'Pharmacy', other: 'Other' },
+        roles: { org_admin: 'Administrator', doctor: 'Doctor', nurse: 'Nurse', specialist: 'Specialist', staff: 'Staff', guest: 'Guest' },
+      },
     },
   },
 });
@@ -99,8 +117,8 @@ describe('MyOrganizationsView', () => {
   it('should render organization cards', () => {
     mockUserOrganizations.value = mockOrgs;
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="org-card-org-1"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="org-card-org-2"]').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Hospital Central');
+    expect(wrapper.text()).toContain('Clinic Norte');
   });
 
   it('should display organization names', () => {
@@ -128,9 +146,34 @@ describe('MyOrganizationsView', () => {
     expect(wrapper.find('[data-testid="dashboard-layout"]').exists()).toBe(true);
   });
 
-  it('should show no results text when empty', () => {
+  it('should show no organizations text when user has no orgs', () => {
     mockUserOrganizations.value = [];
     const wrapper = mountView();
+    expect(wrapper.text()).toContain("You don't belong to any organization yet.");
+  });
+
+  it('should show no results text when search yields no results', async () => {
+    mockUserOrganizations.value = mockOrgs;
+    const wrapper = mountView();
+    const input = wrapper.find('input');
+    await input.setValue('zzznomatch');
     expect(wrapper.text()).toContain('No results');
+  });
+
+  it('should filter organizations by search query', async () => {
+    mockUserOrganizations.value = mockOrgs;
+    const wrapper = mountView();
+    const input = wrapper.find('input');
+    await input.setValue('Hospital');
+    expect(wrapper.text()).toContain('Hospital Central');
+    expect(wrapper.text()).not.toContain('Clinic Norte');
+  });
+
+  it('should show empty state when search yields no results', async () => {
+    mockUserOrganizations.value = mockOrgs;
+    const wrapper = mountView();
+    const input = wrapper.find('input');
+    await input.setValue('zzznomatch');
+    expect(wrapper.find('[data-testid="orgs-empty"]').exists()).toBe(true);
   });
 });
