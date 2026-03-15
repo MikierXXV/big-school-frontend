@@ -11,13 +11,16 @@ import AdminUserListView from '@presentation/views/admin/AdminUserListView.vue';
 
 const { mockRouterPush, mockAdminStore } = vi.hoisted(() => {
   const mockFetchAdmins = vi.fn();
+  const mockFetchUsers = vi.fn();
   const mockDemoteUser = vi.fn();
 
   const mockAdminStore = {
     admins: [] as any[],
+    usersList: null as any,
     isLoading: false,
     error: null as string | null,
     fetchAdmins: mockFetchAdmins,
+    fetchUsers: mockFetchUsers,
     demoteUser: mockDemoteUser,
   };
 
@@ -48,27 +51,33 @@ vi.mock('@presentation/components/ui/BaseBadge.vue', () => ({
   default: { template: '<span><slot /></span>', props: ['variant', 'size'] },
 }));
 
+vi.mock('@presentation/components/ui/BaseSelect.vue', () => ({
+  default: { template: '<select><slot /></select>', props: ['modelValue', 'options', 'label'] },
+}));
+
+vi.mock('@presentation/components/ui/BasePagination.vue', () => ({
+  default: { template: '<div data-testid="base-pagination"></div>', props: ['page', 'totalPages', 'total', 'limit'] },
+}));
+
 vi.mock('@presentation/stores/admin.store.js', () => ({
   useAdminStore: () => mockAdminStore,
 }));
 
+const mockUsersList = {
+  users: [
+    { id: 'admin-1', email: 'admin@test.com', firstName: 'Admin', lastName: 'One', systemRole: 'admin', status: 'ACTIVE', emailVerified: true, createdAt: '', fullName: 'Admin One' },
+    { id: 'super-1', email: 'super@test.com', firstName: 'Super', lastName: 'Admin', systemRole: 'super_admin', status: 'ACTIVE', emailVerified: true, createdAt: '', fullName: 'Super Admin' },
+  ],
+  total: 2,
+  page: 1,
+  limit: 20,
+  totalPages: 1,
+  hasNext: false,
+  hasPrevious: false,
+};
+
 const mockAdmins = [
-  {
-    userId: 'admin-1',
-    email: 'admin@test.com',
-    firstName: 'Admin',
-    lastName: 'One',
-    systemRole: 'admin',
-    permissions: ['manage_users', 'manage_organizations'],
-  },
-  {
-    userId: 'super-1',
-    email: 'super@test.com',
-    firstName: 'Super',
-    lastName: 'Admin',
-    systemRole: 'super_admin',
-    permissions: [],
-  },
+  { userId: 'admin-1', email: 'admin@test.com', firstName: 'Admin', lastName: 'One', systemRole: 'admin', permissions: ['manage_users', 'manage_organizations'] },
 ];
 
 const i18n = createI18n({
@@ -77,10 +86,20 @@ const i18n = createI18n({
   messages: {
     en: {
       admin: {
-        users: { title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User', confirmDemote: 'Are you sure?' },
+        users: { title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User', confirmDemote: 'Are you sure?', search: 'Search users...' },
         permissions: { title: 'Permissions' },
       },
-      common: { name: 'Name', role: 'Role', actions: 'Actions', loading: 'Loading...', noResults: 'No results' },
+      common: {
+        name: 'Name',
+        role: 'Role',
+        actions: 'Actions',
+        loading: 'Loading...',
+        noResults: 'No results',
+        all: 'All',
+        status: 'Status',
+        active: 'Active',
+        inactive: 'Inactive',
+      },
       roles: { super_admin: 'Super Admin', admin: 'Administrator', user: 'User' },
       permissions: { manage_users: 'Manage Users', manage_organizations: 'Manage Organizations', assign_members: 'Assign Members', view_all_data: 'View All Data' },
     },
@@ -97,8 +116,10 @@ describe('AdminUserListView', () => {
   beforeEach(() => {
     mockRouterPush.mockClear();
     mockAdminStore.fetchAdmins.mockClear();
+    mockAdminStore.fetchUsers.mockClear();
     mockAdminStore.isLoading = false;
     mockAdminStore.error = null;
+    mockAdminStore.usersList = { ...mockUsersList, users: [...mockUsersList.users] };
     mockAdminStore.admins = [...mockAdmins];
   });
 
@@ -119,8 +140,8 @@ describe('AdminUserListView', () => {
 
   it('should render admin rows', () => {
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="admin-row-admin-1"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="admin-row-super-1"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="user-row-admin-1"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="user-row-super-1"]').exists()).toBe(true);
   });
 
   it('should display admin names and emails', () => {
@@ -148,35 +169,37 @@ describe('AdminUserListView', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/admin/users/admin-1/permissions');
   });
 
-  it('should call fetchAdmins on mount', async () => {
+  it('should call fetchAdmins and fetchUsers on mount', async () => {
     mountView();
     await new Promise((r) => setTimeout(r, 0));
     expect(mockAdminStore.fetchAdmins).toHaveBeenCalled();
+    expect(mockAdminStore.fetchUsers).toHaveBeenCalled();
   });
 
   it('should show loading state', () => {
     mockAdminStore.isLoading = true;
-    mockAdminStore.admins = [];
+    mockAdminStore.usersList = null;
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="admins-loading"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="users-loading"]').exists()).toBe(true);
   });
 
   it('should show error state', () => {
     mockAdminStore.error = 'Forbidden';
-    mockAdminStore.admins = [];
+    mockAdminStore.usersList = null;
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="admins-error"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="users-error"]').exists()).toBe(true);
   });
 
   it('should show empty state', () => {
-    mockAdminStore.admins = [];
+    mockAdminStore.usersList = { users: [], total: 0, page: 1, limit: 20, totalPages: 1, hasNext: false, hasPrevious: false };
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="admins-empty"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="users-empty"]').exists()).toBe(true);
   });
 
   it('should display permissions badges', () => {
     const wrapper = mountView();
-    expect(wrapper.text()).toContain('Manage Users');
-    expect(wrapper.text()).toContain('Manage Organizations');
+    // View shows abbreviated labels: 'Usr' for manage_users, 'Org' for manage_organizations
+    expect(wrapper.text()).toContain('Usr');
+    expect(wrapper.text()).toContain('Org');
   });
 });

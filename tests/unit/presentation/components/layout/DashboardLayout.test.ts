@@ -4,10 +4,18 @@
  * ============================================
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import DashboardLayout from '@presentation/components/layout/DashboardLayout.vue';
+
+vi.mock('@presentation/components/layout/AppHeader.vue', () => ({
+  default: { template: '<header data-testid="app-header"></header>', name: 'AppHeader' },
+}));
+
+vi.mock('@presentation/components/layout/AppFooter.vue', () => ({
+  default: { template: '<footer data-testid="app-footer"></footer>', name: 'AppFooter' },
+}));
 
 describe('DashboardLayout', () => {
   beforeEach(() => {

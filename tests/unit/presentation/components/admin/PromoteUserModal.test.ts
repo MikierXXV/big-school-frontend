@@ -12,6 +12,7 @@ import PromoteUserModal from '@presentation/components/admin/PromoteUserModal.vu
 const { mockAdminStore } = vi.hoisted(() => {
   const mockAdminStore = {
     usersList: null as any,
+    isLoading: false,
     fetchUsers: vi.fn(),
     promoteUser: vi.fn(),
   };
@@ -30,12 +31,16 @@ vi.mock('@presentation/components/ui/BaseBadge.vue', () => ({
   default: { template: '<span><slot /></span>', props: ['variant', 'size'] },
 }));
 
+vi.mock('@presentation/components/ui/ConfirmDialog.vue', () => ({
+  default: { template: '<div></div>', props: ['open', 'title', 'message'] },
+}));
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
   messages: {
     en: {
-      admin: { users: { promote: 'Promote to Admin', search: 'Search users...' } },
+      admin: { users: { promote: 'Promote to Admin', search: 'Search users...', confirmPromote: 'Are you sure?' } },
       common: { search: 'Search', cancel: 'Cancel', noResults: 'No results', loading: 'Loading...', name: 'Name', role: 'Role', actions: 'Actions' },
       roles: { super_admin: 'Super Admin', admin: 'Administrator', user: 'User' },
     },
@@ -53,6 +58,7 @@ describe('PromoteUserModal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockAdminStore.usersList = null;
+    mockAdminStore.isLoading = false;
   });
 
   it('should render the modal content', () => {
@@ -65,43 +71,39 @@ describe('PromoteUserModal', () => {
     expect(wrapper.find('[data-testid="promote-search-input"]').exists()).toBe(true);
   });
 
-  it('should render search button', () => {
-    const wrapper = mountModal();
-    expect(wrapper.find('[data-testid="promote-search-btn"]').exists()).toBe(true);
-  });
-
-  it('should call fetchUsers on search', async () => {
-    const wrapper = mountModal();
-    await wrapper.find('[data-testid="promote-search-input"]').setValue('john@test.com');
-    await wrapper.find('form').trigger('submit');
-    expect(mockAdminStore.fetchUsers).toHaveBeenCalledWith({ search: 'john@test.com', page: 1, limit: 10 });
+  it('should call fetchUsers with limit 500 when opened', async () => {
+    const wrapper = mountModal({ open: false });
+    await wrapper.setProps({ open: true });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(mockAdminStore.fetchUsers).toHaveBeenCalledWith({ limit: 500 });
   });
 
   it('should display user results', () => {
     mockAdminStore.usersList = {
       users: [
-        { id: 'u-1', email: 'john@test.com', fullName: 'John Doe', systemRole: 'user', status: 'active', emailVerified: true, createdAt: '' },
+        { id: 'u-1', email: 'john@test.com', firstName: 'John', lastName: 'Doe', systemRole: 'user', status: 'ACTIVE', emailVerified: true, createdAt: '' },
       ],
       total: 1,
       page: 1,
-      limit: 10,
+      limit: 500,
       totalPages: 1,
       hasNext: false,
       hasPrevious: false,
     };
     const wrapper = mountModal();
     expect(wrapper.find('[data-testid="user-row-u-1"]').exists()).toBe(true);
-    expect(wrapper.text()).toContain('John Doe');
+    expect(wrapper.text()).toContain('John');
+    expect(wrapper.text()).toContain('Doe');
   });
 
   it('should show promote button for regular users', () => {
     mockAdminStore.usersList = {
       users: [
-        { id: 'u-1', email: 'john@test.com', fullName: 'John Doe', systemRole: 'user', status: 'active', emailVerified: true, createdAt: '' },
+        { id: 'u-1', email: 'john@test.com', firstName: 'John', lastName: 'Doe', systemRole: 'user', status: 'ACTIVE', emailVerified: true, createdAt: '' },
       ],
       total: 1,
       page: 1,
-      limit: 10,
+      limit: 500,
       totalPages: 1,
       hasNext: false,
       hasPrevious: false,
@@ -111,7 +113,7 @@ describe('PromoteUserModal', () => {
   });
 
   it('should show no results when empty', () => {
-    mockAdminStore.usersList = { users: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNext: false, hasPrevious: false };
+    mockAdminStore.usersList = { users: [], total: 0, page: 1, limit: 500, totalPages: 0, hasNext: false, hasPrevious: false };
     const wrapper = mountModal();
     expect(wrapper.find('[data-testid="promote-no-results"]').exists()).toBe(true);
   });

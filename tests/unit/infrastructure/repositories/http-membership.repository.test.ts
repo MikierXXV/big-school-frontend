@@ -13,6 +13,7 @@ function createMockHttpClient(): IHttpClient {
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
+    patch: vi.fn(),
     delete: vi.fn(),
   };
 }
@@ -54,14 +55,14 @@ describe('HttpMembershipRepository', () => {
   });
 
   describe('changeRole', () => {
-    it('should PUT to /api/organizations/:orgId/members/:userId/role', async () => {
+    it('should PATCH to /api/organizations/:orgId/members/:userId/role', async () => {
       const data = { role: 'nurse' };
       const memberData = { id: 'mem-1', userId: 'user-1', email: 'john@test.com', firstName: 'John', lastName: 'Doe', organizationId: 'org-1', role: 'nurse', joinedAt: '', isActive: true };
-      vi.mocked(httpClient.put).mockResolvedValue(mockResponse(memberData));
+      vi.mocked(httpClient.patch).mockResolvedValue(mockResponse(memberData));
 
       const result = await repo.changeRole('org-1', 'user-1', data);
 
-      expect(httpClient.put).toHaveBeenCalledWith('/api/organizations/org-1/members/user-1/role', data);
+      expect(httpClient.patch).toHaveBeenCalledWith('/api/organizations/org-1/members/user-1/role', { newRole: 'nurse' });
       expect(result).toEqual(memberData);
     });
   });
