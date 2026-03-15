@@ -36,6 +36,29 @@ function getGrantInfo(permission: string): { grantedBy: string; grantedAt: strin
   return grant ? { grantedBy: grant.grantedBy, grantedAt: grant.grantedAt } : null;
 }
 
+function resolveUserLabel(id: string): string {
+  // Check paginated users list (UserListItemDTO uses .id)
+  const user = adminStore.usersList?.users.find((u) => u.id === id);
+  if (user) {
+    const name = `${user.firstName} ${user.lastName}`.trim();
+    return name || user.email;
+  }
+  // Fall back to admins list (AdminDTO uses .userId)
+  const admin = adminStore.admins.find((a) => a.userId === id);
+  if (admin) {
+    const name = `${admin.firstName} ${admin.lastName}`.trim();
+    return name || admin.email;
+  }
+  return id;
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 async function handleToggle(permission: string, enabled: boolean): Promise<void> {
   if (enabled) {
     await adminStore.grantPermissions(userId, [permission]);
@@ -47,6 +70,8 @@ async function handleToggle(permission: string, enabled: boolean): Promise<void>
 
 onMounted(() => {
   adminStore.fetchPermissions(userId);
+  adminStore.fetchUsers({ limit: 500 });
+  adminStore.fetchAdmins();
 });
 </script>
 
@@ -66,7 +91,7 @@ onMounted(() => {
         {{ t('admin.permissions.title') }}
       </h1>
       <p v-if="adminStore.adminPermissions" class="text-gray-600 dark:text-gray-400 mb-6">
-        {{ t('common.user') || 'User' }}: {{ adminStore.adminPermissions.userId }}
+        {{ t('common.user') || 'User' }}: {{ resolveUserLabel(adminStore.adminPermissions.userId) }}
       </p>
 
       <!-- Loading -->
@@ -93,8 +118,8 @@ onMounted(() => {
             />
           </div>
           <div v-if="getGrantInfo(perm)" class="text-xs text-gray-500 dark:text-gray-400">
-            {{ t('admin.permissions.grant') }}: {{ getGrantInfo(perm)!.grantedBy }}
-            · {{ getGrantInfo(perm)!.grantedAt }}
+            {{ t('admin.permissions.grant') }}: {{ resolveUserLabel(getGrantInfo(perm)!.grantedBy) }}
+            · {{ formatDate(getGrantInfo(perm)!.grantedAt) }}
           </div>
         </div>
       </div>

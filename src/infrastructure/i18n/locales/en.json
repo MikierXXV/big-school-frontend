@@ -17,7 +17,19 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
-    "showing": "Showing {from}-{to} of {total}"
+    "showing": "Showing {from}-{to} of {total}",
+    "back": "Back",
+    "user": "User",
+    "name": "Name",
+    "role": "Role",
+    "filter": "Filter",
+    "all": "All",
+    "select": "Select",
+    "type": "Type",
+    "status": "Status",
+    "description": "Description",
+    "address": "Address",
+    "phone": "Phone"
   },
   "auth": {
     "login": "Login",
@@ -57,6 +69,7 @@
     "view_all_data": "View all data"
   },
   "organizations": {
+    "searchPlaceholder": "Search by name or email",
     "types": {
       "hospital": "Hospital",
       "clinic": "Clinic",
@@ -86,6 +99,7 @@
       "demote": "Demote to User",
       "search": "Search users...",
       "confirmDemote": "Are you sure you want to demote this administrator?",
+      "confirmPromote": "Are you sure you want to promote this user to administrator?",
       "promoteSuccess": "User promoted successfully",
       "demoteSuccess": "Administrator demoted successfully"
     },
@@ -106,6 +120,7 @@
       "changeRole": "Change Role",
       "remove": "Remove Member",
       "confirmRemove": "Are you sure you want to remove this member?",
+      "confirmChangeRole": "Are you sure you want to change {name}'s role to {role}?",
       "assignSuccess": "Member assigned successfully",
       "removeSuccess": "Member removed successfully",
       "changeRoleSuccess": "Role updated successfully"
@@ -118,8 +133,16 @@
       "revokeSuccess": "Permission revoked successfully"
     }
   },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "nav": {
-    "adminPanel": "Admin"
+    "adminPanel": "Admin",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",

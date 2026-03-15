@@ -93,6 +93,7 @@ test.describe('Protected Routes & Auth Guards', () => {
         localStorage.setItem('accessToken', 'mock-access-token');
         localStorage.setItem('refreshToken', 'mock-refresh-token');
         localStorage.setItem('auth_user', authUser);
+        localStorage.setItem('app-locale', 'en');
       }, MOCK_AUTH_USER);
 
       // Navigate to dashboard
@@ -100,7 +101,7 @@ test.describe('Protected Routes & Auth Guards', () => {
 
       // Should stay on dashboard
       await expect(page).toHaveURL('/dashboard');
-      await expect(page.locator('text=/Welcome|Dashboard/i')).toBeVisible();
+      await expect(page.locator('text=/Welcome|Dashboard/i').first()).toBeVisible();
     });
 
     test('should redirect to dashboard when authenticated user visits login', async ({ page }) => {

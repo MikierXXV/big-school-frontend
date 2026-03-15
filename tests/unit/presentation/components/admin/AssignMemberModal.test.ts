@@ -9,6 +9,25 @@ import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import AssignMemberModal from '@presentation/components/admin/AssignMemberModal.vue';
 
+const { mockListUsersExecute } = vi.hoisted(() => {
+  const mockListUsersExecute = vi.fn().mockResolvedValue({
+    users: [],
+    total: 0,
+    page: 1,
+    limit: 8,
+    totalPages: 0,
+    hasNext: false,
+    hasPrevious: false,
+  });
+  return { mockListUsersExecute };
+});
+
+vi.mock('@infrastructure/di/container.js', () => ({
+  createContainer: () => ({
+    useCases: { listUsersUseCase: { execute: mockListUsersExecute } },
+  }),
+}));
+
 vi.mock('@presentation/components/ui/BaseModal.vue', () => ({
   default: {
     template: '<div data-testid="base-modal"><slot /></div>',
@@ -43,7 +62,7 @@ const i18n = createI18n({
           guest: 'Guest',
         },
       },
-      common: { cancel: 'Cancel', select: 'Select...' },
+      common: { cancel: 'Cancel', select: 'Select...', error: 'User and role are required', noResults: 'No results' },
     },
   },
 });
@@ -75,13 +94,24 @@ describe('AssignMemberModal', () => {
     const wrapper = mountModal();
     await wrapper.find('[data-testid="assign-member-form"]').trigger('submit');
     expect(wrapper.find('[data-testid="assign-error"]').exists()).toBe(true);
-    expect(wrapper.text()).toContain('User ID and role are required');
+    expect(wrapper.text()).toContain('User and role are required');
   });
 
   it('should emit submit with form data', async () => {
     const wrapper = mountModal();
 
-    await wrapper.find('[data-testid="member-userid-input"]').setValue('user-123');
+    const vm = wrapper.vm as any;
+    vm.selectedUser = {
+      id: 'user-123',
+      firstName: 'Test',
+      lastName: 'User',
+      email: 't@t.com',
+      fullName: 'Test User',
+      systemRole: 'user',
+      status: 'ACTIVE',
+      emailVerified: true,
+      createdAt: '',
+    };
     await wrapper.find('select').setValue('doctor');
     await wrapper.find('[data-testid="assign-member-form"]').trigger('submit');
 

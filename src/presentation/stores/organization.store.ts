@@ -139,7 +139,7 @@ export const useOrganizationStore = defineStore('organization', () => {
       error.value = null;
       const updated = await useCases.changeMemberRoleUseCase.execute(organizationId, userId, data);
       const index = members.value.findIndex((m) => m.userId === userId);
-      if (index !== -1) members.value[index] = updated;
+      if (index !== -1) members.value[index] = { ...members.value[index], role: updated.role };
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to change member role';
       throw err;

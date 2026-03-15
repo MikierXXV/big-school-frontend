@@ -13,14 +13,20 @@ const { mockRouterPush, mockAdminStore } = vi.hoisted(() => {
   const mockFetchPermissions = vi.fn();
   const mockGrantPermissions = vi.fn();
   const mockRevokePermission = vi.fn();
+  const mockFetchUsers = vi.fn();
+  const mockFetchAdmins = vi.fn();
 
   const mockAdminStore = {
     adminPermissions: null as any,
     isLoading: false,
     error: null as string | null,
+    admins: [] as any[],
+    usersList: null as any,
     fetchPermissions: mockFetchPermissions,
     grantPermissions: mockGrantPermissions,
     revokePermission: mockRevokePermission,
+    fetchUsers: mockFetchUsers,
+    fetchAdmins: mockFetchAdmins,
   };
 
   return {
@@ -89,8 +95,12 @@ describe('AdminPermissionsView', () => {
     mockAdminStore.fetchPermissions.mockClear();
     mockAdminStore.grantPermissions.mockClear();
     mockAdminStore.revokePermission.mockClear();
+    mockAdminStore.fetchUsers.mockClear();
+    mockAdminStore.fetchAdmins.mockClear();
     mockAdminStore.adminPermissions = mockPermissions;
     mockAdminStore.isLoading = false;
+    mockAdminStore.admins = [];
+    mockAdminStore.usersList = null;
   });
 
   it('should render the view', () => {

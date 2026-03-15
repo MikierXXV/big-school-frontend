@@ -21,6 +21,7 @@ import { useRBAC } from '@presentation/composables/useRBAC.js';
 import { OrganizationRole } from '@domain/value-objects/organization-role.value-object.js';
 import type { AssignMemberDTO, ChangeMemberRoleDTO } from '@application/dtos/organization/membership.dto.js';
 import type { CreateOrganizationDTO } from '@application/dtos/organization/organization.dto.js';
+import { PencilSquareIcon, TrashIcon, UserPlusIcon } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -34,6 +35,7 @@ const showEditModal = ref(false);
 const showDeleteConfirm = ref(false);
 const showAssignModal = ref(false);
 const removingMemberId = ref<string | null>(null);
+const pendingRoleChange = ref<{ userId: string; newRole: string; memberName: string; roleLabel: string } | null>(null);
 
 const roleOptions = Object.values(OrganizationRole).map((val) => ({
   value: val,
@@ -56,7 +58,22 @@ async function handleAssign(data: AssignMemberDTO): Promise<void> {
   showAssignModal.value = false;
 }
 
-async function handleRoleChange(userId: string, newRole: string): Promise<void> {
+function handleRoleChange(userId: string, newRole: string): void {
+  const member = orgStore.members.find((m) => m.userId === userId);
+  if (!member) return;
+  const roleLabel = t(`organizations.roles.${newRole}`);
+  pendingRoleChange.value = {
+    userId,
+    newRole,
+    memberName: `${member.firstName} ${member.lastName}`,
+    roleLabel,
+  };
+}
+
+async function confirmRoleChange(): Promise<void> {
+  if (!pendingRoleChange.value) return;
+  const { userId, newRole } = pendingRoleChange.value;
+  pendingRoleChange.value = null;
   const data: ChangeMemberRoleDTO = { role: newRole };
   await orgStore.changeMemberRole(orgId, userId, data);
 }
@@ -100,18 +117,20 @@ onMounted(async () => {
             <div class="flex gap-2">
               <button
                 data-testid="edit-org-btn"
-                class="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                :title="t('common.edit')"
+                class="p-2 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
                 @click="showEditModal = true"
               >
-                {{ t('common.edit') }}
+                <PencilSquareIcon class="w-4 h-4" />
               </button>
               <button
                 v-if="isSuperAdmin"
                 data-testid="delete-org-btn"
-                class="px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                :title="t('common.delete')"
+                class="p-2 text-white bg-red-600 rounded-md hover:bg-red-700"
                 @click="showDeleteConfirm = true"
               >
-                {{ t('common.delete') }}
+                <TrashIcon class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -156,9 +175,10 @@ onMounted(async () => {
             </h2>
             <button
               data-testid="assign-member-btn"
-              class="px-3 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
               @click="showAssignModal = true"
             >
+              <UserPlusIcon class="w-4 h-4" />
               {{ t('admin.members.assign') }}
             </button>
           </div>
@@ -203,10 +223,11 @@ onMounted(async () => {
                   <td class="px-4 py-3 text-sm">
                     <button
                       :data-testid="`remove-member-${member.userId}`"
-                      class="text-red-600 hover:text-red-800 text-sm font-medium"
+                      :title="t('admin.members.remove')"
+                      class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
                       @click="removingMemberId = member.userId"
                     >
-                      {{ t('admin.members.remove') }}
+                      <TrashIcon class="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -253,6 +274,16 @@ onMounted(async () => {
         confirm-variant="danger"
         @confirm="handleRemoveMember"
         @cancel="removingMemberId = null"
+      />
+
+      <!-- Change Role Confirm -->
+      <ConfirmDialog
+        :open="pendingRoleChange !== null"
+        :title="t('admin.members.changeRole')"
+        :message="pendingRoleChange ? t('admin.members.confirmChangeRole', { name: pendingRoleChange.memberName, role: pendingRoleChange.roleLabel }) : ''"
+        confirm-variant="primary"
+        @confirm="confirmRoleChange"
+        @cancel="pendingRoleChange = null"
       />
     </div>
   </AdminLayout>

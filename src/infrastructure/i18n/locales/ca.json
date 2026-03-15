@@ -1,0 +1,249 @@
+{
+  "common": {
+    "loading": "Carregant...",
+    "error": "S'ha produït un error",
+    "success": "Operació exitosa",
+    "cancel": "Cancel·lar",
+    "accept": "Acceptar",
+    "save": "Desar",
+    "previous": "Anterior",
+    "next": "Següent",
+    "actions": "Accions",
+    "confirm": "Confirmar",
+    "search": "Cercar",
+    "noResults": "No s'han trobat resultats",
+    "active": "Actiu",
+    "inactive": "Inactiu",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "showing": "Mostrant {from}-{to} de {total}",
+    "back": "Tornar",
+    "user": "Usuari",
+    "name": "Nom",
+    "role": "Rol",
+    "filter": "Filtrar",
+    "all": "Tots",
+    "select": "Seleccionar",
+    "type": "Tipus",
+    "status": "Estat",
+    "description": "Descripció",
+    "address": "Adreça",
+    "phone": "Telèfon"
+  },
+  "auth": {
+    "login": "Iniciar sessió",
+    "register": "Registrar-se",
+    "logout": "Tancar sessió",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "firstName": "Nom",
+    "lastName": "Cognom",
+    "forgotPassword": "Has oblidat la contrasenya?",
+    "alreadyHaveAccount": "Ja tens compte?",
+    "dontHaveAccount": "No tens compte?",
+    "loginSuccess": "Inici de sessió exitós",
+    "registerSuccess": "Registre exitós"
+  },
+  "errors": {
+    "invalidCredentials": "Credencials invàlides",
+    "emailAlreadyExists": "El correu electrònic ja existeix",
+    "tokenExpired": "La sessió ha expirat",
+    "unauthorized": "No autoritzat",
+    "networkError": "Error de connexió",
+    "forbidden": "Accés denegat",
+    "insufficientPermissions": "No tens permisos suficients per realitzar aquesta acció",
+    "organizationNotFound": "Organització no trobada",
+    "memberAlreadyExists": "El membre ja pertany a aquesta organització",
+    "memberNotFound": "Membre no trobat"
+  },
+  "roles": {
+    "super_admin": "Super Administrador",
+    "admin": "Administrador",
+    "user": "Usuari"
+  },
+  "permissions": {
+    "manage_users": "Gestionar usuaris",
+    "manage_organizations": "Gestionar organitzacions",
+    "assign_members": "Assignar membres",
+    "view_all_data": "Veure totes les dades"
+  },
+  "organizations": {
+    "searchPlaceholder": "Cercar per nom o correu",
+    "types": {
+      "hospital": "Hospital",
+      "clinic": "Clínica",
+      "health_center": "Centre de Salut",
+      "laboratory": "Laboratori",
+      "pharmacy": "Farmàcia",
+      "other": "Altre"
+    },
+    "roles": {
+      "org_admin": "Administrador",
+      "doctor": "Doctor",
+      "nurse": "Infermer/a",
+      "specialist": "Especialista",
+      "staff": "Personal",
+      "guest": "Convidat"
+    }
+  },
+  "theme": {
+    "light": "Clar",
+    "dark": "Fosc",
+    "system": "Sistema"
+  },
+  "admin": {
+    "title": "Tauler d'Administració",
+    "dashboard": {
+      "title": "Tauler d'Administració",
+      "description": "Gestioni usuaris, organitzacions i permisos del sistema"
+    },
+    "users": {
+      "title": "Gestió d'Usuaris",
+      "promote": "Promoure a Admin",
+      "demote": "Degradar a Usuari",
+      "search": "Cercar usuaris...",
+      "confirmDemote": "Esteu segur que voleu degradar aquest administrador?",
+      "confirmPromote": "Esteu segur que voleu promocionar aquest usuari com a administrador?",
+      "promoteSuccess": "Usuari promogut exitosament",
+      "demoteSuccess": "Administrador degradat exitosament"
+    },
+    "organizations": {
+      "title": "Gestió d'Organitzacions",
+      "create": "Crear Organització",
+      "edit": "Editar Organització",
+      "delete": "Eliminar Organització",
+      "deactivate": "Desactivar Organització",
+      "confirmDelete": "Esteu segur que voleu eliminar aquesta organització?",
+      "createSuccess": "Organització creada exitosament",
+      "updateSuccess": "Organització actualitzada exitosament",
+      "deleteSuccess": "Organització eliminada exitosament"
+    },
+    "members": {
+      "title": "Membres",
+      "assign": "Assignar Membre",
+      "changeRole": "Canviar Rol",
+      "remove": "Eliminar Membre",
+      "confirmRemove": "Esteu segur que voleu eliminar aquest membre?",
+      "confirmChangeRole": "Esteu segur que voleu canviar el rol de {name} a {role}?",
+      "assignSuccess": "Membre assignat exitosament",
+      "removeSuccess": "Membre eliminat exitosament",
+      "changeRoleSuccess": "Rol actualitzat exitosament"
+    },
+    "permissions": {
+      "title": "Gestió de Permisos",
+      "grant": "Atorgar Permís",
+      "revoke": "Revocar Permís",
+      "grantSuccess": "Permisos atorgats exitosament",
+      "revokeSuccess": "Permís revocat exitosament"
+    }
+  },
+  "nav": {
+    "adminPanel": "Admin",
+    "dashboard": "Tauler",
+    "profile": "Perfil",
+    "settings": "Configuració"
+  },
+  "dashboard": {
+    "title": "Tauler Principal",
+    "welcome": {
+      "greeting": "Benvingut de nou",
+      "subtitle": "Seleccioneu un mòdul per continuar"
+    },
+    "adminPanel": {
+      "title": "Tauler d'Administració",
+      "description": "Gestioni usuaris, organitzacions i permisos"
+    },
+    "myOrganizations": {
+      "title": "Les meves Organitzacions",
+      "viewAll": "Veure totes"
+    },
+    "modules": {
+      "surgicalBlock": {
+        "title": "Bloc Quirúrgic",
+        "description": "Gestió de quiròfans i intervencions"
+      },
+      "emergency": {
+        "title": "Urgències",
+        "description": "Àrea d'urgències i emergències"
+      },
+      "dataAnalytics": {
+        "title": "Dades i Anàlisi",
+        "description": "Estadístiques i indicadors"
+      },
+      "wristbandPrinting": {
+        "title": "Impressió de Polseres",
+        "description": "Polseres d'identificació"
+      },
+      "labelPrinting": {
+        "title": "Impressió d'Etiquetes",
+        "description": "Etiquetes per a mostres i documents"
+      }
+    }
+  },
+  "forbidden": {
+    "title": "Accés Denegat",
+    "message": "No tens permisos per accedir a aquesta pàgina",
+    "goBack": "Tornar al Tauler"
+  },
+  "home": {
+    "hero": {
+      "title": "Health Care Suite",
+      "subtitle": "Plataforma integral per a la gestió hospitalària i assistencial",
+      "getStarted": "Començar",
+      "signIn": "Iniciar Sessió",
+      "goToDashboard": "Anar al Tauler"
+    },
+    "features": {
+      "title": "Mòduls del Sistema",
+      "surgicalBlock": {
+        "title": "Bloc Quirúrgic",
+        "description": "Gestió i programació d'intervencions quirúrgiques i quiròfans"
+      },
+      "emergency": {
+        "title": "Urgències",
+        "description": "Control i seguiment de pacients a l'àrea d'urgències"
+      },
+      "dataAnalytics": {
+        "title": "Dades i Anàlisi",
+        "description": "Anàlisi de dades clíniques, estadístiques i indicadors hospitalaris"
+      },
+      "wristbandPrinting": {
+        "title": "Impressió de Polseres",
+        "description": "Impressió de polseres d'identificació de pacients"
+      },
+      "labelPrinting": {
+        "title": "Impressió d'Etiquetes",
+        "description": "Impressió d'etiquetes per a mostres, medicació i documentació"
+      }
+    },
+    "cta": {
+      "title": "Llest per començar?",
+      "subtitle": "Accediu al sistema de gestió hospitalària",
+      "createAccount": "Crear Compte",
+      "continueToDashboard": "Continuar al Tauler"
+    }
+  },
+  "modules": {
+    "surgicalBlock": {
+      "title": "Bloc Quirúrgic",
+      "placeholder": "Mòdul de Bloc Quirúrgic en construcció"
+    },
+    "emergency": {
+      "title": "Urgències",
+      "placeholder": "Mòdul d'Urgències en construcció"
+    },
+    "dataAnalytics": {
+      "title": "Dades i Anàlisi",
+      "placeholder": "Mòdul de Dades i Anàlisi en construcció"
+    },
+    "wristbandPrinting": {
+      "title": "Impressió de Polseres",
+      "placeholder": "Mòdul d'Impressió de Polseres en construcció"
+    },
+    "labelPrinting": {
+      "title": "Impressió d'Etiquetes",
+      "placeholder": "Mòdul d'Impressió d'Etiquetes en construcció"
+    }
+  }
+}

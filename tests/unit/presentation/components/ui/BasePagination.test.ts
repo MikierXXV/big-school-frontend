@@ -45,7 +45,7 @@ describe('BasePagination', () => {
   it('should disable next button on last page', () => {
     const wrapper = mountPagination({ page: 5, totalPages: 5, total: 50, limit: 10 });
     const buttons = wrapper.findAll('button');
-    expect(buttons[1].attributes('disabled')).toBeDefined();
+    expect(buttons[buttons.length - 1].attributes('disabled')).toBeDefined();
   });
 
   it('should emit page-change with previous page', async () => {
@@ -58,7 +58,7 @@ describe('BasePagination', () => {
   it('should emit page-change with next page', async () => {
     const wrapper = mountPagination({ page: 3, totalPages: 5, total: 50, limit: 10 });
     const buttons = wrapper.findAll('button');
-    await buttons[1].trigger('click');
+    await buttons[buttons.length - 1].trigger('click');
     expect(wrapper.emitted('page-change')?.[0]).toEqual([4]);
   });
 
