@@ -51,6 +51,6 @@ export class HttpMembershipRepository implements IMembershipRepository {
 
   async getUserOrganizations(userId: string): Promise<UserOrganizationDTO[]> {
     const response = await this.httpClient.get<any>(`/api/users/${userId}/organizations`);
-    return response.data.data;
+    return response.data.data.organizations ?? response.data.data;
   }
 }
