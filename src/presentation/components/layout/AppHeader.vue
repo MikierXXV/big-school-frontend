@@ -4,8 +4,13 @@
       <div class="flex justify-between items-center h-16">
         <!-- Logo -->
         <div class="flex items-center">
-          <a href="/" class="text-2xl font-bold text-primary-600 dark:text-primary-400">
-            Health Care Suite
+          <a href="/" class="flex items-center gap-2">
+            <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.12"/>
+              <rect x="13" y="6" width="6" height="20" rx="2" fill="currentColor"/>
+              <rect x="6" y="13" width="20" height="6" rx="2" fill="currentColor"/>
+            </svg>
+            <span class="text-xl font-bold text-primary-600 dark:text-primary-400 tracking-tight">Health Care Suite</span>
           </a>
         </div>
 
@@ -17,6 +22,13 @@
             class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
           >
             {{ t('nav.dashboard') }}
+          </a>
+          <a
+            v-if="isAuthenticated"
+            href="/my-organizations"
+            class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+          >
+            {{ t('nav.myOrganizations') }}
           </a>
           <a
             v-if="isAuthenticated && rbac.hasElevatedRole.value"
@@ -164,6 +176,13 @@
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
               {{ t('nav.adminPanel') }}
+            </a>
+            <a
+              v-if="isAuthenticated"
+              href="/my-organizations"
+              class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+            >
+              {{ t('nav.myOrganizations') }}
             </a>
             <a
               v-if="isAuthenticated"
