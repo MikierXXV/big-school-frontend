@@ -16,7 +16,7 @@
             href="/dashboard"
             class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
           >
-            Dashboard
+            {{ t('nav.dashboard') }}
           </a>
           <a
             v-if="isAuthenticated && rbac.hasElevatedRole.value"
@@ -24,12 +24,15 @@
             data-testid="admin-link"
             class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
           >
-            Admin
+            {{ t('nav.adminPanel') }}
           </a>
         </nav>
 
         <!-- Right Side Actions -->
         <div class="flex items-center gap-4">
+          <!-- Language Selector -->
+          <LanguageSelector />
+
           <!-- Theme Toggle -->
           <ThemeToggle />
 
@@ -65,7 +68,7 @@
                           'block px-4 py-2 text-sm text-gray-700 dark:text-gray-200',
                         ]"
                       >
-                        Profile
+                        {{ t('nav.profile') }}
                       </a>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
@@ -76,7 +79,7 @@
                           'block px-4 py-2 text-sm text-gray-700 dark:text-gray-200',
                         ]"
                       >
-                        Settings
+                        {{ t('nav.settings') }}
                       </a>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
@@ -87,7 +90,7 @@
                           'block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200',
                         ]"
                       >
-                        Logout
+                        {{ t('auth.logout') }}
                       </button>
                     </MenuItem>
                   </div>
@@ -102,7 +105,7 @@
             href="/login"
             class="hidden md:inline-block text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
           >
-            Login
+            {{ t('auth.login') }}
           </a>
 
           <!-- Mobile Menu Button -->
@@ -152,7 +155,7 @@
               href="/dashboard"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Dashboard
+              {{ t('nav.dashboard') }}
             </a>
             <a
               v-if="isAuthenticated && rbac.hasElevatedRole.value"
@@ -160,35 +163,35 @@
               data-testid="admin-link-mobile"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Admin
+              {{ t('nav.adminPanel') }}
             </a>
             <a
               v-if="isAuthenticated"
               href="/profile"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Profile
+              {{ t('nav.profile') }}
             </a>
             <a
               v-if="isAuthenticated"
               href="/settings"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Settings
+              {{ t('nav.settings') }}
             </a>
             <button
               v-if="isAuthenticated"
               @click="logoutAndRedirect"
               class="text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Logout
+              {{ t('auth.logout') }}
             </button>
             <a
               v-if="!isAuthenticated"
               href="/login"
               class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
-              Login
+              {{ t('auth.login') }}
             </a>
           </nav>
         </div>
@@ -199,10 +202,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import { useAuth } from '@presentation/composables/useAuth.js';
 import { useRBAC } from '@presentation/composables/useRBAC.js';
 import ThemeToggle from '@presentation/components/ui/ThemeToggle.vue';
+import LanguageSelector from '@presentation/components/ui/LanguageSelector.vue';
 
 interface Props {
   isAuthenticated?: boolean;
@@ -212,6 +217,7 @@ const props = withDefaults(defineProps<Props>(), {
   isAuthenticated: undefined,
 });
 
+const { t } = useI18n();
 const auth = useAuth();
 const rbac = useRBAC();
 const mobileMenuOpen = ref(false);
