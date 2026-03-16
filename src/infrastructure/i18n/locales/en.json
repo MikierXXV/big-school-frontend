@@ -104,9 +104,12 @@
       "promoteSuccess": "User promoted successfully",
       "demoteSuccess": "Administrator demoted successfully",
       "selected": "selected",
+      "deactivateSelected": "Deactivate selected",
+      "bulkDeactivateTitle": "Deactivate users",
+      "bulkDeactivateMessage": "You are about to deactivate {count} user(s). They will be marked as inactive.",
       "deleteSelected": "Delete selected",
       "bulkDeleteTitle": "Delete users",
-      "bulkDeleteMessage": "You are about to delete {count} user(s). This action cannot be undone."
+      "bulkDeleteMessage": "You are about to permanently delete {count} user(s). This action cannot be undone."
     },
     "organizations": {
       "title": "Organization Management",

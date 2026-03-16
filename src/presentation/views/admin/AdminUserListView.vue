@@ -35,7 +35,8 @@ const demotingUserId = ref<string | null>(null);
 
 // Bulk selection
 const selectedIds = ref<Set<string>>(new Set());
-const showBulkDeleteConfirm = ref(false);
+const showBulkDeactivateConfirm = ref(false);
+const showBulkHardDeleteConfirm = ref(false);
 
 const canDeleteUsers = computed(() => isSuperAdmin.value || hasPermission('manage_users'));
 
@@ -59,11 +60,19 @@ function toggleSelect(id: string): void {
   selectedIds.value = next;
 }
 
-async function handleBulkDelete(): Promise<void> {
+async function handleBulkDeactivate(): Promise<void> {
   const ids = Array.from(selectedIds.value);
   await adminStore.deleteUsers(ids);
   selectedIds.value = new Set();
-  showBulkDeleteConfirm.value = false;
+  showBulkDeactivateConfirm.value = false;
+  await loadUsers(searchText.value.trim() || undefined);
+}
+
+async function handleBulkHardDelete(): Promise<void> {
+  const ids = Array.from(selectedIds.value);
+  await adminStore.hardDeleteUsers(ids);
+  selectedIds.value = new Set();
+  showBulkHardDeleteConfirm.value = false;
   await loadUsers(searchText.value.trim() || undefined);
 }
 
@@ -214,21 +223,29 @@ onMounted(() => {
         <div
           v-if="canDeleteUsers && selectedIds.size > 0"
           data-testid="bulk-action-bar"
-          class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+          class="mb-4 flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg"
         >
-          <span class="text-sm text-red-700 dark:text-red-300 font-medium">
+          <span class="text-sm text-gray-700 dark:text-gray-200 font-medium">
             {{ selectedIds.size }} {{ t('admin.users.selected') }}
           </span>
           <button
-            data-testid="bulk-delete-btn"
+            data-testid="bulk-deactivate-users-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors"
+            @click="showBulkDeactivateConfirm = true"
+          >
+            <UserMinusIcon class="w-4 h-4" />
+            {{ t('admin.users.deactivateSelected') }}
+          </button>
+          <button
+            data-testid="bulk-delete-users-btn"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-            @click="showBulkDeleteConfirm = true"
+            @click="showBulkHardDeleteConfirm = true"
           >
             <TrashIcon class="w-4 h-4" />
             {{ t('admin.users.deleteSelected') }}
           </button>
           <button
-            class="text-sm text-red-600 dark:text-red-400 hover:underline"
+            class="text-sm text-gray-600 dark:text-gray-400 hover:underline"
             @click="selectedIds = new Set()"
           >
             {{ t('common.cancel') }}
@@ -394,14 +411,24 @@ onMounted(() => {
         @cancel="demotingUserId = null"
       />
 
-      <!-- Bulk Delete Confirm -->
+      <!-- Bulk Deactivate Confirm -->
       <ConfirmDialog
-        :open="showBulkDeleteConfirm"
+        :open="showBulkDeactivateConfirm"
+        :title="t('admin.users.bulkDeactivateTitle')"
+        :message="t('admin.users.bulkDeactivateMessage', { count: selectedIds.size })"
+        confirm-variant="danger"
+        @confirm="handleBulkDeactivate"
+        @cancel="showBulkDeactivateConfirm = false"
+      />
+
+      <!-- Bulk Hard Delete Confirm -->
+      <ConfirmDialog
+        :open="showBulkHardDeleteConfirm"
         :title="t('admin.users.bulkDeleteTitle')"
         :message="t('admin.users.bulkDeleteMessage', { count: selectedIds.size })"
         confirm-variant="danger"
-        @confirm="handleBulkDelete"
-        @cancel="showBulkDeleteConfirm = false"
+        @confirm="handleBulkHardDelete"
+        @cancel="showBulkHardDeleteConfirm = false"
       />
     </div>
   </AdminLayout>

@@ -44,6 +44,7 @@ import { GrantPermissionsUseCase } from '@application/use-cases/admin/grant-perm
 import { RevokePermissionUseCase } from '@application/use-cases/admin/revoke-permission.use-case.js';
 import { ListUsersUseCase } from '@application/use-cases/admin/list-users.use-case.js';
 import { DeleteUserUseCase } from '@application/use-cases/admin/delete-user.use-case.js';
+import { HardDeleteUserUseCase } from '@application/use-cases/admin/hard-delete-user.use-case.js';
 
 /**
  * Container interface
@@ -81,6 +82,7 @@ export interface Container {
     revokePermissionUseCase: RevokePermissionUseCase;
     listUsersUseCase: ListUsersUseCase;
     deleteUserUseCase: DeleteUserUseCase;
+    hardDeleteUserUseCase: HardDeleteUserUseCase;
   };
 }
 
@@ -170,6 +172,7 @@ export function createContainer(): Container {
   const revokePermissionUseCase = new RevokePermissionUseCase({ adminRepository });
   const listUsersUseCase = new ListUsersUseCase({ adminRepository });
   const deleteUserUseCase = new DeleteUserUseCase({ adminRepository });
+  const hardDeleteUserUseCase = new HardDeleteUserUseCase({ adminRepository });
 
   // Create container
   containerInstance = {
@@ -201,6 +204,7 @@ export function createContainer(): Container {
       revokePermissionUseCase,
       listUsersUseCase,
       deleteUserUseCase,
+      hardDeleteUserUseCase,
     },
   };
 

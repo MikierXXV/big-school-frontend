@@ -109,9 +109,12 @@
       "promoteSuccess": "Usuari promogut exitosament",
       "demoteSuccess": "Administrador degradat exitosament",
       "selected": "seleccionat(s)",
+      "deactivateSelected": "Desactivar seleccionats",
+      "bulkDeactivateTitle": "Desactivar usuaris",
+      "bulkDeactivateMessage": "Desactivaràs {count} usuari(s). Quedaran marcats com a inactius.",
       "deleteSelected": "Eliminar seleccionats",
       "bulkDeleteTitle": "Eliminar usuaris",
-      "bulkDeleteMessage": "Eliminaràs {count} usuari(s). Aquesta acció no es pot desfer."
+      "bulkDeleteMessage": "Eliminaràs permanentment {count} usuari(s). Aquesta acció no es pot desfer."
     },
     "organizations": {
       "title": "Gestió d'Organitzacions",

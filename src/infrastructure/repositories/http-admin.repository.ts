@@ -62,4 +62,8 @@ export class HttpAdminRepository implements IAdminRepository {
   async deleteUser(userId: string): Promise<void> {
     await this.httpClient.delete(`/api/users/${userId}`);
   }
+
+  async hardDeleteUser(userId: string): Promise<void> {
+    await this.httpClient.delete(`/api/users/${userId}/permanent`);
+  }
 }

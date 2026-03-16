@@ -104,9 +104,12 @@
       "promoteSuccess": "Usuario promovido exitosamente",
       "demoteSuccess": "Administrador degradado exitosamente",
       "selected": "seleccionado(s)",
+      "deactivateSelected": "Desactivar seleccionados",
+      "bulkDeactivateTitle": "Desactivar usuarios",
+      "bulkDeactivateMessage": "Vas a desactivar {count} usuario(s). Quedarán marcados como inactivos.",
       "deleteSelected": "Eliminar seleccionados",
       "bulkDeleteTitle": "Eliminar usuarios",
-      "bulkDeleteMessage": "Vas a eliminar {count} usuario(s). Esta acción no se puede deshacer."
+      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} usuario(s). Esta acción no se puede deshacer."
     },
     "organizations": {
       "title": "Gestión de Organizaciones",
