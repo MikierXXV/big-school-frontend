@@ -28,8 +28,20 @@ export function clearSentryUser(): void {
 export type SentryEventLevel = 'info' | 'warning' | 'error';
 
 /**
- * Tracks expected domain events (not bugs) as Sentry messages.
- * Uses captureMessage so beforeSend filter does not apply.
+ * Custom error class for domain events.
+ * Appears in Sentry Issues as "DomainEvent: <message>" — separate from real bugs.
+ * Uses captureException so it's visible on the free plan.
+ */
+class DomainEventCapture extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DomainEvent';
+  }
+}
+
+/**
+ * Tracks expected domain events (not bugs) as grouped Issues in Sentry.
+ * Each unique message forms its own Issue (via fingerprint), tagged with category=domain_event.
  */
 export function trackDomainEvent(
   message: string,
@@ -38,9 +50,11 @@ export function trackDomainEvent(
 ): void {
   Sentry.withScope((scope) => {
     scope.setLevel(level);
+    scope.setFingerprint(['domain-event', message]);
+    scope.setTag('category', 'domain_event');
     if (extras) {
       Object.entries(extras).forEach(([key, value]) => scope.setExtra(key, value));
     }
-    Sentry.captureMessage(message, level);
+    Sentry.captureException(new DomainEventCapture(message));
   });
 }
