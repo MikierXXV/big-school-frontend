@@ -123,12 +123,10 @@ export const useAdminStore = defineStore('admin', () => {
 
   async function deleteUsers(userIds: string[]): Promise<void> {
     await Promise.allSettled(userIds.map((id) => useCases.deleteUserUseCase.execute(id)));
-    await fetchUsers({ page: usersList.value?.page, limit: usersList.value?.limit });
   }
 
   async function hardDeleteUsers(userIds: string[]): Promise<void> {
     await Promise.allSettled(userIds.map((id) => useCases.hardDeleteUserUseCase.execute(id)));
-    await fetchUsers({ page: usersList.value?.page, limit: usersList.value?.limit });
   }
 
   function clearError(): void {
