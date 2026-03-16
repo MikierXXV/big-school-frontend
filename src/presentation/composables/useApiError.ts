@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router';
 import { DomainError } from '@domain/errors/domain-error.base.js';
 import { ForbiddenError, InsufficientPermissionsError } from '@domain/errors/authorization.errors.js';
 import { OrganizationNotFoundError } from '@domain/errors/organization.errors.js';
+import { trackDomainEvent } from '@infrastructure/sentry/sentry.service.js';
 
 export interface ApiErrorResult {
   message: string;
@@ -27,6 +28,7 @@ export function useApiError() {
     }
 
     if (error instanceof ForbiddenError) {
+      trackDomainEvent('Access denied: forbidden', 'warning', { errorType: 'ForbiddenError' });
       return {
         message: t('errors.forbidden'),
         redirectTo: '/dashboard',
@@ -34,12 +36,14 @@ export function useApiError() {
     }
 
     if (error instanceof InsufficientPermissionsError) {
+      trackDomainEvent('Access denied: insufficient permissions', 'warning', { errorType: 'InsufficientPermissionsError' });
       return {
         message: t('errors.insufficientPermissions'),
       };
     }
 
     if (error instanceof OrganizationNotFoundError) {
+      trackDomainEvent('Resource not found: organization', 'info');
       return {
         message: t('errors.organizationNotFound'),
         redirectTo: '/admin/organizations',
