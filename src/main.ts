@@ -33,7 +33,7 @@ app.use(i18n);
 
 // Sentry (production only)
 if (import.meta.env.PROD) {
-  initSentry(app);
+  initSentry(app, router);
 }
 
 // Mount

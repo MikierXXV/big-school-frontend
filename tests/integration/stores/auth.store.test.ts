@@ -8,8 +8,14 @@
  * TODO: Implementar tests completos
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
+
+vi.mock('@infrastructure/sentry/sentry.service.js', () => ({
+  setSentryUser: vi.fn(),
+  clearSentryUser: vi.fn(),
+}));
+
 import { useAuthStore } from '@presentation/stores/auth.store.js';
 
 describe('Auth Store', () => {

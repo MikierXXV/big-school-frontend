@@ -11,6 +11,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { createContainer } from '@infrastructure/di/container.js';
+import { setSentryUser, clearSentryUser } from '@infrastructure/sentry/sentry.service.js';
 import type { RegisterDTO } from '@application/dtos/auth/register.dto.js';
 import type { LoginDTO } from '@application/dtos/auth/login.dto.js';
 import type { UserDTO } from '@application/dtos/user.dto.js';
@@ -86,6 +87,11 @@ export const useAuthStore = defineStore('auth', () => {
   const storedAccessToken = localStorage.getItem('accessToken');
   const storedRefreshToken = localStorage.getItem('refreshToken');
 
+  // Restore Sentry user context if session already exists
+  if (storedUser) {
+    setSentryUser(storedUser);
+  }
+
   const user = ref<AuthUser | null>(storedUser);
   const accessToken = ref<string | null>(storedAccessToken);
   const refreshToken = ref<string | null>(storedRefreshToken);
@@ -117,6 +123,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       // Persist user data (tokens already persisted by LoginUseCase)
       persistUser(authUser);
+      setSentryUser(authUser);
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Login failed';
       throw err;
@@ -170,6 +177,7 @@ export const useAuthStore = defineStore('auth', () => {
       clearPersistedUser();
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      clearSentryUser();
       isLoading.value = false;
     }
   }
@@ -258,6 +266,7 @@ export const useAuthStore = defineStore('auth', () => {
     accessToken.value = tokens.accessToken;
     refreshToken.value = tokens.refreshToken;
     persistUser(authUser);
+    setSentryUser(authUser);
   }
 
   return {
