@@ -102,7 +102,14 @@
       "confirmDemote": "Are you sure you want to demote this administrator?",
       "confirmPromote": "Are you sure you want to promote this user to administrator?",
       "promoteSuccess": "User promoted successfully",
-      "demoteSuccess": "Administrator demoted successfully"
+      "demoteSuccess": "Administrator demoted successfully",
+      "selected": "selected",
+      "deactivateSelected": "Deactivate selected",
+      "bulkDeactivateTitle": "Deactivate users",
+      "bulkDeactivateMessage": "You are about to deactivate {count} user(s). They will be marked as inactive.",
+      "deleteSelected": "Delete selected",
+      "bulkDeleteTitle": "Delete users",
+      "bulkDeleteMessage": "You are about to permanently delete {count} user(s). This action cannot be undone."
     },
     "organizations": {
       "title": "Organization Management",
@@ -113,7 +120,14 @@
       "confirmDelete": "Are you sure you want to delete this organization?",
       "createSuccess": "Organization created successfully",
       "updateSuccess": "Organization updated successfully",
-      "deleteSuccess": "Organization deleted successfully"
+      "deleteSuccess": "Organization deleted successfully",
+      "selected": "selected",
+      "deactivateSelected": "Deactivate selected",
+      "bulkDeactivateTitle": "Deactivate organizations",
+      "bulkDeactivateMessage": "You are about to deactivate {count} organization(s). They will be marked as inactive.",
+      "deleteSelected": "Delete selected",
+      "bulkDeleteTitle": "Delete organizations",
+      "bulkDeleteMessage": "You are about to permanently delete {count} organization(s). This action cannot be undone."
     },
     "members": {
       "title": "Members",

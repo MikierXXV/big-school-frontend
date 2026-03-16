@@ -56,4 +56,8 @@ export class HttpOrganizationRepository implements IOrganizationRepository {
   async deactivate(id: string): Promise<void> {
     await this.httpClient.delete(`/api/organizations/${id}`);
   }
+
+  async hardDelete(id: string): Promise<void> {
+    await this.httpClient.delete(`/api/organizations/${id}/permanent`);
+  }
 }

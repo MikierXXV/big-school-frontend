@@ -162,6 +162,16 @@ export const useOrganizationStore = defineStore('organization', () => {
     }
   }
 
+  async function deleteOrganizations(ids: string[]): Promise<void> {
+    await Promise.allSettled(ids.map((id) => useCases.deleteOrganizationUseCase.execute(id)));
+    await fetchOrganizations({ page: pagination.value.page, limit: pagination.value.limit });
+  }
+
+  async function hardDeleteOrganizations(ids: string[]): Promise<void> {
+    await Promise.allSettled(ids.map((id) => useCases.hardDeleteOrganizationUseCase.execute(id)));
+    await fetchOrganizations({ page: pagination.value.page, limit: pagination.value.limit });
+  }
+
   function clearError(): void {
     error.value = null;
   }
@@ -181,6 +191,8 @@ export const useOrganizationStore = defineStore('organization', () => {
     createOrganization,
     updateOrganization,
     deleteOrganization,
+    deleteOrganizations,
+    hardDeleteOrganizations,
     fetchMembers,
     assignMember,
     changeMemberRole,

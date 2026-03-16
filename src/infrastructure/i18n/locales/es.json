@@ -102,7 +102,14 @@
       "confirmDemote": "¿Estás seguro de que deseas degradar a este administrador?",
       "confirmPromote": "¿Estás seguro de que deseas promover a este usuario como administrador?",
       "promoteSuccess": "Usuario promovido exitosamente",
-      "demoteSuccess": "Administrador degradado exitosamente"
+      "demoteSuccess": "Administrador degradado exitosamente",
+      "selected": "seleccionado(s)",
+      "deactivateSelected": "Desactivar seleccionados",
+      "bulkDeactivateTitle": "Desactivar usuarios",
+      "bulkDeactivateMessage": "Vas a desactivar {count} usuario(s). Quedarán marcados como inactivos.",
+      "deleteSelected": "Eliminar seleccionados",
+      "bulkDeleteTitle": "Eliminar usuarios",
+      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} usuario(s). Esta acción no se puede deshacer."
     },
     "organizations": {
       "title": "Gestión de Organizaciones",
@@ -113,7 +120,14 @@
       "confirmDelete": "¿Estás seguro de que deseas eliminar esta organización?",
       "createSuccess": "Organización creada exitosamente",
       "updateSuccess": "Organización actualizada exitosamente",
-      "deleteSuccess": "Organización eliminada exitosamente"
+      "deleteSuccess": "Organización eliminada exitosamente",
+      "selected": "seleccionada(s)",
+      "deactivateSelected": "Desactivar seleccionadas",
+      "bulkDeactivateTitle": "Desactivar organizaciones",
+      "bulkDeactivateMessage": "Vas a desactivar {count} organización(es). Quedarán marcadas como inactivas.",
+      "deleteSelected": "Eliminar seleccionadas",
+      "bulkDeleteTitle": "Eliminar organizaciones",
+      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} organización(es). Esta acción no se puede deshacer."
     },
     "members": {
       "title": "Miembros",

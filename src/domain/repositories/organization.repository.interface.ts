@@ -18,4 +18,5 @@ export interface IOrganizationRepository {
   getById(id: string): Promise<OrganizationDTO>;
   update(id: string, data: UpdateOrganizationDTO): Promise<OrganizationDTO>;
   deactivate(id: string): Promise<void>;
+  hardDelete(id: string): Promise<void>;
 }

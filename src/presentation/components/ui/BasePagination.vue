@@ -62,7 +62,7 @@ function goToPage(p: number) {
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 py-3">
+  <div class="flex items-center justify-center gap-6 px-4 py-3">
     <!-- Showing X-Y of Z -->
     <div class="text-sm text-gray-700 dark:text-gray-300">
       {{ t('common.showing', { from, to, total }) }}

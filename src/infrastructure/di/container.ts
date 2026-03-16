@@ -28,6 +28,7 @@ import { ListOrganizationsUseCase } from '@application/use-cases/organization/li
 import { GetOrganizationUseCase } from '@application/use-cases/organization/get-organization.use-case.js';
 import { UpdateOrganizationUseCase } from '@application/use-cases/organization/update-organization.use-case.js';
 import { DeleteOrganizationUseCase } from '@application/use-cases/organization/delete-organization.use-case.js';
+import { HardDeleteOrganizationUseCase } from '@application/use-cases/organization/hard-delete-organization.use-case.js';
 
 import { AssignMemberUseCase } from '@application/use-cases/membership/assign-member.use-case.js';
 import { ListMembersUseCase } from '@application/use-cases/membership/list-members.use-case.js';
@@ -42,6 +43,8 @@ import { GetAdminPermissionsUseCase } from '@application/use-cases/admin/get-adm
 import { GrantPermissionsUseCase } from '@application/use-cases/admin/grant-permissions.use-case.js';
 import { RevokePermissionUseCase } from '@application/use-cases/admin/revoke-permission.use-case.js';
 import { ListUsersUseCase } from '@application/use-cases/admin/list-users.use-case.js';
+import { DeleteUserUseCase } from '@application/use-cases/admin/delete-user.use-case.js';
+import { HardDeleteUserUseCase } from '@application/use-cases/admin/hard-delete-user.use-case.js';
 
 /**
  * Container interface
@@ -63,6 +66,7 @@ export interface Container {
     getOrganizationUseCase: GetOrganizationUseCase;
     updateOrganizationUseCase: UpdateOrganizationUseCase;
     deleteOrganizationUseCase: DeleteOrganizationUseCase;
+    hardDeleteOrganizationUseCase: HardDeleteOrganizationUseCase;
     // Membership
     assignMemberUseCase: AssignMemberUseCase;
     listMembersUseCase: ListMembersUseCase;
@@ -77,6 +81,8 @@ export interface Container {
     grantPermissionsUseCase: GrantPermissionsUseCase;
     revokePermissionUseCase: RevokePermissionUseCase;
     listUsersUseCase: ListUsersUseCase;
+    deleteUserUseCase: DeleteUserUseCase;
+    hardDeleteUserUseCase: HardDeleteUserUseCase;
   };
 }
 
@@ -148,6 +154,7 @@ export function createContainer(): Container {
   const getOrganizationUseCase = new GetOrganizationUseCase({ organizationRepository });
   const updateOrganizationUseCase = new UpdateOrganizationUseCase({ organizationRepository });
   const deleteOrganizationUseCase = new DeleteOrganizationUseCase({ organizationRepository });
+  const hardDeleteOrganizationUseCase = new HardDeleteOrganizationUseCase({ organizationRepository });
 
   // Application Layer - Membership use cases
   const assignMemberUseCase = new AssignMemberUseCase({ membershipRepository });
@@ -164,6 +171,8 @@ export function createContainer(): Container {
   const grantPermissionsUseCase = new GrantPermissionsUseCase({ adminRepository });
   const revokePermissionUseCase = new RevokePermissionUseCase({ adminRepository });
   const listUsersUseCase = new ListUsersUseCase({ adminRepository });
+  const deleteUserUseCase = new DeleteUserUseCase({ adminRepository });
+  const hardDeleteUserUseCase = new HardDeleteUserUseCase({ adminRepository });
 
   // Create container
   containerInstance = {
@@ -181,6 +190,7 @@ export function createContainer(): Container {
       getOrganizationUseCase,
       updateOrganizationUseCase,
       deleteOrganizationUseCase,
+      hardDeleteOrganizationUseCase,
       assignMemberUseCase,
       listMembersUseCase,
       changeMemberRoleUseCase,
@@ -193,6 +203,8 @@ export function createContainer(): Container {
       grantPermissionsUseCase,
       revokePermissionUseCase,
       listUsersUseCase,
+      deleteUserUseCase,
+      hardDeleteUserUseCase,
     },
   };
 
