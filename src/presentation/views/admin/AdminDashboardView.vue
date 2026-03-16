@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import * as Sentry from '@sentry/vue';
 import AdminLayout from '@presentation/components/layout/AdminLayout.vue';
 import { useRBAC } from '@presentation/composables/useRBAC.js';
 
@@ -54,6 +55,10 @@ const cards: AdminCard[] = [
 function navigateTo(route: string): void {
   router.push(route);
 }
+
+function testSentryError(): void {
+  Sentry.captureException(new Error('Sentry test — big-school-frontend'));
+}
 </script>
 
 <template>
@@ -65,6 +70,21 @@ function navigateTo(route: string): void {
       <p class="text-gray-600 dark:text-gray-400 mb-8">
         {{ t('admin.dashboard.description') }}
       </p>
+
+      <!-- Sentry test button — superadmin only -->
+      <div v-if="isSuperAdmin" class="mb-6">
+        <button
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-dashed border-gray-300 dark:border-gray-600 text-xs text-gray-400 dark:text-gray-500 hover:border-red-400 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-400 transition-colors duration-150"
+          @click="testSentryError"
+        >
+          <!-- Bug icon -->
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8c-2.21 0-4 1.79-4 4v3a4 4 0 008 0v-3c0-2.21-1.79-4-4-4zm0 0V5m-4 4l-2-2m10 2l2-2M8 17l-2 2m10-2l2 2M8 12H5m14 0h-3" />
+          </svg>
+          Test Sentry
+        </button>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <template v-for="card in cards" :key="card.id">

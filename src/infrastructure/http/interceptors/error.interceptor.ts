@@ -16,15 +16,17 @@ import type { IStorageService } from '@application/ports/storage.port.js';
 import type { IHttpClient } from '@application/ports/http-client.port.js';
 import { mapHttpErrorToDomainError } from '../utils/error-mapper.util.js';
 import { RefreshTokenReuseDetectedError } from '@domain/errors/auth.errors.js';
+import { trackDomainEvent } from '@infrastructure/sentry/sentry.service.js';
 
 /**
  * Public endpoints that don't require authentication
  */
 const PUBLIC_ENDPOINTS = [
-  '/api/auth/login',
-  '/api/auth/register',
-  '/api/auth/password-reset',
-  '/api/auth/password-reset/confirm',
+  '/auth/login',
+  '/auth/register',
+  '/auth/password-reset',
+  '/auth/password-reset/confirm',
+  '/auth/oauth/callback',
 ];
 
 /**
@@ -51,6 +53,7 @@ export function createErrorInterceptor(
     const errorData = axiosError.response?.data as any;
     if (errorData?.error?.code === 'DOMAIN_REFRESH_TOKEN_REUSE_DETECTED') {
       storageService.clear();
+      trackDomainEvent('Security: refresh token reuse detected', 'warning');
       throw new RefreshTokenReuseDetectedError();
     }
 
@@ -72,6 +75,7 @@ export function createErrorInterceptor(
         throw mapHttpErrorToDomainError(error);
       } catch (refreshError) {
         storageService.clear();
+        trackDomainEvent('Session expired: refresh token invalid', 'info');
         throw mapHttpErrorToDomainError(refreshError);
       }
     }

@@ -31,9 +31,9 @@ app.use(router);
 // i18n
 app.use(i18n);
 
-// Sentry (production only)
-if (import.meta.env.PROD) {
-  initSentry(app);
+// Sentry (only when DSN is configured)
+if (import.meta.env.VITE_SENTRY_DSN) {
+  initSentry(app, router);
 }
 
 // Mount
