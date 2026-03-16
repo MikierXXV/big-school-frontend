@@ -195,7 +195,7 @@ onMounted(() => {
           data-testid="bulk-action-bar-orgs"
           class="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg"
         >
-          <span class="text-sm text-amber-800 dark:text-amber-300 font-medium">
+          <span class="text-sm text-gray-700 dark:text-gray-200 font-medium">
             {{ selectedIds.size }} {{ t('admin.organizations.selected') }}
           </span>
           <button
