@@ -34,7 +34,8 @@ let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Bulk selection
 const selectedIds = ref<Set<string>>(new Set());
-const showBulkDeleteConfirm = ref(false);
+const showBulkDeactivateConfirm = ref(false);
+const showBulkHardDeleteConfirm = ref(false);
 
 const canDeleteOrgs = computed(() => isSuperAdmin.value || hasPermission('manage_organizations'));
 
@@ -60,11 +61,18 @@ function toggleSelect(id: string, event: Event): void {
   selectedIds.value = next;
 }
 
-async function handleBulkDelete(): Promise<void> {
+async function handleBulkDeactivate(): Promise<void> {
   const ids = Array.from(selectedIds.value);
   await orgStore.deleteOrganizations(ids);
   selectedIds.value = new Set();
-  showBulkDeleteConfirm.value = false;
+  showBulkDeactivateConfirm.value = false;
+}
+
+async function handleBulkHardDelete(): Promise<void> {
+  const ids = Array.from(selectedIds.value);
+  await orgStore.hardDeleteOrganizations(ids);
+  selectedIds.value = new Set();
+  showBulkHardDeleteConfirm.value = false;
 }
 
 const typeOptions = [
@@ -185,21 +193,29 @@ onMounted(() => {
         <div
           v-if="canDeleteOrgs && selectedIds.size > 0"
           data-testid="bulk-action-bar-orgs"
-          class="mb-4 flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+          class="mb-4 flex items-center gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg"
         >
-          <span class="text-sm text-red-700 dark:text-red-300 font-medium">
+          <span class="text-sm text-amber-800 dark:text-amber-300 font-medium">
             {{ selectedIds.size }} {{ t('admin.organizations.selected') }}
           </span>
           <button
+            data-testid="bulk-deactivate-orgs-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors"
+            @click="showBulkDeactivateConfirm = true"
+          >
+            <TrashIcon class="w-4 h-4" />
+            {{ t('admin.organizations.deactivateSelected') }}
+          </button>
+          <button
             data-testid="bulk-delete-orgs-btn"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-            @click="showBulkDeleteConfirm = true"
+            @click="showBulkHardDeleteConfirm = true"
           >
             <TrashIcon class="w-4 h-4" />
             {{ t('admin.organizations.deleteSelected') }}
           </button>
           <button
-            class="text-sm text-red-600 dark:text-red-400 hover:underline"
+            class="text-sm text-gray-600 dark:text-gray-400 hover:underline"
             @click="selectedIds = new Set()"
           >
             {{ t('common.cancel') }}
@@ -296,14 +312,24 @@ onMounted(() => {
         @submit="handleCreate"
       />
 
-      <!-- Bulk Delete Confirm -->
+      <!-- Bulk Deactivate Confirm -->
       <ConfirmDialog
-        :open="showBulkDeleteConfirm"
+        :open="showBulkDeactivateConfirm"
+        :title="t('admin.organizations.bulkDeactivateTitle')"
+        :message="t('admin.organizations.bulkDeactivateMessage', { count: selectedIds.size })"
+        confirm-variant="warning"
+        @confirm="handleBulkDeactivate"
+        @cancel="showBulkDeactivateConfirm = false"
+      />
+
+      <!-- Bulk Hard Delete Confirm -->
+      <ConfirmDialog
+        :open="showBulkHardDeleteConfirm"
         :title="t('admin.organizations.bulkDeleteTitle')"
         :message="t('admin.organizations.bulkDeleteMessage', { count: selectedIds.size })"
         confirm-variant="danger"
-        @confirm="handleBulkDelete"
-        @cancel="showBulkDeleteConfirm = false"
+        @confirm="handleBulkHardDelete"
+        @cancel="showBulkHardDeleteConfirm = false"
       />
     </div>
   </AdminLayout>

@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import BaseModal from './BaseModal.vue';
 
-type ConfirmVariant = 'primary' | 'danger';
+type ConfirmVariant = 'primary' | 'danger' | 'warning';
 
 interface Props {
   open: boolean;
@@ -51,7 +51,9 @@ const emit = defineEmits<{
           'px-4 py-2 text-sm font-medium rounded-md text-white transition-colors',
           confirmVariant === 'danger'
             ? 'bg-red-600 hover:bg-red-700'
-            : 'bg-primary-600 hover:bg-primary-700',
+            : confirmVariant === 'warning'
+              ? 'bg-amber-500 hover:bg-amber-600'
+              : 'bg-primary-600 hover:bg-primary-700',
         ]"
         @click="emit('confirm')"
       >

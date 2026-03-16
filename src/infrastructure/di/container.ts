@@ -28,6 +28,7 @@ import { ListOrganizationsUseCase } from '@application/use-cases/organization/li
 import { GetOrganizationUseCase } from '@application/use-cases/organization/get-organization.use-case.js';
 import { UpdateOrganizationUseCase } from '@application/use-cases/organization/update-organization.use-case.js';
 import { DeleteOrganizationUseCase } from '@application/use-cases/organization/delete-organization.use-case.js';
+import { HardDeleteOrganizationUseCase } from '@application/use-cases/organization/hard-delete-organization.use-case.js';
 
 import { AssignMemberUseCase } from '@application/use-cases/membership/assign-member.use-case.js';
 import { ListMembersUseCase } from '@application/use-cases/membership/list-members.use-case.js';
@@ -64,6 +65,7 @@ export interface Container {
     getOrganizationUseCase: GetOrganizationUseCase;
     updateOrganizationUseCase: UpdateOrganizationUseCase;
     deleteOrganizationUseCase: DeleteOrganizationUseCase;
+    hardDeleteOrganizationUseCase: HardDeleteOrganizationUseCase;
     // Membership
     assignMemberUseCase: AssignMemberUseCase;
     listMembersUseCase: ListMembersUseCase;
@@ -150,6 +152,7 @@ export function createContainer(): Container {
   const getOrganizationUseCase = new GetOrganizationUseCase({ organizationRepository });
   const updateOrganizationUseCase = new UpdateOrganizationUseCase({ organizationRepository });
   const deleteOrganizationUseCase = new DeleteOrganizationUseCase({ organizationRepository });
+  const hardDeleteOrganizationUseCase = new HardDeleteOrganizationUseCase({ organizationRepository });
 
   // Application Layer - Membership use cases
   const assignMemberUseCase = new AssignMemberUseCase({ membershipRepository });
@@ -184,6 +187,7 @@ export function createContainer(): Container {
       getOrganizationUseCase,
       updateOrganizationUseCase,
       deleteOrganizationUseCase,
+      hardDeleteOrganizationUseCase,
       assignMemberUseCase,
       listMembersUseCase,
       changeMemberRoleUseCase,

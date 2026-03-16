@@ -119,9 +119,12 @@
       "updateSuccess": "Organization updated successfully",
       "deleteSuccess": "Organization deleted successfully",
       "selected": "selected",
+      "deactivateSelected": "Deactivate selected",
+      "bulkDeactivateTitle": "Deactivate organizations",
+      "bulkDeactivateMessage": "You are about to deactivate {count} organization(s). They will be marked as inactive.",
       "deleteSelected": "Delete selected",
       "bulkDeleteTitle": "Delete organizations",
-      "bulkDeleteMessage": "You are about to delete {count} organization(s). This action cannot be undone."
+      "bulkDeleteMessage": "You are about to permanently delete {count} organization(s). This action cannot be undone."
     },
     "members": {
       "title": "Members",

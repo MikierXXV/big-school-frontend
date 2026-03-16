@@ -119,9 +119,12 @@
       "updateSuccess": "Organización actualizada exitosamente",
       "deleteSuccess": "Organización eliminada exitosamente",
       "selected": "seleccionada(s)",
+      "deactivateSelected": "Desactivar seleccionadas",
+      "bulkDeactivateTitle": "Desactivar organizaciones",
+      "bulkDeactivateMessage": "Vas a desactivar {count} organización(es). Quedarán marcadas como inactivas.",
       "deleteSelected": "Eliminar seleccionadas",
       "bulkDeleteTitle": "Eliminar organizaciones",
-      "bulkDeleteMessage": "Vas a eliminar {count} organización(es). Esta acción no se puede deshacer."
+      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} organización(es). Esta acción no se puede deshacer."
     },
     "members": {
       "title": "Miembros",
