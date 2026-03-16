@@ -14,6 +14,7 @@ import { setActivePinia, createPinia } from 'pinia';
 vi.mock('@infrastructure/sentry/sentry.service.js', () => ({
   setSentryUser: vi.fn(),
   clearSentryUser: vi.fn(),
+  trackDomainEvent: vi.fn(),
 }));
 
 import { useAuthStore } from '@presentation/stores/auth.store.js';

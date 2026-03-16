@@ -10,6 +10,10 @@ import { DomainError } from '@domain/errors/domain-error.base.js';
 import { ForbiddenError, InsufficientPermissionsError } from '@domain/errors/authorization.errors.js';
 import { OrganizationNotFoundError } from '@domain/errors/organization.errors.js';
 
+vi.mock('@infrastructure/sentry/sentry.service.js', () => ({
+  trackDomainEvent: vi.fn(),
+}));
+
 const mockPush = vi.fn();
 
 vi.mock('vue-i18n', () => ({
