@@ -22,10 +22,11 @@ import { trackDomainEvent } from '@infrastructure/sentry/sentry.service.js';
  * Public endpoints that don't require authentication
  */
 const PUBLIC_ENDPOINTS = [
-  '/api/auth/login',
-  '/api/auth/register',
-  '/api/auth/password-reset',
-  '/api/auth/password-reset/confirm',
+  '/auth/login',
+  '/auth/register',
+  '/auth/password-reset',
+  '/auth/password-reset/confirm',
+  '/auth/oauth/callback',
 ];
 
 /**
