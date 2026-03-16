@@ -9,6 +9,7 @@
 
 import { AxiosHttpClient } from '@infrastructure/http/axios-http-client.js';
 import { LocalStorageService } from '@infrastructure/storage/local-storage.service.js';
+import { createErrorInterceptor } from '@infrastructure/http/interceptors/error.interceptor.js';
 import { HttpAuthRepository } from '@infrastructure/repositories/http-auth.repository.js';
 import { HttpOrganizationRepository } from '@infrastructure/repositories/http-organization.repository.js';
 import { HttpMembershipRepository } from '@infrastructure/repositories/http-membership.repository.js';
@@ -104,6 +105,12 @@ export function createContainer(): Container {
   // Infrastructure Layer - Create adapters
   const httpClient = new AxiosHttpClient(apiBaseUrl);
   const storageService = new LocalStorageService();
+
+  // Wire error interceptor: maps AxiosErrors → DomainErrors, handles token refresh
+  httpClient.getAxiosInstance().interceptors.response.use(
+    undefined,
+    createErrorInterceptor(storageService, httpClient)
+  );
 
   // Infrastructure Layer - Create repositories
   const authRepository = new HttpAuthRepository(httpClient);
