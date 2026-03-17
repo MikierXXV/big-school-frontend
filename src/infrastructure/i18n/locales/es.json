@@ -146,6 +146,59 @@
       "revoke": "Revocar Permiso",
       "grantSuccess": "Permisos otorgados exitosamente",
       "revokeSuccess": "Permiso revocado exitosamente"
+    },
+    "analytics": {
+      "nav": "Gestión de Datos",
+      "title": "Monitorización del Sistema",
+      "description": "Resumen de usuarios, organizaciones y actividad del sistema",
+      "dashboardDescription": "Estadísticas agregadas y estado global del sistema",
+      "empty": "No hay datos disponibles",
+      "kpis": {
+        "totalUsers": "Total de usuarios",
+        "totalOrgs": "Total de organizaciones",
+        "totalAdmins": "Admins activos",
+        "activeOrgs": "Organizaciones activas"
+      },
+      "users": {
+        "title": "Usuarios",
+        "byRole": "Por rol del sistema",
+        "byStatus": "Por estado"
+      },
+      "roles": {
+        "user": "Usuario",
+        "admin": "Admin",
+        "superAdmin": "Super Admin"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "pending": "Pendiente de verificación"
+      },
+      "providers": {
+        "title": "Proveedores de Autenticación",
+        "local": "Local (email/contraseña)",
+        "google": "Google OAuth",
+        "microsoft": "Microsoft OAuth"
+      },
+      "orgs": {
+        "title": "Organizaciones",
+        "byType": "Por tipo",
+        "byStatus": "Por estado",
+        "count": "Cantidad"
+      },
+      "admins": {
+        "title": "Admins y Permisos",
+        "name": "Nombre",
+        "email": "Email",
+        "permissions": "Permisos",
+        "search": "Buscar por nombre o email...",
+        "noResults": "Ningún admin coincide con la búsqueda"
+      },
+      "email": {
+        "title": "Verificación de Email",
+        "verified": "Verificados",
+        "unverified": "Sin verificar"
+      }
     }
   },
   "theme": {
