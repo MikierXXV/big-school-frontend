@@ -151,6 +151,59 @@
       "revoke": "Revocar Permís",
       "grantSuccess": "Permisos atorgats exitosament",
       "revokeSuccess": "Permís revocat exitosament"
+    },
+    "analytics": {
+      "nav": "Gestió de Dades",
+      "title": "Monitorització del Sistema",
+      "description": "Resum d'usuaris, organitzacions i activitat del sistema",
+      "dashboardDescription": "Estadístiques agregades i estat global del sistema",
+      "empty": "No hi ha dades disponibles",
+      "kpis": {
+        "totalUsers": "Total d'usuaris",
+        "totalOrgs": "Total d'organitzacions",
+        "totalAdmins": "Admins actius",
+        "activeOrgs": "Organitzacions actives"
+      },
+      "users": {
+        "title": "Usuaris",
+        "byRole": "Per rol del sistema",
+        "byStatus": "Per estat"
+      },
+      "roles": {
+        "user": "Usuari",
+        "admin": "Admin",
+        "superAdmin": "Super Admin"
+      },
+      "status": {
+        "active": "Actiu",
+        "inactive": "Inactiu",
+        "pending": "Pendent de verificació"
+      },
+      "providers": {
+        "title": "Proveïdors d'Autenticació",
+        "local": "Local (email/contrasenya)",
+        "google": "Google OAuth",
+        "microsoft": "Microsoft OAuth"
+      },
+      "orgs": {
+        "title": "Organitzacions",
+        "byType": "Per tipus",
+        "byStatus": "Per estat",
+        "count": "Quantitat"
+      },
+      "admins": {
+        "title": "Admins i Permisos",
+        "name": "Nom",
+        "email": "Email",
+        "permissions": "Permisos",
+        "search": "Cerca per nom o email...",
+        "noResults": "Cap admin coincideix amb la cerca"
+      },
+      "email": {
+        "title": "Verificació d'Email",
+        "verified": "Verificats",
+        "unverified": "Sense verificar"
+      }
     }
   },
   "nav": {

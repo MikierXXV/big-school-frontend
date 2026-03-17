@@ -152,6 +152,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, requiresRole: ['super_admin', 'admin'] },
   },
   {
+    path: '/admin/analytics',
+    name: 'admin-analytics',
+    component: () => import('@presentation/views/admin/AdminAnalyticsView.vue'),
+    meta: { requiresAuth: true, requiresRole: ['super_admin', 'admin'], requiresPermission: 'view_all_data' },
+  },
+  {
     path: '/admin/users',
     name: 'admin-users',
     component: () => import('@presentation/views/admin/AdminUserListView.vue'),

@@ -146,6 +146,59 @@
       "revoke": "Revoke Permission",
       "grantSuccess": "Permissions granted successfully",
       "revokeSuccess": "Permission revoked successfully"
+    },
+    "analytics": {
+      "nav": "Data Management",
+      "title": "System Monitoring",
+      "description": "Overview of users, organizations, and system activity",
+      "dashboardDescription": "Aggregated statistics and system data overview",
+      "empty": "No data available",
+      "kpis": {
+        "totalUsers": "Total users",
+        "totalOrgs": "Total organizations",
+        "totalAdmins": "Active admins",
+        "activeOrgs": "Active organizations"
+      },
+      "users": {
+        "title": "Users",
+        "byRole": "By system role",
+        "byStatus": "By status"
+      },
+      "roles": {
+        "user": "User",
+        "admin": "Admin",
+        "superAdmin": "Super Admin"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "pending": "Pending verification"
+      },
+      "providers": {
+        "title": "Authentication Providers",
+        "local": "Local (email/password)",
+        "google": "Google OAuth",
+        "microsoft": "Microsoft OAuth"
+      },
+      "orgs": {
+        "title": "Organizations",
+        "byType": "By type",
+        "byStatus": "By status",
+        "count": "Count"
+      },
+      "admins": {
+        "title": "Admins & Permissions",
+        "name": "Name",
+        "email": "Email",
+        "permissions": "Permissions",
+        "search": "Search by name or email...",
+        "noResults": "No admins match your search"
+      },
+      "email": {
+        "title": "Email Verification",
+        "verified": "Verified",
+        "unverified": "Unverified"
+      }
     }
   },
   "theme": {
