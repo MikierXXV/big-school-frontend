@@ -36,7 +36,7 @@ const shadowClasses = computed(() => {
   const shadows = {
     none: 'shadow-none',
     sm: 'shadow-sm',
-    md: 'shadow-md',
+    md: 'shadow-card',
     lg: 'shadow-lg',
   };
   return shadows[props.shadow];
@@ -50,7 +50,7 @@ const cardClasses = computed(() => {
     'border',
     'border-gray-200',
     'dark:border-gray-700',
-    'rounded-lg',
+    'rounded-2xl',
 
     // Padding
     paddingClasses.value,
@@ -60,9 +60,11 @@ const cardClasses = computed(() => {
 
     // Hoverable
     props.hoverable && [
-      'hover:shadow-lg',
-      'transition-shadow',
-      'duration-200',
+      'hover:shadow-card-glow',
+      'dark:hover:shadow-card-glow-dark',
+      'hover:-translate-y-1',
+      'transition-all',
+      'duration-300',
       'cursor-pointer',
     ],
   ];
