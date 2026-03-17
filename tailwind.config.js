@@ -98,12 +98,23 @@ export default {
           '0%': { transform: 'scale(0)', opacity: '1' },
           '100%': { transform: 'scale(4)', opacity: '0' },
         },
+        'slide-in-up-soft': {
+          '0%': { transform: 'translateY(8px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-in-up': 'slide-in-up 0.4s ease-out',
         'slide-in-right': 'slide-in-right 0.3s ease-out',
         ripple: 'ripple 0.6s ease-out',
+        'slide-in-up-soft': 'slide-in-up-soft 0.25s ease-out',
+      },
+      boxShadow: {
+        card: '0 4px 24px rgba(0, 0, 0, 0.06)',
+        'card-hover': '0 8px 40px rgba(0, 0, 0, 0.12)',
+        'card-glow': '0 0 0 2px rgba(2, 132, 199, 0.35), 0 8px 32px rgba(2, 132, 199, 0.25)',
+        'card-glow-dark': '0 0 0 2px rgba(14, 165, 233, 0.5), 0 8px 32px rgba(14, 165, 233, 0.3)',
       },
     },
   },

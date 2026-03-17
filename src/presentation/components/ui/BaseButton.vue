@@ -111,6 +111,12 @@ const spinnerSize = computed(() => {
   return sizes[props.size];
 });
 
+const roundedClass = computed(() =>
+  (['primary', 'secondary', 'danger', 'outline'] as ButtonVariant[]).includes(props.variant)
+    ? 'rounded-full'
+    : 'rounded-lg',
+);
+
 const buttonClasses = computed(() => {
   return [
     // Base styles
@@ -119,9 +125,10 @@ const buttonClasses = computed(() => {
     'items-center',
     'justify-center',
     'font-medium',
-    'rounded-md',
+    roundedClass.value,
     'transition-all',
     'duration-200',
+    'active:scale-95',
 
     // Focus styles
     'focus:outline-none',

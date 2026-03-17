@@ -96,7 +96,7 @@ function navigateTo(routeName: string): void {
       </h1>
 
       <!-- Welcome Message -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-card p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {{ t('dashboard.welcome.greeting') }}{{ user ? `, ${user.fullName}` : '' }}!
         </h2>
@@ -109,7 +109,7 @@ function navigateTo(routeName: string): void {
       <div
         v-if="hasElevatedRole"
         data-testid="admin-panel-card"
-        class="bg-indigo-50 dark:bg-indigo-900 border border-indigo-200 dark:border-indigo-700 rounded-lg shadow p-6 mb-6 cursor-pointer hover:shadow-md transition-shadow"
+        class="bg-indigo-50 dark:bg-indigo-900 border border-indigo-200 dark:border-indigo-700 rounded-2xl shadow-card p-6 mb-6 cursor-pointer hover:shadow-card-glow dark:hover:shadow-card-glow-dark hover:-translate-y-1 transition-all duration-300"
         @click="router.push('/admin')"
       >
         <div class="flex items-center gap-4">
@@ -159,7 +159,7 @@ function navigateTo(routeName: string): void {
           v-for="mod in modules"
           :key="mod.id"
           :data-testid="`module-card-${mod.id}`"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-card p-6 cursor-pointer hover:shadow-card-glow dark:hover:shadow-card-glow-dark hover:-translate-y-1 transition-all duration-300"
           @click="navigateTo(mod.route)"
         >
           <div class="flex items-center mb-4">

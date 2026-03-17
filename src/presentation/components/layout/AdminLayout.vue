@@ -13,7 +13,7 @@ import AdminSidebar from './AdminSidebar.vue';
 </script>
 
 <template>
-  <div data-testid="admin-layout" class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div data-testid="admin-layout" class="flex flex-col min-h-screen bg-[#EEF2FF] dark:bg-gray-900">
     <AppHeader />
     <div class="flex flex-1">
       <AdminSidebar />

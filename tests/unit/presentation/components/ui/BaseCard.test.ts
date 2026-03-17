@@ -67,7 +67,7 @@ describe('BaseCard', () => {
       const wrapper = mount(BaseCard);
       const card = wrapper.element as HTMLElement;
 
-      expect(card.className).toContain('shadow-md');
+      expect(card.className).toContain('shadow-card');
     });
 
     it('should apply sm shadow', () => {
@@ -103,7 +103,7 @@ describe('BaseCard', () => {
       const wrapper = mount(BaseCard);
       const card = wrapper.element as HTMLElement;
 
-      expect(card.className).not.toContain('hover:shadow-lg');
+      expect(card.className).not.toContain('hover:shadow-card-glow');
     });
 
     it('should apply hover effect when hoverable prop is true', () => {
@@ -112,8 +112,9 @@ describe('BaseCard', () => {
       });
       const card = wrapper.element as HTMLElement;
 
-      expect(card.className).toContain('hover:shadow-lg');
-      expect(card.className).toContain('transition-shadow');
+      expect(card.className).toContain('hover:shadow-card-glow');
+      expect(card.className).toContain('hover:-translate-y-1');
+      expect(card.className).toContain('transition-all');
     });
   });
 
@@ -140,7 +141,7 @@ describe('BaseCard', () => {
       const wrapper = mount(BaseCard);
       const card = wrapper.element as HTMLElement;
 
-      expect(card.className).toContain('rounded-lg');
+      expect(card.className).toContain('rounded-2xl');
     });
   });
 });
