@@ -34,13 +34,20 @@ const route = useRoute();
 <style>
 /* Page Transition Animations */
 
-/* Fade Transition */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
+/* Fade Transition — with subtle slide-up */
+.fade-enter-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.fade-enter-from,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
 .fade-leave-to {
   opacity: 0;
 }
