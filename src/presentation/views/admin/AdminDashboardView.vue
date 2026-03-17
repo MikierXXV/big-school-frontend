@@ -101,16 +101,12 @@ function testSentryError(): void {
           <div
             v-if="card.show()"
             :data-testid="`admin-card-${card.id}`"
-            class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-card p-6 cursor-pointer hover:shadow-card-glow dark:hover:shadow-card-glow-dark hover:-translate-y-1 transition-all duration-300"
             @click="navigateTo(card.route)"
           >
-            <div class="flex items-center mb-4">
-              <div :class="['w-12 h-12 rounded-full flex items-center justify-center', card.iconBg]">
-                <svg :class="['w-6 h-6', card.iconColor]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="card.iconPath" />
-                </svg>
-              </div>
-            </div>
+            <svg :class="['w-8 h-8 mb-4', card.iconColor]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" :d="card.iconPath" />
+            </svg>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {{ t(card.titleKey) }}
             </h3>
