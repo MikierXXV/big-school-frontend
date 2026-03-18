@@ -21,6 +21,6 @@ import AdminSidebar from './AdminSidebar.vue';
         <slot />
       </main>
     </div>
-    <AppFooter />
+    <AppFooter :minimal="true" />
   </div>
 </template>
