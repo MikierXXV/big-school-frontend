@@ -328,5 +328,112 @@
       "title": "Label Printing",
       "placeholder": "Label Printing module under construction"
     }
+  },
+  "footer": {
+    "tagline": "Comprehensive hospital management platform",
+    "description": "Digital solutions to optimize the clinical, surgical, and emergency management of your healthcare organization.",
+    "sections": {
+      "platform": "Platform",
+      "company": "Company",
+      "contact": "Contact"
+    },
+    "platform": {
+      "surgicalBlock": "Surgical Block",
+      "emergency": "Emergency",
+      "dataAnalytics": "Analytics",
+      "wristbandPrinting": "Wristband Printing",
+      "labelPrinting": "Label Printing"
+    },
+    "company": {
+      "about": "About us",
+      "contact": "Contact",
+      "privacy": "Privacy policy",
+      "terms": "Terms of service"
+    },
+    "contact": {
+      "email": "contact@healthcaresuite.com",
+      "phone": "+34 900 000 000",
+      "address": "Innovation Street, 42\nBarcelona, 08001"
+    },
+    "copyright": "© {year} Health Care Suite. All rights reserved."
+  },
+  "about": {
+    "modal": {
+      "title": "About us",
+      "tagline": "Comprehensive hospital management platform",
+      "description": "Health Care Suite is a digital solution designed to optimize clinical, surgical, and emergency management in healthcare organizations. Built to the highest standards of security and privacy, it helps healthcare professionals work more efficiently and safely.",
+      "ctaDescription": "To learn more about our mission, values, and team, visit our corporate website.",
+      "ctaButton": "Visit website"
+    }
+  },
+  "contactModal": {
+    "title": "Contact us",
+    "description": "We are here to help. Feel free to reach out to our team.",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "addressLabel": "Address",
+    "emailAction": "Send email"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "lastUpdated": "Last updated: January 2025",
+    "accept": "Got it",
+    "s1": {
+      "title": "1. Data controller",
+      "text": "Health Care Suite, S.L., located at Innovation Street, 42, Barcelona, 08001, is the data controller for the personal data collected through this platform."
+    },
+    "s2": {
+      "title": "2. Data we collect",
+      "text": "We collect personal identification data (first name, last name, email address), professional data (healthcare facility, clinical role), and platform usage data necessary to provide the service. We do not collect patient data directly through this application."
+    },
+    "s3": {
+      "title": "3. Purpose of processing",
+      "text": "Data is used exclusively to: (a) manage access and platform usage by authorized professionals, (b) improve service quality, (c) comply with legal obligations applicable to the healthcare sector."
+    },
+    "s4": {
+      "title": "4. Legal basis",
+      "text": "Processing is based on the performance of the service contract with your organization (Art. 6.1.b GDPR) and, where applicable, compliance with legal obligations (Art. 6.1.c GDPR). For optional features, your explicit consent will be requested."
+    },
+    "s5": {
+      "title": "5. Data retention",
+      "text": "Data will be retained for the duration of the contractual relationship and, once terminated, for the legally established periods (minimum 5 years for healthcare-related documentation)."
+    },
+    "s6": {
+      "title": "6. User rights",
+      "text": "You may exercise your rights of access, rectification, erasure, objection, restriction, and portability by emailing contact@healthcaresuite.com. You have the right to lodge a complaint with the relevant supervisory authority."
+    },
+    "s7": {
+      "title": "7. Security",
+      "text": "We apply appropriate technical and organizational measures including in-transit encryption (TLS), role-based access control (RBAC), and periodic security audits."
+    }
+  },
+  "terms": {
+    "title": "Terms of service",
+    "lastUpdated": "Last updated: January 2025",
+    "accept": "Got it",
+    "s1": {
+      "title": "1. Acceptance of terms",
+      "text": "Access to and use of Health Care Suite implies full acceptance of these terms. If you act on behalf of an organization, you declare that you have sufficient authority to bind it to these terms."
+    },
+    "s2": {
+      "title": "2. Service description",
+      "text": "Health Care Suite is a hospital management platform including surgical block, emergency, data analytics, wristband printing, and label printing modules. The service is provided under a SaaS model and is intended exclusively for healthcare professionals and organizations."
+    },
+    "s3": {
+      "title": "3. Authorized use",
+      "text": "The user agrees to use the platform only for the purposes for which it was contracted, not to share access credentials with third parties, and to immediately notify any unauthorized use of their account."
+    },
+    "s4": {
+      "title": "4. Intellectual property",
+      "text": "All software, design, content, and documentation of Health Care Suite are the exclusive property of the Company or its licensors. Reproduction, distribution, or modification without express written authorization is prohibited."
+    },
+    "s5": {
+      "title": "5. Limitation of liability",
+      "text": "The Company shall not be liable for damages resulting from improper use of the platform, service interruptions beyond its control, or clinical decisions made by professionals based on information managed through the system."
+    },
+    "s6": {
+      "title": "6. Amendments and termination",
+      "text": "The Company reserves the right to modify these terms with 30 days' notice. Continued use of the service after that period implies acceptance of the new terms."
+    }
   }
 }

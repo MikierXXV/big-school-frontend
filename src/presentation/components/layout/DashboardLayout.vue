@@ -9,7 +9,7 @@
     </main>
 
     <!-- Footer -->
-    <AppFooter />
+    <AppFooter :minimal="true" />
   </div>
 </template>
 

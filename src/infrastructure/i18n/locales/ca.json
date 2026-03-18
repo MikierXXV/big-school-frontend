@@ -328,5 +328,112 @@
       "title": "Impressió d'Etiquetes",
       "placeholder": "Mòdul d'Impressió d'Etiquetes en construcció"
     }
+  },
+  "footer": {
+    "tagline": "Plataforma integral de gestió hospitalària",
+    "description": "Solucions digitals per optimitzar la gestió clínica, quirúrgica i d'urgències de la teva organització sanitària.",
+    "sections": {
+      "platform": "Plataforma",
+      "company": "Empresa",
+      "contact": "Contacte"
+    },
+    "platform": {
+      "surgicalBlock": "Bloc Quirúrgic",
+      "emergency": "Urgències",
+      "dataAnalytics": "Analítiques",
+      "wristbandPrinting": "Impressió de Polseres",
+      "labelPrinting": "Impressió d'Etiquetes"
+    },
+    "company": {
+      "about": "Sobre nosaltres",
+      "contact": "Contacte",
+      "privacy": "Política de privacitat",
+      "terms": "Termes de servei"
+    },
+    "contact": {
+      "email": "contacte@healthcaresuite.com",
+      "phone": "+34 900 000 000",
+      "address": "Carrer Innovació, 42\nBarcelona, 08001"
+    },
+    "copyright": "© {year} Health Care Suite. Tots els drets reservats."
+  },
+  "about": {
+    "modal": {
+      "title": "Sobre nosaltres",
+      "tagline": "Plataforma integral de gestió hospitalària",
+      "description": "Health Care Suite és una solució digital dissenyada per optimitzar la gestió clínica, quirúrgica i d'urgències a les organitzacions sanitàries. Desenvolupada amb els estàndards més alts de seguretat i privacitat, ajuda els professionals de la salut a treballar de manera més eficient i segura.",
+      "ctaDescription": "Per conèixer en detall la nostra missió, valors i equip, visita el nostre lloc web corporatiu.",
+      "ctaButton": "Visitar lloc web"
+    }
+  },
+  "contactModal": {
+    "title": "Contacta amb nosaltres",
+    "description": "Som aquí per ajudar-te. No dubtis a posar-te en contacte amb el nostre equip.",
+    "emailLabel": "Correu electrònic",
+    "phoneLabel": "Telèfon",
+    "addressLabel": "Adreça",
+    "emailAction": "Enviar email"
+  },
+  "privacy": {
+    "title": "Política de privacitat",
+    "lastUpdated": "Darrera actualització: gener 2025",
+    "accept": "Entès",
+    "s1": {
+      "title": "1. Responsable del tractament",
+      "text": "Health Care Suite, S.L., amb domicili al Carrer Innovació, 42, Barcelona, 08001, és la responsable del tractament de les dades personals recollides a través d'aquesta plataforma."
+    },
+    "s2": {
+      "title": "2. Dades que recopilem",
+      "text": "Recopilem dades d'identificació personal (nom, cognoms, correu electrònic), dades professionals (centre sanitari, rol clínic) i dades d'ús de la plataforma necessàries per a la prestació del servei. No recopilem dades de pacients directament a través d'aquesta aplicació."
+    },
+    "s3": {
+      "title": "3. Finalitat del tractament",
+      "text": "Les dades s'utilitzen exclusivament per: (a) gestionar l'accés i ús de la plataforma per part dels professionals autoritzats, (b) millorar la qualitat del servei, (c) complir amb les obligacions legals aplicables al sector sanitari."
+    },
+    "s4": {
+      "title": "4. Base legal",
+      "text": "El tractament es basa en l'execució del contracte de servei subscrit amb la seva organització (art. 6.1.b RGPD) i, si escau, en el compliment d'obligacions legals (art. 6.1.c RGPD)."
+    },
+    "s5": {
+      "title": "5. Conservació de dades",
+      "text": "Les dades es conservaran durant la vigència de la relació contractual i, un cop finalitzada, durant els terminis legalment establerts (mínim 5 anys per a documentació relacionada amb l'activitat sanitària)."
+    },
+    "s6": {
+      "title": "6. Drets dels usuaris",
+      "text": "Podeu exercir els vostres drets d'accés, rectificació, supressió, oposició, limitació i portabilitat enviant un correu a contacte@healthcaresuite.com. Teniu dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades."
+    },
+    "s7": {
+      "title": "7. Seguretat",
+      "text": "Apliquem mesures tècniques i organitzatives adequades, incloent-hi xifratge en trànsit (TLS), control d'accés basat en rols (RBAC) i auditories periòdiques de seguretat."
+    }
+  },
+  "terms": {
+    "title": "Termes de servei",
+    "lastUpdated": "Darrera actualització: gener 2025",
+    "accept": "Entès",
+    "s1": {
+      "title": "1. Acceptació dels termes",
+      "text": "L'accés i ús de Health Care Suite implica l'acceptació plena dels presents termes. Si actua en nom d'una organització, declara tenir autoritat suficient per vincular-la a aquests termes."
+    },
+    "s2": {
+      "title": "2. Descripció del servei",
+      "text": "Health Care Suite és una plataforma de gestió hospitalària que inclou mòduls de bloc quirúrgic, urgències, analítiques de dades, impressió de polseres i impressió d'etiquetes. El servei es presta sota model SaaS i està destinat exclusivament a professionals i organitzacions del sector sanitari."
+    },
+    "s3": {
+      "title": "3. Ús autoritzat",
+      "text": "L'usuari es compromet a utilitzar la plataforma únicament per als fins per als quals va ser contractada, a no compartir les seves credencials d'accés amb tercers i a notificar immediatament qualsevol ús no autoritzat del seu compte."
+    },
+    "s4": {
+      "title": "4. Propietat intel·lectual",
+      "text": "Tot el programari, disseny, contingut i documentació de Health Care Suite són propietat exclusiva de l'Empresa o dels seus llicenciants. Queda prohibida la seva reproducció, distribució o modificació sense autorització expressa i per escrit."
+    },
+    "s5": {
+      "title": "5. Limitació de responsabilitat",
+      "text": "L'Empresa no serà responsable dels danys derivats de l'ús incorrecte de la plataforma, d'interrupcions del servei per causes alienes al seu control o de decisions clíniques preses pels professionals basades en la informació gestionada a través del sistema."
+    },
+    "s6": {
+      "title": "6. Modificacions i terminació",
+      "text": "L'Empresa es reserva el dret a modificar aquests termes amb un preavís de 30 dies. L'ús continuat del servei després d'aquest període implica l'acceptació dels nous termes."
+    }
   }
 }
