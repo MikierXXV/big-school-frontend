@@ -328,5 +328,112 @@
       "title": "Impresión de Etiquetas",
       "placeholder": "Módulo de Impresión de Etiquetas en construcción"
     }
+  },
+  "footer": {
+    "tagline": "Plataforma integral de gestión hospitalaria",
+    "description": "Soluciones digitales para optimizar la gestión clínica, quirúrgica y de urgencias de tu organización sanitaria.",
+    "sections": {
+      "platform": "Plataforma",
+      "company": "Empresa",
+      "contact": "Contacto"
+    },
+    "platform": {
+      "surgicalBlock": "Bloque Quirúrgico",
+      "emergency": "Urgencias",
+      "dataAnalytics": "Analíticas",
+      "wristbandPrinting": "Impresión de Pulseras",
+      "labelPrinting": "Impresión de Etiquetas"
+    },
+    "company": {
+      "about": "Sobre nosotros",
+      "contact": "Contacto",
+      "privacy": "Política de privacidad",
+      "terms": "Términos de servicio"
+    },
+    "contact": {
+      "email": "contacto@healthcaresuite.com",
+      "phone": "+34 900 000 000",
+      "address": "Calle Innovación, 42\nBarcelona, 08001"
+    },
+    "copyright": "© {year} Health Care Suite. Todos los derechos reservados."
+  },
+  "about": {
+    "modal": {
+      "title": "Sobre nosotros",
+      "tagline": "Plataforma integral de gestión hospitalaria",
+      "description": "Health Care Suite es una solución digital diseñada para optimizar la gestión clínica, quirúrgica y de urgencias en organizaciones sanitarias. Desarrollada con los más altos estándares de seguridad y privacidad, ayuda a los profesionales de la salud a trabajar de forma más eficiente y segura.",
+      "ctaDescription": "Para conocer en detalle nuestra misión, valores y equipo, visita nuestro sitio web corporativo.",
+      "ctaButton": "Ver sitio web"
+    }
+  },
+  "contactModal": {
+    "title": "Contacta con nosotros",
+    "description": "Estamos aquí para ayudarte. No dudes en ponerte en contacto con nuestro equipo.",
+    "emailLabel": "Correo electrónico",
+    "phoneLabel": "Teléfono",
+    "addressLabel": "Dirección",
+    "emailAction": "Enviar email"
+  },
+  "privacy": {
+    "title": "Política de privacidad",
+    "lastUpdated": "Última actualización: enero 2025",
+    "accept": "Entendido",
+    "s1": {
+      "title": "1. Responsable del tratamiento",
+      "text": "Health Care Suite, S.L., con domicilio en Calle Innovación, 42, Barcelona, 08001, es la responsable del tratamiento de los datos personales recogidos a través de esta plataforma."
+    },
+    "s2": {
+      "title": "2. Datos que recopilamos",
+      "text": "Recopilamos datos de identificación personal (nombre, apellidos, correo electrónico), datos profesionales (centro sanitario, rol clínico) y datos de uso de la plataforma necesarios para la prestación del servicio. No recopilamos datos de pacientes directamente a través de esta aplicación."
+    },
+    "s3": {
+      "title": "3. Finalidad del tratamiento",
+      "text": "Los datos se utilizan exclusivamente para: (a) gestionar el acceso y uso de la plataforma por parte de los profesionales autorizados, (b) mejorar la calidad del servicio, (c) cumplir con las obligaciones legales aplicables al sector sanitario."
+    },
+    "s4": {
+      "title": "4. Base legal",
+      "text": "El tratamiento se basa en la ejecución del contrato de servicio suscrito con su organización (art. 6.1.b RGPD) y, en su caso, en el cumplimiento de obligaciones legales (art. 6.1.c RGPD). Para funcionalidades opcionales, se solicitará su consentimiento explícito."
+    },
+    "s5": {
+      "title": "5. Conservación de datos",
+      "text": "Los datos se conservarán durante la vigencia de la relación contractual y, una vez finalizada, durante los plazos legalmente establecidos (mínimo 5 años para documentación relacionada con la actividad sanitaria)."
+    },
+    "s6": {
+      "title": "6. Derechos de los usuarios",
+      "text": "Puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad enviando un correo a contacto@healthcaresuite.com. Tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (aepd.es)."
+    },
+    "s7": {
+      "title": "7. Seguridad",
+      "text": "Aplicamos medidas técnicas y organizativas adecuadas, incluyendo cifrado en tránsito (TLS), control de acceso basado en roles (RBAC) y auditorías periódicas de seguridad."
+    }
+  },
+  "terms": {
+    "title": "Términos de servicio",
+    "lastUpdated": "Última actualización: enero 2025",
+    "accept": "Entendido",
+    "s1": {
+      "title": "1. Aceptación de los términos",
+      "text": "El acceso y uso de Health Care Suite implica la aceptación plena de los presentes términos. Si actúa en nombre de una organización, declara tener autoridad suficiente para vincularla a estos términos."
+    },
+    "s2": {
+      "title": "2. Descripción del servicio",
+      "text": "Health Care Suite es una plataforma de gestión hospitalaria que incluye módulos de bloque quirúrgico, urgencias, analíticas de datos, impresión de pulseras e impresión de etiquetas. El servicio se presta bajo modelo SaaS y está destinado exclusivamente a profesionales y organizaciones del sector sanitario."
+    },
+    "s3": {
+      "title": "3. Uso autorizado",
+      "text": "El usuario se compromete a utilizar la plataforma únicamente para los fines para los que fue contratada, a no compartir sus credenciales de acceso con terceros y a notificar inmediatamente cualquier uso no autorizado de su cuenta."
+    },
+    "s4": {
+      "title": "4. Propiedad intelectual",
+      "text": "Todo el software, diseño, contenido y documentación de Health Care Suite son propiedad exclusiva de la Empresa o de sus licenciantes. Queda prohibida su reproducción, distribución o modificación sin autorización expresa y por escrito."
+    },
+    "s5": {
+      "title": "5. Limitación de responsabilidad",
+      "text": "La Empresa no será responsable de los daños derivados del uso incorrecto de la plataforma, de interrupciones del servicio por causas ajenas a su control o de decisiones clínicas tomadas por los profesionales basadas en la información gestionada a través del sistema."
+    },
+    "s6": {
+      "title": "6. Modificaciones y terminación",
+      "text": "La Empresa se reserva el derecho a modificar estos términos con un preaviso de 30 días. El uso continuado del servicio tras dicho período implica la aceptación de los nuevos términos."
+    }
   }
 }
