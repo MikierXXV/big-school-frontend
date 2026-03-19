@@ -223,12 +223,12 @@ onMounted(() => {
         </div>
 
         <!-- Table -->
-        <div v-if="filteredOrganizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div v-if="filteredOrganizations.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
               <!-- Checkbox header -->
-              <th v-if="canDeleteOrgs" class="px-4 py-3 w-10">
+              <th v-if="canDeleteOrgs" class="px-3 py-3 sm:px-4 w-10">
                 <input
                   type="checkbox"
                   :checked="allPageSelected"
@@ -237,16 +237,16 @@ onMounted(() => {
                   @change="toggleSelectAll"
                 />
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th class="px-3 py-3 sm:px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {{ t('common.name') || 'Name' }}
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th class="px-3 py-3 sm:px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {{ t('common.type') || 'Type' }}
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th class="px-3 py-3 sm:px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {{ t('common.status') || 'Status' }}
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              <th class="px-3 py-3 sm:px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                 Email
               </th>
             </tr>
@@ -260,7 +260,7 @@ onMounted(() => {
               @click="goToDetail(org.id)"
             >
               <!-- Row checkbox -->
-              <td v-if="canDeleteOrgs" class="px-4 py-4 w-10" @click.stop>
+              <td v-if="canDeleteOrgs" class="px-3 py-3 sm:px-4 sm:py-4 w-10" @click.stop>
                 <input
                   type="checkbox"
                   :checked="selectedIds.has(org.id)"
@@ -269,18 +269,19 @@ onMounted(() => {
                   @change="toggleSelect(org.id, $event)"
                 />
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                {{ org.name }}
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                <div>{{ org.name }}</div>
+                <div class="text-xs text-gray-400 sm:hidden truncate max-w-[130px]">{{ org.contactEmail }}</div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                 <BaseBadge variant="info" size="sm">{{ t(`organizations.types.${org.type}`) }}</BaseBadge>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                 <BaseBadge :variant="badgeVariant(org.active)" size="sm">
                   {{ org.active ? t('common.active') : t('common.inactive') }}
                 </BaseBadge>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                 {{ org.contactEmail }}
               </td>
             </tr>
@@ -288,7 +289,7 @@ onMounted(() => {
         </table>
 
         <!-- Pagination -->
-        <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+        <div class="px-3 sm:px-6 py-3 border-t border-gray-200 dark:border-gray-700">
           <BasePagination
             :page="orgStore.pagination.page"
             :total-pages="orgStore.pagination.totalPages"

@@ -245,8 +245,8 @@ onMounted(() => {
         </div>
 
         <!-- User table -->
-        <div v-if="pagedUsers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div v-if="pagedUsers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-x-auto">
+        <table class="min-w-full min-w-[640px] divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700">
             <tr>
               <!-- Checkbox header -->

@@ -5,11 +5,16 @@
 
   Sidebar navigation for admin panel.
   Links are conditionally shown based on RBAC permissions.
+  On mobile: slide-in drawer (controlled by `open` prop).
+  On desktop: always visible static sidebar.
 -->
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useRBAC } from '@presentation/composables/useRBAC.js';
+
+defineProps<{ open?: boolean }>();
+defineEmits<{ close: [] }>();
 
 const { t } = useI18n();
 const { isSuperAdmin, canAccess } = useRBAC();
@@ -43,12 +48,35 @@ const navItems = [
 </script>
 
 <template>
-  <aside class="w-64 shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+  <aside
+    :class="[
+      'bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700',
+      'transition-transform duration-300 ease-in-out',
+      'fixed inset-y-0 left-0 z-50 w-64',
+      'md:static md:z-auto md:translate-x-0 md:shrink-0',
+      open ? 'translate-x-0' : '-translate-x-full',
+    ]"
+  >
+    <!-- Header con botón X — solo mobile -->
+    <div class="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+      <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ t('nav.adminPanel') }}</span>
+      <button
+        @click="$emit('close')"
+        aria-label="Close navigation"
+        class="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
     <nav class="p-4 space-y-1">
       <template v-for="item in navItems" :key="item.to">
         <router-link
           v-if="item.show()"
           :to="item.to"
+          @click="$emit('close')"
           class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400"
         >

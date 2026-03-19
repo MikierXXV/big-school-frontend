@@ -62,14 +62,14 @@ function goToPage(p: number) {
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-6 px-4 py-3">
+  <div class="flex flex-col items-center gap-2 px-4 py-3 sm:flex-row sm:justify-between sm:gap-6">
     <!-- Showing X-Y of Z -->
     <div class="text-sm text-gray-700 dark:text-gray-300">
       {{ t('common.showing', { from, to, total }) }}
     </div>
 
     <!-- Previous · page numbers · Next -->
-    <div class="flex items-center gap-1">
+    <div class="flex items-center flex-wrap justify-center gap-1">
       <button
         :disabled="!hasPrevious"
         class="px-3 py-1.5 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
