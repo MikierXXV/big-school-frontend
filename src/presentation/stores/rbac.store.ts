@@ -50,10 +50,10 @@ export const useRbacStore = defineStore('rbac', () => {
     return getRoleInOrg(organizationId) === 'org_admin';
   }
 
-  async function fetchPermissions(userId: string): Promise<void> {
+  async function fetchPermissions(_userId?: string): Promise<void> {
     try {
       isLoading.value = true;
-      const result = await useCases.getAdminPermissionsUseCase.execute(userId);
+      const result = await useCases.getMyPermissionsUseCase.execute();
       permissions.value = result.permissions.map((p) => p.permission);
     } catch {
       permissions.value = [];

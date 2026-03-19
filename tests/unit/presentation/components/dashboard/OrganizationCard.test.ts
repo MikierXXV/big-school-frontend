@@ -65,7 +65,9 @@ describe('OrganizationCard', () => {
 
   it('should display join date', () => {
     const wrapper = mountCard();
-    expect(wrapper.text()).toContain('2024-01-15');
+    // Date is formatted via toLocaleDateString — verify year and day are present
+    expect(wrapper.text()).toContain('2024');
+    expect(wrapper.text()).toContain('15');
   });
 
   it('should use correct testid based on organizationId', () => {

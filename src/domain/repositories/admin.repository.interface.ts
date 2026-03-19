@@ -12,6 +12,7 @@ import type {
   PromoteUserDTO,
   DemoteUserDTO,
   PaginatedUsersDTO,
+  UserStatsDTO,
 } from '@application/dtos/admin/admin.dto.js';
 
 export interface IAdminRepository {
@@ -19,9 +20,11 @@ export interface IAdminRepository {
   demote(data: DemoteUserDTO): Promise<void>;
   listAdmins(): Promise<AdminListDTO>;
   getPermissions(userId: string): Promise<AdminPermissionsDTO>;
+  getMyPermissions(): Promise<AdminPermissionsDTO>;
   grantPermissions(data: GrantPermissionsDTO): Promise<AdminPermissionsDTO>;
   revokePermission(data: RevokePermissionDTO): Promise<AdminPermissionsDTO>;
-  listUsers(query: { page?: number; limit?: number; search?: string }): Promise<PaginatedUsersDTO>;
+  listUsers(query: { page?: number; limit?: number; search?: string; role?: string }): Promise<PaginatedUsersDTO>;
+  getUserStats(): Promise<UserStatsDTO>;
   deleteUser(userId: string): Promise<void>;
   hardDeleteUser(userId: string): Promise<void>;
 }

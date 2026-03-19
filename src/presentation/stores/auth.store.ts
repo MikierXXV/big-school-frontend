@@ -11,6 +11,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { createContainer } from '@infrastructure/di/container.js';
+import { useRbacStore } from '@presentation/stores/rbac.store.js';
 import { setSentryUser, clearSentryUser, trackDomainEvent } from '@infrastructure/sentry/sentry.service.js';
 import { InvalidCredentialsError } from '@domain/errors/auth.errors.js';
 import { InvalidVerificationTokenError, EmailAlreadyVerifiedError } from '@domain/errors/auth.errors.js';
@@ -183,6 +184,7 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       clearSentryUser();
+      useRbacStore().clear();
       isLoading.value = false;
     }
   }

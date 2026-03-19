@@ -14,9 +14,6 @@ test.describe('Registration Flow', () => {
   });
 
   test('should display registration form with all fields', async ({ page }) => {
-    // Wait for page to be fully loaded
-    await page.waitForLoadState('networkidle');
-
     // Wait for heading to be visible
     const heading = page.locator('h1');
     await heading.waitFor({ state: 'visible', timeout: 5000 });

@@ -68,3 +68,24 @@ export interface PaginatedUsersDTO {
   readonly hasNext: boolean;
   readonly hasPrevious: boolean;
 }
+
+export interface UserStatsDTO {
+  readonly total: number;
+  readonly emailVerified: number;
+  readonly byRole: {
+    readonly user: number;
+    readonly admin: number;
+    readonly super_admin: number;
+  };
+  readonly byStatus: {
+    readonly active: number;
+    readonly suspended: number;
+    readonly pending_verification: number;
+    readonly deactivated: number;
+  };
+  readonly byProvider: {
+    readonly local: number;
+    readonly google: number;
+    readonly microsoft: number;
+  };
+}

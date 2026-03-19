@@ -40,15 +40,22 @@ const showBulkHardDeleteConfirm = ref(false);
 
 const canDeleteUsers = computed(() => isSuperAdmin.value || hasPermission('manage_users'));
 
+// Server provides the paginated page — no client-side slicing needed
+const pagedUsers = computed(() => adminStore.usersList?.users ?? []);
+const totalPages = computed(() => adminStore.usersList?.totalPages ?? 1);
+const totalFiltered = computed(() => adminStore.usersList?.total ?? 0);
+
+const selectableUsers = computed(() => pagedUsers.value.filter((u) => u.systemRole !== 'super_admin'));
+
 const allPageSelected = computed(() =>
-  pagedUsers.value.length > 0 && pagedUsers.value.every((u) => selectedIds.value.has(u.id))
+  selectableUsers.value.length > 0 && selectableUsers.value.every((u) => selectedIds.value.has(u.id))
 );
 
 function toggleSelectAll(): void {
   if (allPageSelected.value) {
-    pagedUsers.value.forEach((u) => selectedIds.value.delete(u.id));
+    selectableUsers.value.forEach((u) => selectedIds.value.delete(u.id));
   } else {
-    pagedUsers.value.forEach((u) => selectedIds.value.add(u.id));
+    selectableUsers.value.forEach((u) => selectedIds.value.add(u.id));
   }
   selectedIds.value = new Set(selectedIds.value);
 }
@@ -65,7 +72,7 @@ async function handleBulkDeactivate(): Promise<void> {
   await adminStore.deleteUsers(ids);
   selectedIds.value = new Set();
   showBulkDeactivateConfirm.value = false;
-  await loadUsers(searchText.value.trim() || undefined);
+  await loadUsers();
 }
 
 async function handleBulkHardDelete(): Promise<void> {
@@ -73,7 +80,7 @@ async function handleBulkHardDelete(): Promise<void> {
   await adminStore.hardDeleteUsers(ids);
   selectedIds.value = new Set();
   showBulkHardDeleteConfirm.value = false;
-  await loadUsers(searchText.value.trim() || undefined);
+  await loadUsers();
 }
 
 const roleOptions = [
@@ -83,12 +90,16 @@ const roleOptions = [
   { value: 'super_admin', label: t('roles.super_admin') },
 ];
 
-async function loadUsers(search?: string): Promise<void> {
+async function loadUsers(): Promise<void> {
   await Promise.all([
-    adminStore.fetchUsers({ limit: 500, ...(search ? { search } : {}) }),
+    adminStore.fetchUsers({
+      page: currentPage.value,
+      limit: PAGE_SIZE,
+      ...(searchText.value.trim() ? { search: searchText.value.trim() } : {}),
+      ...(filterRole.value ? { role: filterRole.value } : {}),
+    }),
     adminStore.fetchAdmins(),
   ]);
-  currentPage.value = 1;
 }
 
 function getUserPermissions(userId: string): string[] {
@@ -107,36 +118,17 @@ let searchDebounce: ReturnType<typeof setTimeout> | null = null;
 function handleSearchInput(): void {
   currentPage.value = 1;
   if (searchDebounce) clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(() => {
-    loadUsers(searchText.value.trim() || undefined);
-  }, 300);
+  searchDebounce = setTimeout(() => loadUsers(), 300);
 }
 
 function handleFilterChange(): void {
   currentPage.value = 1;
+  loadUsers();
 }
-
-const filteredUsers = computed(() => {
-  let users = adminStore.usersList?.users ?? [];
-  if (filterRole.value) {
-    users = users.filter((u) => u.systemRole === filterRole.value);
-  }
-  return users;
-});
-
-// When role filter is active, count client-side; otherwise use server total
-const totalFiltered = computed(() =>
-  filterRole.value ? filteredUsers.value.length : (adminStore.usersList?.total ?? filteredUsers.value.length)
-);
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredUsers.value.length / PAGE_SIZE)));
-
-const pagedUsers = computed(() => {
-  const start = (currentPage.value - 1) * PAGE_SIZE;
-  return filteredUsers.value.slice(start, start + PAGE_SIZE);
-});
 
 function handlePageChange(page: number): void {
   currentPage.value = page;
+  loadUsers();
 }
 
 async function handleDemote(): Promise<void> {
@@ -292,15 +284,19 @@ onMounted(() => {
               v-for="user in pagedUsers"
               :key="user.id"
               :data-testid="`user-row-${user.id}`"
-              :class="{ 'bg-red-50 dark:bg-red-900/10': selectedIds.has(user.id) }"
+              :class="{
+                'bg-red-50 dark:bg-red-900/10': selectedIds.has(user.id),
+                'opacity-50 cursor-not-allowed': user.systemRole === 'super_admin',
+              }"
             >
               <!-- Row checkbox -->
               <td v-if="canDeleteUsers" class="px-4 py-4 w-10">
                 <input
                   type="checkbox"
                   :checked="selectedIds.has(user.id)"
+                  :disabled="user.systemRole === 'super_admin'"
                   :data-testid="`select-${user.id}`"
-                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
+                  class="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500 disabled:opacity-40 disabled:cursor-not-allowed"
                   @change="toggleSelect(user.id)"
                 />
               </td>
@@ -354,7 +350,7 @@ onMounted(() => {
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
                 <button
-                  v-if="user.systemRole !== 'user'"
+                  v-if="user.systemRole === 'admin'"
                   :data-testid="`permissions-btn-${user.id}`"
                   :title="t('admin.permissions.title')"
                   class="p-1.5 text-primary-600 hover:text-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded"

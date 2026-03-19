@@ -11,6 +11,7 @@ import { useAdminStore } from '@presentation/stores/admin.store.js';
 const {
   mockListAdmins,
   mockListUsers,
+  mockGetUserStats,
   mockPromoteAdmin,
   mockDemoteAdmin,
   mockGetAdminPermissions,
@@ -19,6 +20,7 @@ const {
 } = vi.hoisted(() => ({
   mockListAdmins: vi.fn(),
   mockListUsers: vi.fn(),
+  mockGetUserStats: vi.fn(),
   mockPromoteAdmin: vi.fn(),
   mockDemoteAdmin: vi.fn(),
   mockGetAdminPermissions: vi.fn(),
@@ -53,6 +55,7 @@ vi.mock('@infrastructure/di/container.js', () => ({
       grantPermissionsUseCase: { execute: mockGrantPermissions },
       revokePermissionUseCase: { execute: mockRevokePermission },
       listUsersUseCase: { execute: mockListUsers },
+      getUserStatsUseCase: { execute: mockGetUserStats },
     },
   }),
 }));
@@ -95,6 +98,7 @@ describe('Admin Store', () => {
       expect(store.admins).toEqual([]);
       expect(store.adminPermissions).toBeNull();
       expect(store.usersList).toBeNull();
+      expect(store.userStats).toBeNull();
       expect(store.isLoading).toBe(false);
       expect(store.error).toBeNull();
     });
@@ -260,6 +264,36 @@ describe('Admin Store', () => {
 
       await expect(store.revokePermission('admin-1', 'manage_users')).rejects.toThrow('Revoke failed');
       expect(store.error).toBe('Revoke failed');
+    });
+  });
+
+  describe('fetchUserStats', () => {
+    const mockStats = {
+      total: 100,
+      emailVerified: 80,
+      byRole: { user: 90, admin: 8, super_admin: 2 },
+      byStatus: { active: 95, suspended: 2, pending_verification: 2, deactivated: 1 },
+      byProvider: { local: 85, google: 10, microsoft: 5 },
+    };
+
+    it('should fetch and store user stats', async () => {
+      mockGetUserStats.mockResolvedValue(mockStats);
+      const store = useAdminStore();
+
+      await store.fetchUserStats();
+
+      expect(store.userStats).toEqual(mockStats);
+      expect(store.isLoading).toBe(false);
+    });
+
+    it('should set error on failure', async () => {
+      mockGetUserStats.mockRejectedValue(new Error('Stats failed'));
+      const store = useAdminStore();
+
+      await store.fetchUserStats();
+
+      expect(store.error).toBe('Stats failed');
+      expect(store.userStats).toBeNull();
     });
   });
 

@@ -41,9 +41,11 @@ import { PromoteAdminUseCase } from '@application/use-cases/admin/promote-admin.
 import { DemoteAdminUseCase } from '@application/use-cases/admin/demote-admin.use-case.js';
 import { ListAdminsUseCase } from '@application/use-cases/admin/list-admins.use-case.js';
 import { GetAdminPermissionsUseCase } from '@application/use-cases/admin/get-admin-permissions.use-case.js';
+import { GetMyPermissionsUseCase } from '@application/use-cases/admin/get-my-permissions.use-case.js';
 import { GrantPermissionsUseCase } from '@application/use-cases/admin/grant-permissions.use-case.js';
 import { RevokePermissionUseCase } from '@application/use-cases/admin/revoke-permission.use-case.js';
 import { ListUsersUseCase } from '@application/use-cases/admin/list-users.use-case.js';
+import { GetUserStatsUseCase } from '@application/use-cases/admin/get-user-stats.use-case.js';
 import { DeleteUserUseCase } from '@application/use-cases/admin/delete-user.use-case.js';
 import { HardDeleteUserUseCase } from '@application/use-cases/admin/hard-delete-user.use-case.js';
 
@@ -79,9 +81,11 @@ export interface Container {
     demoteAdminUseCase: DemoteAdminUseCase;
     listAdminsUseCase: ListAdminsUseCase;
     getAdminPermissionsUseCase: GetAdminPermissionsUseCase;
+    getMyPermissionsUseCase: GetMyPermissionsUseCase;
     grantPermissionsUseCase: GrantPermissionsUseCase;
     revokePermissionUseCase: RevokePermissionUseCase;
     listUsersUseCase: ListUsersUseCase;
+    getUserStatsUseCase: GetUserStatsUseCase;
     deleteUserUseCase: DeleteUserUseCase;
     hardDeleteUserUseCase: HardDeleteUserUseCase;
   };
@@ -175,9 +179,11 @@ export function createContainer(): Container {
   const demoteAdminUseCase = new DemoteAdminUseCase({ adminRepository });
   const listAdminsUseCase = new ListAdminsUseCase({ adminRepository });
   const getAdminPermissionsUseCase = new GetAdminPermissionsUseCase({ adminRepository });
+  const getMyPermissionsUseCase = new GetMyPermissionsUseCase({ adminRepository });
   const grantPermissionsUseCase = new GrantPermissionsUseCase({ adminRepository });
   const revokePermissionUseCase = new RevokePermissionUseCase({ adminRepository });
   const listUsersUseCase = new ListUsersUseCase({ adminRepository });
+  const getUserStatsUseCase = new GetUserStatsUseCase({ adminRepository });
   const deleteUserUseCase = new DeleteUserUseCase({ adminRepository });
   const hardDeleteUserUseCase = new HardDeleteUserUseCase({ adminRepository });
 
@@ -207,9 +213,11 @@ export function createContainer(): Container {
       demoteAdminUseCase,
       listAdminsUseCase,
       getAdminPermissionsUseCase,
+      getMyPermissionsUseCase,
       grantPermissionsUseCase,
       revokePermissionUseCase,
       listUsersUseCase,
+      getUserStatsUseCase,
       deleteUserUseCase,
       hardDeleteUserUseCase,
     },

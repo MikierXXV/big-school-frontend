@@ -71,11 +71,11 @@ describe('PromoteUserModal', () => {
     expect(wrapper.find('[data-testid="promote-search-input"]').exists()).toBe(true);
   });
 
-  it('should call fetchUsers with limit 500 when opened', async () => {
+  it('should call fetchUsers with page/limit/role when opened', async () => {
     const wrapper = mountModal({ open: false });
     await wrapper.setProps({ open: true });
     await new Promise((r) => setTimeout(r, 0));
-    expect(mockAdminStore.fetchUsers).toHaveBeenCalledWith({ limit: 500 });
+    expect(mockAdminStore.fetchUsers).toHaveBeenCalledWith({ page: 1, limit: 20, role: 'user' });
   });
 
   it('should display user results', () => {

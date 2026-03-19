@@ -166,10 +166,10 @@ describe('AdminUserListView', () => {
     expect(wrapper.find('[data-testid="demote-btn-super-1"]').exists()).toBe(false);
   });
 
-  it('should show permissions button for each admin', () => {
+  it('should show permissions button for admin but not for super_admin', () => {
     const wrapper = mountView();
     expect(wrapper.find('[data-testid="permissions-btn-admin-1"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="permissions-btn-super-1"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="permissions-btn-super-1"]').exists()).toBe(false);
   });
 
   it('should navigate to permissions view', async () => {

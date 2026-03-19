@@ -46,21 +46,18 @@ const orgStore = useOrganizationStore();
 const isLoading = ref(true);
 
 // ─── KPIs ──────────────────────────────────────────────────────────────────
-const totalUsers = computed(() => adminStore.usersList?.total ?? 0);
+const totalUsers = computed(() => adminStore.userStats?.total ?? 0);
 const totalOrgs = computed(() => orgStore.pagination.total);
 const totalAdmins = computed(() => adminStore.admins.length);
 const activeOrgs = computed(() => orgStore.organizations.filter((o) => o.active).length);
 const inactiveOrgs = computed(() => orgStore.organizations.filter((o) => !o.active).length);
 
 // ─── Users by role ─────────────────────────────────────────────────────────
-const usersByRole = computed(() => {
-  const users = adminStore.usersList?.users ?? [];
-  return {
-    user: users.filter((u) => u.systemRole === 'user').length,
-    admin: users.filter((u) => u.systemRole === 'admin').length,
-    super_admin: users.filter((u) => u.systemRole === 'super_admin').length,
-  };
-});
+const usersByRole = computed(() => ({
+  user: adminStore.userStats?.byRole.user ?? 0,
+  admin: adminStore.userStats?.byRole.admin ?? 0,
+  super_admin: adminStore.userStats?.byRole.super_admin ?? 0,
+}));
 
 const roleChartData = computed(() => ({
   labels: [
@@ -78,14 +75,11 @@ const roleChartData = computed(() => ({
 }));
 
 // ─── Users by status ───────────────────────────────────────────────────────
-const usersByStatus = computed(() => {
-  const users = adminStore.usersList?.users ?? [];
-  return {
-    active: users.filter((u) => u.status === 'ACTIVE').length,
-    inactive: users.filter((u) => u.status === 'INACTIVE').length,
-    pending: users.filter((u) => u.status === 'PENDING_VERIFICATION').length,
-  };
-});
+const usersByStatus = computed(() => ({
+  active: adminStore.userStats?.byStatus.active ?? 0,
+  inactive: adminStore.userStats?.byStatus.deactivated ?? 0,
+  pending: adminStore.userStats?.byStatus.pending_verification ?? 0,
+}));
 
 const statusChartData = computed(() => ({
   labels: [
@@ -104,11 +98,11 @@ const statusChartData = computed(() => ({
 
 // ─── Auth providers ────────────────────────────────────────────────────────
 const authProviders = computed(() => {
-  const users = adminStore.usersList?.users ?? [];
-  const total = users.length || 1;
-  const local = users.filter((u) => u.authProvider === 'local').length;
-  const google = users.filter((u) => u.authProvider === 'google').length;
-  const microsoft = users.filter((u) => u.authProvider === 'microsoft').length;
+  const stats = adminStore.userStats;
+  const total = stats?.total || 1;
+  const local = stats?.byProvider.local ?? 0;
+  const google = stats?.byProvider.google ?? 0;
+  const microsoft = stats?.byProvider.microsoft ?? 0;
   return [
     { key: 'local', label: t('admin.analytics.providers.local'), count: local, pct: Math.round((local / total) * 100), color: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200' },
     { key: 'google', label: t('admin.analytics.providers.google'), count: google, pct: Math.round((google / total) * 100), color: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300' },
@@ -151,9 +145,8 @@ const orgStatusChartData = computed(() => ({
 
 // ─── Email verification ────────────────────────────────────────────────────
 const emailVerificationData = computed(() => {
-  const users = adminStore.usersList?.users ?? [];
-  const verified = users.filter((u) => u.emailVerified).length;
-  const unverified = users.length - verified;
+  const verified = adminStore.userStats?.emailVerified ?? 0;
+  const unverified = (adminStore.userStats?.total ?? 0) - verified;
   return {
     labels: [t('admin.analytics.email.verified'), t('admin.analytics.email.unverified')],
     datasets: [
@@ -275,7 +268,7 @@ const kpiCards = computed(() => [
 onMounted(async () => {
   try {
     await Promise.all([
-      adminStore.fetchUsers({ page: 1, limit: 1000 }),
+      adminStore.fetchUserStats(),
       orgStore.fetchOrganizations({ limit: 500 }),
       adminStore.fetchAdmins(),
     ]);
