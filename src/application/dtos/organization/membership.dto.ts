@@ -14,6 +14,7 @@ export interface MembershipDTO {
   readonly role: string;
   readonly joinedAt: string;
   readonly isActive: boolean;
+  readonly systemRole?: string;
 }
 
 export interface AssignMemberDTO {

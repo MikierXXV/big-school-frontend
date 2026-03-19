@@ -16,6 +16,7 @@ import type {
   PromoteUserDTO,
   DemoteUserDTO,
   PaginatedUsersDTO,
+  UserStatsDTO,
 } from '@application/dtos/admin/admin.dto.js';
 
 export class HttpAdminRepository implements IAdminRepository {
@@ -39,6 +40,11 @@ export class HttpAdminRepository implements IAdminRepository {
     return response.data.data;
   }
 
+  async getMyPermissions(): Promise<AdminPermissionsDTO> {
+    const response = await this.httpClient.get<any>('/api/admin/my-permissions');
+    return response.data.data;
+  }
+
   async grantPermissions(data: GrantPermissionsDTO): Promise<AdminPermissionsDTO> {
     const response = await this.httpClient.post<any>('/api/admin/permissions/grant', data);
     return response.data.data;
@@ -49,13 +55,19 @@ export class HttpAdminRepository implements IAdminRepository {
     return response.data.data;
   }
 
-  async listUsers(query: { page?: number; limit?: number; search?: string }): Promise<PaginatedUsersDTO> {
+  async listUsers(query: { page?: number; limit?: number; search?: string; role?: string }): Promise<PaginatedUsersDTO> {
     const params: Record<string, unknown> = {};
     if (query.page !== undefined) params.page = query.page;
     if (query.limit !== undefined) params.limit = query.limit;
     if (query.search !== undefined) params.search = query.search;
+    if (query.role !== undefined) params.role = query.role;
 
     const response = await this.httpClient.get<any>('/api/users', { params });
+    return response.data.data;
+  }
+
+  async getUserStats(): Promise<UserStatsDTO> {
+    const response = await this.httpClient.get<any>('/api/users/stats');
     return response.data.data;
   }
 

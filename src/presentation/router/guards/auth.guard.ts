@@ -14,12 +14,13 @@
 
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { useAuthStore } from '@presentation/stores/auth.store.js';
+import { useRbacStore } from '@presentation/stores/rbac.store.js';
 
-export function authGuard(
+export async function authGuard(
   to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
-): void {
+): Promise<void> {
   const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
@@ -30,6 +31,14 @@ export function authGuard(
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next({ name: 'dashboard' });
     return;
+  }
+
+  // Lazily load permissions for admin users (covers login, OAuth and page reload)
+  if (authStore.isAuthenticated && authStore.isAdmin) {
+    const rbacStore = useRbacStore();
+    if (rbacStore.permissions.length === 0) {
+      await rbacStore.fetchPermissions(authStore.user!.id);
+    }
   }
 
   next();

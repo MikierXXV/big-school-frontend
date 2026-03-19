@@ -215,13 +215,18 @@ onMounted(async () => {
                   </td>
                   <td class="px-4 py-3 text-sm">
                     <BaseSelect
+                      v-if="isSuperAdmin || member.systemRole !== 'super_admin'"
                       :model-value="member.role"
                       :options="roleOptions"
                       @update:model-value="(val: string) => handleRoleChange(member.userId, val)"
                     />
+                    <span v-else class="text-xs text-gray-400 dark:text-gray-500 italic">
+                      {{ t(`organizations.roles.${member.role}`) }}
+                    </span>
                   </td>
                   <td class="px-4 py-3 text-sm">
                     <button
+                      v-if="isSuperAdmin || member.systemRole !== 'super_admin'"
                       :data-testid="`remove-member-${member.userId}`"
                       :title="t('admin.members.remove')"
                       class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"

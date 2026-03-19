@@ -25,6 +25,7 @@ vi.mock('@infrastructure/di/container.js', () => ({
       requestPasswordResetUseCase: { execute: vi.fn() },
       confirmPasswordResetUseCase: { execute: vi.fn() },
       getAdminPermissionsUseCase: { execute: mockGetAdminPermissions },
+      getMyPermissionsUseCase: { execute: mockGetAdminPermissions },
       getUserOrganizationsUseCase: { execute: mockGetUserOrganizations },
       createOrganizationUseCase: { execute: vi.fn() },
       listOrganizationsUseCase: { execute: vi.fn() },

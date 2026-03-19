@@ -14,7 +14,7 @@ export interface ListUsersDeps {
 export class ListUsersUseCase {
   constructor(private readonly deps: ListUsersDeps) {}
 
-  async execute(query: { page?: number; limit?: number; search?: string } = {}): Promise<PaginatedUsersDTO> {
+  async execute(query: { page?: number; limit?: number; search?: string; role?: string } = {}): Promise<PaginatedUsersDTO> {
     return this.deps.adminRepository.listUsers(query);
   }
 }

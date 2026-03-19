@@ -33,16 +33,7 @@ const searchQuery = ref('');
 const promotingUserId = ref<string | null>(null);
 const confirmingUserId = ref<string | null>(null);
 
-const filteredUsers = computed(() => {
-  const users = adminStore.usersList?.users ?? [];
-  const term = searchQuery.value.trim().toLowerCase();
-  if (!term) return users;
-  return users.filter(
-    (u) =>
-      `${u.firstName} ${u.lastName}`.toLowerCase().includes(term) ||
-      u.email.toLowerCase().includes(term)
-  );
-});
+const filteredUsers = computed(() => adminStore.usersList?.users ?? []);
 
 async function handlePromote(): Promise<void> {
   if (!confirmingUserId.value) return;
@@ -53,15 +44,26 @@ async function handlePromote(): Promise<void> {
   emit('promoted');
 }
 
+let searchDebounce: ReturnType<typeof setTimeout> | null = null;
+
+function fetchForModal(search?: string): void {
+  adminStore.fetchUsers({ page: 1, limit: 20, role: 'user', ...(search ? { search } : {}) });
+}
+
 watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
       searchQuery.value = '';
-      adminStore.fetchUsers({ limit: 500 });
+      fetchForModal();
     }
   },
 );
+
+watch(searchQuery, (term) => {
+  if (searchDebounce) clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => fetchForModal(term.trim() || undefined), 300);
+});
 </script>
 
 <template>

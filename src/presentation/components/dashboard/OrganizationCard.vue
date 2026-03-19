@@ -17,7 +17,11 @@ interface Props {
 
 defineProps<Props>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(locale.value, { day: 'numeric', month: 'short', year: 'numeric' });
+}
 </script>
 
 <template>
@@ -37,7 +41,7 @@ const { t } = useI18n();
       </BaseBadge>
     </div>
     <p class="text-xs text-gray-500 dark:text-gray-400">
-      {{ membership.joinedAt }}
+      {{ formatDate(membership.joinedAt) }}
     </p>
   </div>
 </template>

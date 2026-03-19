@@ -17,7 +17,7 @@ import { useRbacStore } from '@presentation/stores/rbac.store.js';
 import { useAuthStore } from '@presentation/stores/auth.store.js';
 import type { UserOrganizationDTO } from '@application/dtos/organization/membership.dto.js';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { userOrganizations, isLoading } = useRBAC();
 const rbacStore = useRbacStore();
 const authStore = useAuthStore();
@@ -51,7 +51,7 @@ function roleBorderClass(role: string): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('ca-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(iso).toLocaleDateString(locale.value, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 </script>
 

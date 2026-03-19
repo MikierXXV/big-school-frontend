@@ -59,7 +59,6 @@ vi.mock('@presentation/stores/admin.store.js', () => ({
 const mockPermissions = {
   userId: 'admin-1',
   permissions: [
-    { permission: 'manage_users', grantedBy: 'super-1', grantedAt: '2024-01-01' },
     { permission: 'manage_organizations', grantedBy: 'super-1', grantedAt: '2024-01-02' },
   ],
 };
@@ -129,20 +128,20 @@ describe('AdminPermissionsView', () => {
     expect(wrapper.text()).toContain('admin-1');
   });
 
-  it('should render permission cards for all 4 permissions', () => {
+  it('should render permission cards for all 2 permissions', () => {
     const wrapper = mountView();
-    expect(wrapper.find('[data-testid="permission-card-manage_users"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="permission-card-manage_organizations"]').exists()).toBe(true);
-    expect(wrapper.find('[data-testid="permission-card-assign_members"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="permission-card-view_all_data"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="permission-card-manage_users"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="permission-card-assign_members"]').exists()).toBe(false);
   });
 
   it('should show permission labels', () => {
     const wrapper = mountView();
-    expect(wrapper.text()).toContain('Manage Users');
     expect(wrapper.text()).toContain('Manage Organizations');
-    expect(wrapper.text()).toContain('Assign Members');
     expect(wrapper.text()).toContain('View All Data');
+    expect(wrapper.text()).not.toContain('Manage Users');
+    expect(wrapper.text()).not.toContain('Assign Members');
   });
 
   it('should show granted info for active permissions', () => {

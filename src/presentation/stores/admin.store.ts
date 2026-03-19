@@ -9,7 +9,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { createContainer } from '@infrastructure/di/container.js';
-import type { AdminDTO, AdminPermissionsDTO, PaginatedUsersDTO } from '@application/dtos/admin/admin.dto.js';
+import type { AdminDTO, AdminPermissionsDTO, PaginatedUsersDTO, UserStatsDTO } from '@application/dtos/admin/admin.dto.js';
 
 const { useCases } = createContainer();
 
@@ -20,6 +20,7 @@ export const useAdminStore = defineStore('admin', () => {
   const admins = ref<AdminDTO[]>([]);
   const adminPermissions = ref<AdminPermissionsDTO | null>(null);
   const usersList = ref<PaginatedUsersDTO | null>(null);
+  const userStats = ref<UserStatsDTO | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
@@ -39,13 +40,25 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function fetchUsers(query: { page?: number; limit?: number; search?: string } = {}): Promise<void> {
+  async function fetchUsers(query: { page?: number; limit?: number; search?: string; role?: string } = {}): Promise<void> {
     try {
       isLoading.value = true;
       error.value = null;
       usersList.value = await useCases.listUsersUseCase.execute(query);
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch users';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function fetchUserStats(): Promise<void> {
+    try {
+      isLoading.value = true;
+      error.value = null;
+      userStats.value = await useCases.getUserStatsUseCase.execute();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch user stats';
     } finally {
       isLoading.value = false;
     }
@@ -138,12 +151,14 @@ export const useAdminStore = defineStore('admin', () => {
     admins,
     adminPermissions,
     usersList,
+    userStats,
     isLoading,
     error,
 
     // Actions
     fetchAdmins,
     fetchUsers,
+    fetchUserStats,
     promoteUser,
     demoteUser,
     deleteUser,
