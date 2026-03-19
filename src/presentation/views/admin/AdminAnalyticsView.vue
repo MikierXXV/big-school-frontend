@@ -431,46 +431,49 @@ onMounted(async () => {
         <div v-else-if="filteredAdmins.length === 0" class="p-8 text-center text-sm text-gray-400">
           {{ adminSearch.trim() ? t('admin.analytics.admins.noResults') : t('admin.analytics.empty') }}
         </div>
-        <table v-else class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400">
-                {{ t('admin.analytics.admins.name') }}
-              </th>
-              <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400">
-                {{ t('admin.analytics.admins.email') }}
-              </th>
-              <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400">
-                {{ t('admin.analytics.admins.permissions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="admin in paginatedAdmins"
-              :key="admin.userId"
-              class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/30 cursor-pointer transition-colors"
-              @click="router.push(`/admin/users/${admin.userId}/permissions`)"
-            >
-              <td class="px-5 py-3 font-medium text-gray-900 dark:text-gray-100">
-                {{ admin.firstName }} {{ admin.lastName }}
-              </td>
-              <td class="px-5 py-3 text-gray-600 dark:text-gray-400">{{ admin.email }}</td>
-              <td class="px-5 py-3">
-                <span v-if="admin.permissions.length === 0" class="text-gray-400 text-xs">—</span>
-                <div v-else class="flex flex-wrap gap-1">
-                  <span
-                    v-for="perm in admin.permissions"
-                    :key="perm"
-                    :class="['inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', permissionColors[perm] ?? 'bg-gray-100 text-gray-600']"
-                  >
-                    {{ permissionLabels[perm] ?? perm }}
-                  </span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-else class="overflow-x-auto">
+          <table class="w-full text-sm min-w-[480px]">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400">
+                  {{ t('admin.analytics.admins.name') }}
+                </th>
+                <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400 hidden sm:table-cell">
+                  {{ t('admin.analytics.admins.email') }}
+                </th>
+                <th class="text-left px-5 py-3 font-medium text-gray-600 dark:text-gray-400">
+                  {{ t('admin.analytics.admins.permissions') }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="admin in paginatedAdmins"
+                :key="admin.userId"
+                class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/30 cursor-pointer transition-colors"
+                @click="router.push(`/admin/users/${admin.userId}/permissions`)"
+              >
+                <td class="px-5 py-3 font-medium text-gray-900 dark:text-gray-100">
+                  <div>{{ admin.firstName }} {{ admin.lastName }}</div>
+                  <div class="text-xs text-gray-400 sm:hidden truncate max-w-[140px]">{{ admin.email }}</div>
+                </td>
+                <td class="px-5 py-3 text-gray-600 dark:text-gray-400 hidden sm:table-cell">{{ admin.email }}</td>
+                <td class="px-5 py-3">
+                  <span v-if="admin.permissions.length === 0" class="text-gray-400 text-xs">—</span>
+                  <div v-else class="flex flex-wrap gap-1">
+                    <span
+                      v-for="perm in admin.permissions"
+                      :key="perm"
+                      :class="['inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', permissionColors[perm] ?? 'bg-gray-100 text-gray-600']"
+                    >
+                      {{ permissionLabels[perm] ?? perm }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- Pagination -->
         <div v-if="!isLoading && adminTotalPages > 1" class="px-5 py-3 border-t border-gray-200 dark:border-gray-700">

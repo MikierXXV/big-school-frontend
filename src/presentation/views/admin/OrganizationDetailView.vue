@@ -168,7 +168,7 @@ onMounted(async () => {
         </div>
 
         <!-- Members section -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {{ t('admin.members.title') }}
@@ -183,20 +183,20 @@ onMounted(async () => {
             </button>
           </div>
 
-          <div v-if="orgStore.members.length > 0">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div v-if="orgStore.members.length > 0" class="overflow-x-auto">
+            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead>
                 <tr>
-                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th class="px-2 py-2 sm:px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     {{ t('common.name') || 'Name' }}
                   </th>
-                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th class="px-2 py-2 sm:px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase hidden sm:table-cell">
                     Email
                   </th>
-                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th class="px-2 py-2 sm:px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     {{ t('admin.members.changeRole') || 'Role' }}
                   </th>
-                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th class="px-2 py-2 sm:px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     {{ t('common.actions') }}
                   </th>
                 </tr>
@@ -207,13 +207,14 @@ onMounted(async () => {
                   :key="member.userId"
                   :data-testid="`member-row-${member.userId}`"
                 >
-                  <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
-                    {{ member.firstName }} {{ member.lastName }}
+                  <td class="px-2 py-2 sm:px-4 sm:py-3 text-sm text-gray-900 dark:text-gray-100">
+                    <div>{{ member.firstName }} {{ member.lastName }}</div>
+                    <div class="text-xs text-gray-400 sm:hidden truncate max-w-[110px]">{{ member.email }}</div>
                   </td>
-                  <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <td class="px-2 py-2 sm:px-4 sm:py-3 text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                     {{ member.email }}
                   </td>
-                  <td class="px-4 py-3 text-sm">
+                  <td class="px-2 py-2 sm:px-4 sm:py-3 text-sm">
                     <BaseSelect
                       v-if="isSuperAdmin || member.systemRole !== 'super_admin'"
                       :model-value="member.role"
@@ -224,7 +225,7 @@ onMounted(async () => {
                       {{ t(`organizations.roles.${member.role}`) }}
                     </span>
                   </td>
-                  <td class="px-4 py-3 text-sm">
+                  <td class="px-2 py-2 sm:px-4 sm:py-3 text-sm">
                     <button
                       v-if="isSuperAdmin || member.systemRole !== 'super_admin'"
                       :data-testid="`remove-member-${member.userId}`"

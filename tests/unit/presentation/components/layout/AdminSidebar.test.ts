@@ -119,6 +119,6 @@ describe('AdminSidebar', () => {
     mockCanAccess.mockReturnValue(true);
     const wrapper = mountSidebar();
     const svgs = wrapper.findAll('svg');
-    expect(svgs.length).toBe(4);
+    expect(svgs.length).toBe(5); // X close button + 4 nav icons
   });
 });
