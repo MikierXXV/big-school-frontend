@@ -22,10 +22,11 @@ const { isAuthenticated } = useAuth();
     <AppHeader />
 
     <!-- Hero Section -->
-    <section class="hero bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-800 dark:to-primary-900 text-white py-20">
-      <div class="container mx-auto px-4 text-center">
+    <section class="hero relative text-white py-20" style="background-image: url('/images/HLA_IOT.jpg'); background-size: cover; background-position: center 30%;">
+      <div class="absolute inset-0 bg-black/55 dark:bg-black/70"></div>
+      <div class="container mx-auto px-4 text-center relative z-10">
         <h1 class="text-5xl md:text-6xl font-bold mb-6">{{ t('home.hero.title') }}</h1>
-        <p class="text-xl md:text-2xl mb-8 text-primary-100">
+        <p class="text-xl md:text-2xl mb-8 text-gray-200">
           {{ t('home.hero.subtitle') }}
         </p>
         <div class="flex gap-4 justify-center flex-wrap">
