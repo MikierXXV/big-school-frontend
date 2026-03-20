@@ -7,12 +7,15 @@
 - [Stack Tecnológico](#stack-tecnológico)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Capas Arquitectónicas](#capas-arquitectónicas)
+- [OAuth2](#oauth2)
+- [RBAC](#rbac)
+- [Temas e Internacionalización](#temas-e-internacionalización)
+- [Error Handling](#error-handling)
 - [Convenciones y Patrones](#convenciones-y-patrones)
 - [Configuración](#configuración)
 - [Testing](#testing)
 - [Comandos Disponibles](#comandos-disponibles)
 - [Path Aliases](#path-aliases)
-- [Próximos Pasos](#próximos-pasos)
 
 ---
 
@@ -24,14 +27,17 @@ Este frontend consume el backend Big School (ubicado en `../backend`) y sigue lo
 
 ### Características Principales
 
-- ✅ **Clean Architecture**: Separación clara de responsabilidades en 5 capas
-- ✅ **DDD**: Modelado del dominio con Entities, Value Objects, y Repository Interfaces
-- ✅ **TDD**: Testing desde el inicio con Vitest y Playwright
-- ✅ **TypeScript Strict**: Tipado fuerte en toda la aplicación
-- ✅ **Internacionalización**: Soporte multi-idioma (es/en) con vue-i18n
-- ✅ **State Management**: Pinia con composition API
-- ✅ **Routing**: Vue Router con guards de autenticación
-- ✅ **Styling**: Tailwind CSS con tema personalizado
+- **Clean Architecture**: Separación clara de responsabilidades en 5 capas
+- **DDD**: Modelado del dominio con Entities, Value Objects, y Repository Interfaces
+- **TDD**: Testing desde el inicio con Vitest y Playwright
+- **TypeScript Strict**: Tipado fuerte en toda la aplicación
+- **Internacionalización**: Soporte multi-idioma (es/en/ca) con vue-i18n
+- **State Management**: Pinia con composition API
+- **Routing**: Vue Router con guards de autenticación y RBAC
+- **Styling**: Tailwind CSS con tema personalizado
+- **OAuth2**: Login con Google y Microsoft
+- **RBAC**: Control de acceso basado en roles y permisos
+- **Temas**: Modo claro/oscuro persistente
 
 ---
 
@@ -123,37 +129,48 @@ La aplicación está organizada en **5 capas concéntricas** donde las dependenc
 Objetos inmutables que representan conceptos del dominio:
 - `UserId`: Identificador único (UUID)
 - `Email`: Email validado y normalizado
+- `Password`: Contraseña con validación de complejidad
+- `AccessToken`: Token de acceso JWT
+- `RefreshToken`: Token de refresco
+- `UserStatus`: Estado del usuario (ACTIVE, INACTIVE, PENDING_VERIFICATION)
 
 #### Repository Interfaces
 Contratos para acceso a datos (definidos en Domain, implementados en Infrastructure):
-- `IAuthRepository`: Login, Register, Logout, RefreshToken
+- `IAuthRepository`: Login, Register, Logout, RefreshToken, OAuth
 - `IUserRepository`: Obtener perfil de usuario
+- `IOrganizationRepository`: CRUD de organizaciones
+- `IMembershipRepository`: Gestión de membresías
+- `IAdminRepository`: Gestión de admins, permisos, usuarios
 
 #### Domain Errors
-Errores específicos del dominio:
+Errores específicos del dominio (`src/domain/errors/auth.errors.ts`):
 - `InvalidCredentialsError`
 - `EmailAlreadyExistsError`
 - `TokenExpiredError`
 - `UnauthorizedError`
+- `ForbiddenError`
+- `UserNotFoundError`
+- `OrganizationNotFoundError`
 
 ---
 
 ## Stack Tecnológico
 
 | Categoría | Tecnología | Versión | Propósito |
-|-----------|------------|---------|-----------|
+|-----------|------------|---------|-----------||
 | **Framework** | Vue 3 | ^3.5 | Framework reactivo con Composition API |
 | **Build Tool** | Vite | ^7.3 | Build tool rápido y moderno |
 | **Lenguaje** | TypeScript | ~5.9 | Tipado estático |
 | **Routing** | Vue Router | ^4.2 | Navegación SPA |
 | **State** | Pinia | ^2.1 | State management |
-| **i18n** | vue-i18n | ^9.9 | Internacionalización |
+| **i18n** | vue-i18n | ^9.9 | Internacionalización (es/en/ca) |
 | **HTTP** | Axios | ^1.6 | Cliente HTTP |
 | **UI Utilities** | @vueuse/core | ^10.7 | Composables útiles |
 | **UI Headless** | @headlessui/vue | ^1.7 | Componentes accesibles sin estilos |
 | **Icons** | @heroicons/vue | ^2.1 | Iconos SVG |
 | **Styling** | Tailwind CSS | ^3.4 | Utility-first CSS |
-| **Monitoring** | Sentry | ^7.91 | Error tracking |
+| **Charts** | Chart.js + vue-chartjs | ^4.5 / ^5.3 | Gráficos y analytics |
+| **Monitoring** | @sentry/vue | ^7.91 | Error tracking |
 | **Tests Unit** | Vitest | ^1.0 | Testing framework |
 | **Tests E2E** | Playwright | ^1.40 | Browser automation |
 | **Linting** | ESLint | ^8.55 | Linter JavaScript/TypeScript |
@@ -166,20 +183,23 @@ Errores específicos del dominio:
 ```
 frontend/
 ├── docs/                           # Documentación del proyecto
-│   └── ARCHITECTURE.md            # Este documento
+│   ├── ARCHITECTURE.md            # Este documento
+│   └── PROJECT.md                 # Resumen completo del proyecto
 │
 ├── public/                         # Archivos estáticos
-│   └── vite.svg
 │
-├── src/                           # Código fuente
-│   │
+├── src/
 │   ├── domain/                    # CAPA 1: Dominio
 │   │   ├── entities/
 │   │   │   ├── user.entity.ts
 │   │   │   └── index.ts
 │   │   ├── value-objects/
-│   │   │   ├── email.value-object.ts
 │   │   │   ├── user-id.value-object.ts
+│   │   │   ├── email.value-object.ts
+│   │   │   ├── password.value-object.ts
+│   │   │   ├── access-token.value-object.ts
+│   │   │   ├── refresh-token.value-object.ts
+│   │   │   ├── user-status.value-object.ts
 │   │   │   └── index.ts
 │   │   ├── repositories/
 │   │   │   ├── auth.repository.interface.ts
@@ -193,16 +213,58 @@ frontend/
 │   │
 │   ├── application/               # CAPA 2: Aplicación
 │   │   ├── use-cases/
-│   │   │   └── auth/
-│   │   │       ├── login.use-case.ts
-│   │   │       ├── register.use-case.ts
-│   │   │       ├── logout.use-case.ts
-│   │   │       └── index.ts
+│   │   │   ├── auth/
+│   │   │   │   ├── login.use-case.ts
+│   │   │   │   ├── register.use-case.ts
+│   │   │   │   ├── logout.use-case.ts
+│   │   │   │   ├── refresh-session.use-case.ts
+│   │   │   │   ├── verify-email.use-case.ts
+│   │   │   │   ├── request-password-reset.use-case.ts
+│   │   │   │   ├── confirm-password-reset.use-case.ts
+│   │   │   │   ├── oauth-login.use-case.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── admin/
+│   │   │   │   ├── list-admins.use-case.ts
+│   │   │   │   ├── promote-admin.use-case.ts
+│   │   │   │   ├── demote-admin.use-case.ts
+│   │   │   │   ├── grant-permissions.use-case.ts
+│   │   │   │   ├── revoke-permission.use-case.ts
+│   │   │   │   ├── get-admin-permissions.use-case.ts
+│   │   │   │   ├── get-my-permissions.use-case.ts
+│   │   │   │   ├── list-users.use-case.ts
+│   │   │   │   ├── delete-user.use-case.ts
+│   │   │   │   ├── hard-delete-user.use-case.ts
+│   │   │   │   └── get-user-stats.use-case.ts
+│   │   │   ├── organization/
+│   │   │   │   ├── create-organization.use-case.ts
+│   │   │   │   ├── get-organization.use-case.ts
+│   │   │   │   ├── list-organizations.use-case.ts
+│   │   │   │   ├── update-organization.use-case.ts
+│   │   │   │   ├── delete-organization.use-case.ts
+│   │   │   │   └── hard-delete-organization.use-case.ts
+│   │   │   ├── membership/
+│   │   │   │   ├── assign-member.use-case.ts
+│   │   │   │   ├── change-member-role.use-case.ts
+│   │   │   │   ├── list-members.use-case.ts
+│   │   │   │   ├── get-user-organizations.use-case.ts
+│   │   │   │   └── remove-member.use-case.ts
+│   │   │   └── index.ts
 │   │   ├── dtos/
-│   │   │   └── auth/
-│   │   │       ├── login.dto.ts
-│   │   │       ├── register.dto.ts
-│   │   │       └── index.ts
+│   │   │   ├── auth/
+│   │   │   │   ├── login.dto.ts
+│   │   │   │   ├── register.dto.ts
+│   │   │   │   ├── refresh.dto.ts
+│   │   │   │   ├── verify-email.dto.ts
+│   │   │   │   ├── request-password-reset.dto.ts
+│   │   │   │   ├── confirm-password-reset.dto.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── admin/
+│   │   │   │   └── admin.dto.ts
+│   │   │   ├── organization/
+│   │   │   │   ├── organization.dto.ts
+│   │   │   │   └── membership.dto.ts
+│   │   │   ├── user.dto.ts
+│   │   │   └── index.ts
 │   │   ├── mappers/
 │   │   │   ├── user.mapper.ts
 │   │   │   └── index.ts
@@ -220,71 +282,138 @@ frontend/
 │   │   │   │   ├── auth.interceptor.ts
 │   │   │   │   ├── error.interceptor.ts
 │   │   │   │   └── index.ts
+│   │   │   ├── utils/
+│   │   │   │   └── error-mapper.util.ts
 │   │   │   └── index.ts
 │   │   ├── repositories/
 │   │   │   ├── http-auth.repository.ts
 │   │   │   ├── http-user.repository.ts
+│   │   │   ├── http-organization.repository.ts
+│   │   │   ├── http-membership.repository.ts
+│   │   │   ├── http-admin.repository.ts
 │   │   │   └── index.ts
 │   │   ├── storage/
 │   │   │   ├── local-storage.service.ts
-│   │   │   └── index.ts
-│   │   ├── sentry/
-│   │   │   ├── sentry.config.ts
 │   │   │   └── index.ts
 │   │   ├── i18n/
 │   │   │   ├── i18n.config.ts
 │   │   │   ├── locales/
 │   │   │   │   ├── es.json
 │   │   │   │   ├── en.json
+│   │   │   │   ├── ca.json
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
-│   │   ├── styles/
-│   │   │   └── main.css
+│   │   ├── sentry/
+│   │   │   ├── sentry.config.ts
+│   │   │   ├── sentry.service.ts
+│   │   │   └── index.ts
+│   │   ├── di/
+│   │   │   └── container.ts
 │   │   └── index.ts
 │   │
 │   ├── presentation/              # CAPA 4: Presentación
 │   │   ├── components/
-│   │   │   ├── ui/                # Componentes base
+│   │   │   ├── ui/
 │   │   │   │   ├── BaseButton.vue
 │   │   │   │   ├── BaseInput.vue
+│   │   │   │   ├── BaseSelect.vue
 │   │   │   │   ├── BaseCard.vue
 │   │   │   │   ├── BaseModal.vue
+│   │   │   │   ├── BaseAlert.vue
+│   │   │   │   ├── BaseBadge.vue
+│   │   │   │   ├── BaseSkeleton.vue
+│   │   │   │   ├── BaseSpinner.vue
+│   │   │   │   ├── BaseToast.vue
+│   │   │   │   ├── BaseToggleSwitch.vue
+│   │   │   │   ├── BasePagination.vue
+│   │   │   │   ├── ConfirmDialog.vue
+│   │   │   │   ├── PasswordStrengthMeter.vue
+│   │   │   │   ├── LanguageSelector.vue
+│   │   │   │   ├── ThemeToggle.vue
 │   │   │   │   └── index.ts
-│   │   │   ├── layout/            # Layout de la app
+│   │   │   ├── layout/
 │   │   │   │   ├── AppHeader.vue
 │   │   │   │   ├── AppFooter.vue
 │   │   │   │   ├── AppSidebar.vue
+│   │   │   │   ├── DashboardLayout.vue
+│   │   │   │   ├── AdminLayout.vue
+│   │   │   │   ├── AdminSidebar.vue
 │   │   │   │   └── index.ts
-│   │   │   ├── auth/              # Componentes de auth
+│   │   │   ├── auth/
 │   │   │   │   ├── LoginForm.vue
 │   │   │   │   ├── RegisterForm.vue
+│   │   │   │   ├── ForgotPasswordForm.vue
+│   │   │   │   ├── ResetPasswordForm.vue
+│   │   │   │   ├── OAuthButton.vue
 │   │   │   │   └── index.ts
+│   │   │   ├── admin/
+│   │   │   │   ├── OrganizationFormModal.vue
+│   │   │   │   ├── PromoteUserModal.vue
+│   │   │   │   └── AssignMemberModal.vue
+│   │   │   ├── dashboard/
+│   │   │   │   └── OrganizationCard.vue
+│   │   │   ├── footer/
+│   │   │   │   ├── AboutModal.vue
+│   │   │   │   ├── ContactModal.vue
+│   │   │   │   ├── PrivacyPolicyModal.vue
+│   │   │   │   └── TermsOfServiceModal.vue
+│   │   │   ├── NotificationContainer.vue
 │   │   │   └── index.ts
-│   │   ├── views/                 # Páginas/Vistas
+│   │   ├── views/
+│   │   │   ├── HomeView.vue
+│   │   │   ├── NotFoundView.vue
+│   │   │   ├── ForbiddenView.vue
 │   │   │   ├── auth/
 │   │   │   │   ├── LoginView.vue
 │   │   │   │   ├── RegisterView.vue
 │   │   │   │   ├── ForgotPasswordView.vue
+│   │   │   │   ├── ResetPasswordView.vue
+│   │   │   │   ├── VerifyEmailView.vue
+│   │   │   │   ├── OAuthCallbackView.vue
 │   │   │   │   └── index.ts
 │   │   │   ├── dashboard/
 │   │   │   │   ├── DashboardView.vue
+│   │   │   │   ├── UserProfileView.vue
+│   │   │   │   ├── UserSettingsView.vue
+│   │   │   │   ├── MyOrganizationsView.vue
+│   │   │   │   ├── DataAnalyticsView.vue
+│   │   │   │   ├── EmergencyView.vue
+│   │   │   │   ├── LabelPrintingView.vue
+│   │   │   │   ├── SurgicalBlockView.vue
+│   │   │   │   ├── WristbandPrintingView.vue
 │   │   │   │   └── index.ts
-│   │   │   ├── HomeView.vue
-│   │   │   ├── NotFoundView.vue
+│   │   │   ├── admin/
+│   │   │   │   ├── AdminDashboardView.vue
+│   │   │   │   ├── AdminUserListView.vue
+│   │   │   │   ├── AdminPermissionsView.vue
+│   │   │   │   ├── AdminAnalyticsView.vue
+│   │   │   │   ├── OrganizationListView.vue
+│   │   │   │   └── OrganizationDetailView.vue
 │   │   │   └── index.ts
-│   │   ├── composables/           # Lógica reutilizable
+│   │   ├── composables/
 │   │   │   ├── useAuth.ts
+│   │   │   ├── useRBAC.ts
 │   │   │   ├── useForm.ts
 │   │   │   ├── useNotification.ts
+│   │   │   ├── useTheme.ts
+│   │   │   ├── useLocale.ts
+│   │   │   ├── useApiError.ts
+│   │   │   ├── usePasswordStrength.ts
 │   │   │   └── index.ts
-│   │   ├── stores/                # Pinia stores
+│   │   ├── stores/
 │   │   │   ├── auth.store.ts
 │   │   │   ├── user.store.ts
+│   │   │   ├── rbac.store.ts
+│   │   │   ├── admin.store.ts
+│   │   │   ├── organization.store.ts
+│   │   │   ├── notification.store.ts
+│   │   │   ├── theme.store.ts
 │   │   │   └── index.ts
-│   │   ├── router/                # Vue Router
+│   │   ├── router/
 │   │   │   ├── routes.ts
 │   │   │   ├── guards/
 │   │   │   │   ├── auth.guard.ts
+│   │   │   │   ├── rbac.guard.ts
 │   │   │   │   └── index.ts
 │   │   │   └── index.ts
 │   │   └── index.ts
@@ -297,6 +426,7 @@ frontend/
 │   │   ├── constants/
 │   │   │   ├── api.constants.ts
 │   │   │   ├── routes.constants.ts
+│   │   │   ├── design-tokens.constants.ts
 │   │   │   └── index.ts
 │   │   ├── utils/
 │   │   │   ├── validation.utils.ts
@@ -306,44 +436,28 @@ frontend/
 │   ├── App.vue                    # Componente raíz
 │   └── main.ts                    # Entry point
 │
-├── tests/                         # Tests
+├── tests/
 │   ├── unit/
 │   │   ├── domain/
-│   │   │   ├── entities/
-│   │   │   └── value-objects/
-│   │   │       └── email.value-object.test.ts
 │   │   ├── application/
-│   │   │   └── use-cases/
 │   │   └── presentation/
-│   │       ├── components/
-│   │       │   └── ui/
-│   │       │       └── BaseButton.test.ts
-│   │       └── composables/
-│   │           └── useAuth.test.ts
 │   ├── integration/
 │   │   └── stores/
-│   │       └── auth.store.test.ts
 │   └── e2e/
-│       ├── auth/
-│       │   └── login.e2e.ts
-│       └── helpers/
-│           ├── test-data.helper.ts
-│           └── api.helper.ts
+│       └── auth/
 │
-├── .env.example                   # Variables de entorno ejemplo
+├── .env.example
 ├── .gitignore
-├── .eslintrc.cjs                  # Configuración ESLint
-├── .prettierrc                    # Configuración Prettier
-├── index.html                     # HTML principal
+├── index.html
 ├── package.json
-├── tsconfig.json                  # Config TS principal
-├── tsconfig.app.json              # Config TS para app
-├── tsconfig.node.json             # Config TS para Node
-├── vite.config.ts                 # Configuración Vite
-├── vitest.config.ts               # Configuración Vitest
-├── playwright.config.ts           # Configuración Playwright
-├── tailwind.config.js             # Configuración Tailwind
-└── postcss.config.js              # Configuración PostCSS
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── vitest.config.ts
+├── playwright.config.ts
+├── tailwind.config.js
+└── postcss.config.js
 ```
 
 ---
@@ -356,155 +470,226 @@ frontend/
 
 **Contiene**:
 - **Entities**: Objetos con identidad única (User)
-- **Value Objects**: Objetos inmutables sin identidad (Email, UserId)
+- **Value Objects**: Objetos inmutables sin identidad
 - **Repository Interfaces**: Contratos para acceso a datos
 - **Domain Errors**: Errores específicos del dominio
 
 **Reglas**:
-- ❌ NO puede depender de otras capas
-- ❌ NO conoce Vue, HTTP, o almacenamiento
-- ✅ Solo contiene lógica de negocio pura
-- ✅ Usa TypeScript puro (sin dependencias externas)
-
-**Ejemplo**:
-```typescript
-// src/domain/value-objects/email.value-object.ts
-export class Email {
-  private readonly _value: string;
-
-  private constructor(value: string) {
-    this._value = value;
-  }
-
-  public static create(value: string): Email {
-    // Validación de negocio
-    const normalized = value.toLowerCase().trim();
-    return new Email(normalized);
-  }
-
-  public get value(): string {
-    return this._value;
-  }
-}
-```
+- NO puede depender de otras capas
+- NO conoce Vue, HTTP, o almacenamiento
+- Solo contiene lógica de negocio pura
 
 ### 2. Application (`src/application/`)
 
-**Responsabilidad**: Orquestación de casos de uso y coordinación de flujos
+**Responsabilidad**: Orquestación de casos de uso
 
-**Contiene**:
-- **Use Cases**: Lógica de aplicación (Login, Register, Logout)
-- **DTOs**: Objetos de transferencia de datos
-- **Ports**: Interfaces para servicios externos (IHttpClient, IStorageService)
-- **Mappers**: Transformadores entre capas
+**Use Cases — tabla completa (32)**:
 
-**Reglas**:
-- ✅ Depende solo de Domain
-- ❌ NO conoce detalles de implementación (Axios, localStorage, Vue)
-- ✅ Define interfaces (Ports) que Infrastructure implementará
-- ✅ Orquesta el flujo de negocio
+| Módulo | Use Case |
+|--------|----------|
+| auth | `login`, `register`, `logout`, `refresh-session` |
+| auth | `verify-email`, `request-password-reset`, `confirm-password-reset`, `oauth-login` |
+| admin | `list-admins`, `promote-admin`, `demote-admin` |
+| admin | `grant-permissions`, `revoke-permission`, `get-admin-permissions`, `get-my-permissions` |
+| admin | `list-users`, `delete-user`, `hard-delete-user`, `get-user-stats` |
+| organization | `create-organization`, `get-organization`, `list-organizations` |
+| organization | `update-organization`, `delete-organization`, `hard-delete-organization` |
+| membership | `assign-member`, `change-member-role`, `list-members` |
+| membership | `get-user-organizations`, `remove-member` |
 
-**Ejemplo**:
-```typescript
-// src/application/use-cases/auth/login.use-case.ts
-export class LoginUseCase {
-  constructor(private readonly deps: {
-    authRepository: IAuthRepository; // Port
-  }) {}
-
-  async execute(dto: LoginDTO): Promise<LoginResult> {
-    // Orquestación del flujo de login
-    const { user, tokens } = await this.deps.authRepository.login({
-      email: dto.email,
-      password: dto.password,
-    });
-    return { user, tokens };
-  }
-}
-```
+**Ports (3)**:
+- `IHttpClient`: Cliente HTTP abstracto
+- `IStorageService`: Almacenamiento abstracto
+- `ILogger`: Logging abstracto
 
 ### 3. Infrastructure (`src/infrastructure/`)
 
-**Responsabilidad**: Implementaciones concretas de Ports y acceso a recursos externos
+**Responsabilidad**: Implementaciones concretas
 
-**Contiene**:
-- **HTTP**: Cliente Axios con interceptors
-- **Repositories**: Implementaciones HTTP de repositorios
-- **Storage**: LocalStorage service
-- **i18n**: Configuración de internacionalización
-- **Sentry**: Configuración de monitoreo
-- **Styles**: Estilos globales (Tailwind)
+**HTTP Client** (`axios-http-client.ts`):
+- Instancia Axios con baseURL desde `VITE_API_BASE_URL`
+- Interceptores: `auth.interceptor` (inyecta Access Token), `error.interceptor` (retry con refresh)
+- `error-mapper.util.ts`: traduce AxiosError con código HTTP → DomainError específico
 
-**Reglas**:
-- ✅ Implementa los Ports definidos en Application
-- ✅ Conoce tecnologías específicas (Axios, localStorage)
-- ✅ Depende de Application y Domain
+**Repositorios HTTP (5)**:
 
-**Ejemplo**:
-```typescript
-// src/infrastructure/http/axios-http-client.ts
-export class AxiosHttpClient implements IHttpClient {
-  private axiosInstance: AxiosInstance;
+| Repositorio | Endpoints |
+|------------|-----------|
+| `HttpAuthRepository` | login, register, logout, refresh, verify-email, reset password, OAuth |
+| `HttpUserRepository` | getProfile, updateProfile |
+| `HttpOrganizationRepository` | CRUD de organizaciones |
+| `HttpMembershipRepository` | asignar, listar, cambiar rol, eliminar miembros |
+| `HttpAdminRepository` | usuarios, admins, permisos, estadísticas |
 
-  constructor() {
-    this.axiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL,
-    });
-  }
+**DI Container** (`infrastructure/di/container.ts`):
+Singleton que instancia todos los repositorios y use cases al arrancar la app. Registra los 32 use cases.
 
-  async get<T>(url: string): Promise<HttpResponse<T>> {
-    const response = await this.axiosInstance.get<T>(url);
-    return { data: response.data, status: response.status };
-  }
-}
-```
+**i18n** — 3 locales:
+- `es.json`: Español (por defecto)
+- `en.json`: English
+- `ca.json`: Català
+
+**Sentry** — error tracking en producción (`VITE_SENTRY_DSN`)
 
 ### 4. Presentation (`src/presentation/`)
 
-**Responsabilidad**: Interfaz de usuario Vue 3
+**Stores Pinia (7)**:
 
-**Contiene**:
-- **Components**: Componentes Vue reutilizables (UI, Layout, Auth)
-- **Views**: Páginas de la aplicación
-- **Composables**: Lógica reactiva reutilizable
-- **Stores**: Estado global con Pinia
-- **Router**: Configuración de rutas y guards
+| Store | Responsabilidad |
+|-------|----------------|
+| `auth.store` | Usuario autenticado, tokens, login/logout |
+| `user.store` | Perfil del usuario, preferencias |
+| `rbac.store` | Roles, permisos, isSuperAdmin, isAdmin |
+| `admin.store` | Lista de admins, usuarios, estadísticas |
+| `organization.store` | Lista y detalle de organizaciones |
+| `notification.store` | Toast/alertas globales |
+| `theme.store` | Modo claro/oscuro, persistencia |
 
-**Reglas**:
-- ✅ Usa Composition API de Vue 3
-- ✅ Consume Use Cases de Application
-- ✅ Usa Stores (Pinia) para estado global
-- ✅ Componentes tontos (UI) vs inteligentes (conectados a stores)
+**Composables (8)**:
 
-**Ejemplo**:
+| Composable | Uso |
+|-----------|-----|
+| `useAuth` | Acceder a estado auth y acciones |
+| `useRBAC` | Verificar roles y permisos del usuario |
+| `useForm` | Manejo de formularios con validación |
+| `useNotification` | Lanzar toasts desde cualquier componente |
+| `useTheme` | Toggle dark/light mode |
+| `useLocale` | Cambiar idioma de la app |
+| `useApiError` | Transformar errores de API en mensajes |
+| `usePasswordStrength` | Indicador de fortaleza de contraseña |
+
+**Vistas (25)**:
+
+| Sección | Vista | Acceso |
+|---------|-------|--------|
+| - | `HomeView` | Pública |
+| - | `NotFoundView` | Pública |
+| - | `ForbiddenView` | Pública |
+| auth | `LoginView` | Pública |
+| auth | `RegisterView` | Pública |
+| auth | `ForgotPasswordView` | Pública |
+| auth | `ResetPasswordView` | Pública |
+| auth | `VerifyEmailView` | Pública |
+| auth | `OAuthCallbackView` | Pública |
+| dashboard | `DashboardView` | Autenticado |
+| dashboard | `UserProfileView` | Autenticado |
+| dashboard | `UserSettingsView` | Autenticado |
+| dashboard | `MyOrganizationsView` | Autenticado |
+| dashboard | `DataAnalyticsView` | Autenticado |
+| dashboard | `EmergencyView` | Autenticado |
+| dashboard | `LabelPrintingView` | Autenticado |
+| dashboard | `SurgicalBlockView` | Autenticado |
+| dashboard | `WristbandPrintingView` | Autenticado |
+| admin | `AdminDashboardView` | Admin |
+| admin | `AdminUserListView` | Admin |
+| admin | `AdminPermissionsView` | Superadmin |
+| admin | `AdminAnalyticsView` | Admin |
+| admin | `OrganizationListView` | Admin |
+| admin | `OrganizationDetailView` | Admin |
+
+**Router Guards**:
+- `auth.guard`: Redirige a `/login` si no autenticado
+- `rbac.guard`: Verifica `to.meta.requiresRole` y `to.meta.requiresPermission`
+
+---
+
+## OAuth2
+
+Flujo de login con Google y Microsoft desde el frontend:
+
+```
+1. Usuario hace clic en OAuthButton (google|microsoft)
+2. Frontend almacena state en sessionStorage (anti-CSRF)
+3. Frontend redirige: GET /auth/oauth/initiate?provider=google
+4. Backend devuelve URL de autorización del proveedor
+5. Usuario se autentica en Google/Microsoft
+6. Proveedor redirige a: /auth/oauth/callback?code=...&state=...
+7. OAuthCallbackView extrae code + state de la URL
+8. Llama a oauth-login.use-case con code + state
+9. Backend procesa y devuelve tokens
+10. Frontend guarda tokens → redirige al dashboard
+```
+
+**Componentes clave**:
+- `OAuthButton.vue`: Botón con ícono del proveedor
+- `OAuthCallbackView.vue`: Procesa el callback de redirección
+- `oauth-login.use-case.ts`: Orquesta el intercambio de código
+
+---
+
+## RBAC
+
+Control de acceso basado en roles y permisos:
+
 ```typescript
-// src/presentation/composables/useAuth.ts
-export function useAuth() {
-  const authStore = useAuthStore();
-  const { user, isAuthenticated } = storeToRefs(authStore);
-
-  return {
-    user,
-    isAuthenticated,
-    login: authStore.login,
-    logout: authStore.logout,
-  };
+// En routes.ts — meta de rutas
+{
+  path: '/admin',
+  meta: {
+    requiresAuth: true,
+    requiresRole: 'admin',           // Rol mínimo requerido
+    requiresPermission: 'MANAGE_USERS'  // Permiso específico (opcional)
+  }
 }
 ```
 
-### 5. Shared (`src/shared/`)
+**Cadena de guards**: `authGuard` → `rbacGuard`
 
-**Responsabilidad**: Código compartido entre todas las capas
+**rbac.store** expone:
+- `systemRole`: 'superadmin' | 'admin' | 'user'
+- `permissions`: string[] (permisos del admin)
+- `isSuperAdmin`: computed boolean
+- `isAdmin`: computed boolean
+- `hasPermission(p)`: función
 
-**Contiene**:
-- **Types**: Tipos TypeScript compartidos
-- **Constants**: Constantes de configuración (API endpoints, rutas)
-- **Utils**: Utilidades puras sin dependencias
+**useRBAC** composable:
+```typescript
+const { isSuperAdmin, isAdmin, hasPermission } = useRBAC()
+```
 
-**Reglas**:
-- ❌ NO depende de ninguna capa
-- ✅ Solo código puro reutilizable
-- ✅ Sin lógica de negocio
+---
+
+## Temas e Internacionalización
+
+### Temas (dark/light)
+- `theme.store.ts` gestiona el tema actual
+- `ThemeToggle.vue` permite cambiar entre modos
+- `useTheme.ts` composable para uso en componentes
+- Persistido en `localStorage` como `theme`
+- Implementado con clase `dark` en `<html>` + Tailwind dark mode
+
+### i18n (3 idiomas)
+- Español (`es`) — idioma por defecto
+- English (`en`)
+- Català (`ca`)
+- `LanguageSelector.vue` para cambiar idioma
+- `useLocale.ts` composable
+- Persistido en `localStorage` como `locale`
+
+---
+
+## Error Handling
+
+Flujo completo de errores HTTP → UI:
+
+```
+AxiosError (HTTP)
+    ↓
+error-mapper.util.ts
+    ↓
+DomainError (InvalidCredentialsError, TokenExpiredError, etc.)
+    ↓
+Use Case lanza el error
+    ↓
+Store lo captura → notificationStore.addError(...)
+    ↓
+NotificationContainer.vue → BaseToast.vue
+```
+
+El `error.interceptor.ts` gestiona:
+- **401 con refresh token válido**: Reintenta silenciosamente con nuevo Access Token
+- **401 sin refresh**: Redirige a login
+- **403**: Redirige a `/forbidden`
 
 ---
 
@@ -513,7 +698,7 @@ export function useAuth() {
 ### Nomenclatura de Archivos
 
 | Tipo | Patrón | Ejemplo |
-|------|--------|---------|
+|------|--------|---------||
 | Componentes Vue | `PascalCase.vue` | `BaseButton.vue` |
 | TypeScript | `kebab-case.ts` | `user.entity.ts` |
 | Tests | `[nombre].test.ts` | `email.value-object.test.ts` |
@@ -521,48 +706,9 @@ export function useAuth() {
 | Barrel Exports | `index.ts` | Cada carpeta tiene su `index.ts` |
 
 ### Barrel Exports
-
-Cada carpeta tiene un `index.ts` que exporta todos sus módulos:
-
-```typescript
-// src/domain/value-objects/index.ts
-export * from './email.value-object.js';
-export * from './user-id.value-object.js';
-```
-
-Esto permite importaciones limpias:
+Cada carpeta tiene un `index.ts` que exporta todos sus módulos para permitir importaciones limpias:
 ```typescript
 import { Email, UserId } from '@domain/value-objects';
-```
-
-### Comentarios en Archivos
-
-Todos los archivos siguen este formato de comentarios:
-
-```typescript
-/**
- * ============================================
- * [TIPO]: [Nombre]
- * ============================================
- *
- * [Descripción del propósito]
- *
- * [Detalles adicionales]
- *
- * TODO: [Tareas pendientes]
- */
-```
-
-### Extensiones de Archivos
-
-Se usa `.js` en imports para compatibilidad con ESM:
-
-```typescript
-// ✅ Correcto
-import { Email } from './email.value-object.js';
-
-// ❌ Incorrecto
-import { Email } from './email.value-object';
 ```
 
 ---
@@ -570,8 +716,6 @@ import { Email } from './email.value-object';
 ## Configuración
 
 ### Variables de Entorno
-
-Crear `.env` basado en `.env.example`:
 
 ```env
 # API Backend
@@ -581,23 +725,15 @@ VITE_API_BASE_URL=http://localhost:3000
 VITE_SENTRY_DSN=
 
 # App Config
-VITE_APP_NAME=Big School
+VITE_APP_NAME=Health Care Suite
 VITE_APP_DEFAULT_LOCALE=es
 ```
 
 ### TypeScript Configuration
-
-**tsconfig.app.json** - Configuración principal con:
-- Strict mode completo
-- Path aliases (@domain, @application, etc.)
-- ESNext target
+**tsconfig.app.json** — Strict mode con path aliases (@domain, @application, etc.)
 
 ### Tailwind Configuration
-
-**tailwind.config.js** - Tema personalizado:
-- Colores primary (blue)
-- Font: Inter
-- Content: todos los archivos `.vue`, `.ts`, `.tsx`
+**tailwind.config.js** — tema personalizado con colores primary (blue), dark mode class-based, font Inter.
 
 ---
 
@@ -606,89 +742,45 @@ VITE_APP_DEFAULT_LOCALE=es
 ### Estrategia de Testing (TDD)
 
 ```
-                    ┌─────────────┐
-                    │   E2E Tests │  (Playwright)
-                    │  Full Flow  │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │ Integration │  (Vitest)
-                    │    Tests    │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │ Unit Tests  │  (Vitest)
-                    │  (Isolated) │
-                    └─────────────┘
+                ┌─────────────┐
+                │   E2E Tests │  (Playwright)
+                │  Full Flow  │
+                └──────┬──────┘
+                       │
+                ┌──────▼──────┐
+                │ Integration │  (Vitest)
+                │    Tests    │
+                └──────┬──────┘
+                       │
+                ┌──────▼──────┐
+                │ Unit Tests  │  (Vitest)
+                │  (Isolated) │
+                └─────────────┘
 ```
 
-### Unit Tests
+### Patrones de Testing Importantes
 
-**Ubicación**: `tests/unit/`
-
-**Propósito**: Probar unidades aisladas (Value Objects, Use Cases, Composables)
-
-**Framework**: Vitest + @vue/test-utils
-
-**Ejemplo**:
+**`vi.hoisted()` para mocks en `vi.mock`**:
 ```typescript
-// tests/unit/domain/value-objects/email.value-object.test.ts
-describe('Email Value Object', () => {
-  it('should normalize email to lowercase', () => {
-    const email = Email.create('USER@EXAMPLE.COM');
-    expect(email.value).toBe('user@example.com');
-  });
-});
+const { mockStore } = vi.hoisted(() => ({
+  mockStore: { user: null, login: vi.fn() }
+}))
+vi.mock('@/stores/auth.store', () => ({ useAuthStore: () => mockStore }))
 ```
 
-### Integration Tests
-
-**Ubicación**: `tests/integration/`
-
-**Propósito**: Probar integración entre capas (Stores + Use Cases)
-
-**Framework**: Vitest + Pinia
-
-**Ejemplo**:
+**Mocking de Vue refs**:
 ```typescript
-// tests/integration/stores/auth.store.test.ts
-describe('Auth Store', () => {
-  it('should initialize with null user', () => {
-    const store = useAuthStore();
-    expect(store.user).toBeNull();
-  });
-});
+// Plain object es siempre truthy; añadir __v_isRef para que Vue.unref() funcione
+const mockRef = { value: false, __v_isRef: true }
 ```
 
-### E2E Tests
-
-**Ubicación**: `tests/e2e/`
-
-**Propósito**: Probar flujos completos de usuario en el browser
-
-**Framework**: Playwright
-
-**Ejemplo**:
+**Async onMounted**:
 ```typescript
-// tests/e2e/auth/login.e2e.ts
-test('should display login form', async ({ page }) => {
-  await page.goto('/login');
-  await expect(page.getByRole('button', { name: /login/i })).toBeVisible();
-});
+await new Promise((r) => setTimeout(r, 0)) // flush microtask queue
 ```
 
-### Coverage
-
-Ejecutar con coverage:
-```bash
-npm run test:coverage
-```
-
-Thresholds configurados en `vitest.config.ts`:
-- Lines: 80%
-- Functions: 80%
-- Branches: 80%
-- Statements: 80%
+### Cobertura
+Thresholds en `vitest.config.ts`: Lines 80%, Functions 80%, Branches 80%
 
 ---
 
@@ -704,15 +796,15 @@ npm run preview          # Preview del build
 npm run typecheck        # Verificar tipos sin compilar
 
 # Linting y Formatting
-npm run lint             # Ejecutar ESLint
-npm run lint:fix         # Ejecutar ESLint y arreglar automáticamente
-npm run format           # Formatear con Prettier
+npm run lint             # ESLint
+npm run lint:fix         # ESLint con autofix
+npm run format           # Prettier
 
 # Testing
 npm test                 # Tests en watch mode
 npm run test:unit        # Tests unitarios
 npm run test:integration # Tests de integración
-npm run test:e2e         # Tests E2E con Playwright
+npm run test:e2e         # Tests E2E (Playwright)
 npm run test:coverage    # Tests con coverage
 ```
 
@@ -724,124 +816,12 @@ Configurados en `tsconfig.app.json` y `vite.config.ts`:
 
 | Alias | Ruta | Uso |
 |-------|------|-----|
-| `@domain/*` | `src/domain/*` | Entidades, Value Objects, Interfaces de repositorios |
+| `@domain/*` | `src/domain/*` | Entidades, Value Objects, Interfaces |
 | `@application/*` | `src/application/*` | Use Cases, DTOs, Ports |
-| `@infrastructure/*` | `src/infrastructure/*` | Implementaciones HTTP, Storage, i18n |
+| `@infrastructure/*` | `src/infrastructure/*` | HTTP, Storage, i18n, DI |
 | `@presentation/*` | `src/presentation/*` | Componentes, Views, Stores, Router |
 | `@shared/*` | `src/shared/*` | Types, Constants, Utils |
 
-**Ejemplo de uso**:
-```typescript
-import { Email } from '@domain/value-objects';
-import { LoginUseCase } from '@application/use-cases/auth';
-import { useAuth } from '@presentation/composables';
-import { API_ENDPOINTS } from '@shared/constants';
-```
-
 ---
 
-## Próximos Pasos
-
-### Fase 1: Implementación de Domain Layer
-
-1. **Value Objects** con validación completa:
-   - [ ] Email (validar formato, normalizar)
-   - [ ] UserId (validar UUID)
-
-2. **Entities**:
-   - [ ] User (factory methods, getters)
-
-3. **Tests**:
-   - [ ] Unit tests para cada Value Object
-   - [ ] Unit tests para User Entity
-
-### Fase 2: Implementación de Infrastructure Layer
-
-1. **HTTP Client**:
-   - [ ] AxiosHttpClient completo
-   - [ ] Auth Interceptor (agregar access token)
-   - [ ] Error Interceptor (manejo de errores HTTP)
-
-2. **Repositories**:
-   - [ ] HttpAuthRepository (login, register, logout, refresh)
-   - [ ] HttpUserRepository (getCurrentUser)
-
-3. **Tests**:
-   - [ ] Integration tests para repositories con mock de Axios
-
-### Fase 3: Implementación de Application Layer
-
-1. **Use Cases**:
-   - [ ] LoginUseCase
-   - [ ] RegisterUseCase
-   - [ ] LogoutUseCase
-
-2. **Mappers**:
-   - [ ] UserMapper (API response → Domain Entity)
-
-3. **Tests**:
-   - [ ] Unit tests para cada Use Case con mocks
-
-### Fase 4: Implementación de Presentation Layer
-
-1. **Stores (Pinia)**:
-   - [ ] AuthStore completo (conectado a Use Cases)
-   - [ ] UserStore
-
-2. **Componentes UI**:
-   - [ ] BaseButton completo con variantes
-   - [ ] BaseInput con validación
-   - [ ] BaseCard
-   - [ ] BaseModal con @headlessui/vue
-
-3. **Forms**:
-   - [ ] LoginForm conectado a AuthStore
-   - [ ] RegisterForm
-
-4. **Views**:
-   - [ ] LoginView
-   - [ ] RegisterView
-   - [ ] DashboardView
-
-5. **Router**:
-   - [ ] Guards de autenticación funcionando
-
-6. **Tests**:
-   - [ ] Component tests para cada componente
-   - [ ] E2E tests para flujos de auth
-
-### Fase 5: Internacionalización y Monitoring
-
-1. **i18n**:
-   - [ ] Completar traducciones es/en
-   - [ ] Implementar switch de idioma
-
-2. **Sentry**:
-   - [ ] Configurar Sentry con DSN de producción
-   - [ ] Agregar contexto de usuario
-
----
-
-## Recursos Adicionales
-
-### Documentación de Referencia
-
-- [Vue 3 Documentation](https://vuejs.org/)
-- [Vite Documentation](https://vitejs.dev/)
-- [Pinia Documentation](https://pinia.vuejs.org/)
-- [Vue Router Documentation](https://router.vuejs.org/)
-- [Tailwind CSS Documentation](https://tailwindcss.com/)
-- [Vitest Documentation](https://vitest.dev/)
-- [Playwright Documentation](https://playwright.dev/)
-
-### Clean Architecture
-
-- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
-
----
-
-**Última actualización**: Febrero 2026
-
-**Mantenido por**: Equipo Big School
+**Última actualización**: Marzo 2026
