@@ -351,7 +351,7 @@
       "terms": "Termes de servei"
     },
     "contact": {
-      "email": "contacte@healthcaresuite.com",
+      "email": "contacte{'@'}healthcaresuite.com",
       "phone": "+34 900 000 000",
       "address": "Carrer Innovació, 42 · Barcelona, 08001"
     },
@@ -400,7 +400,7 @@
     },
     "s6": {
       "title": "6. Drets dels usuaris",
-      "text": "Podeu exercir els vostres drets d'accés, rectificació, supressió, oposició, limitació i portabilitat enviant un correu a contacte@healthcaresuite.com. Teniu dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades."
+      "text": "Podeu exercir els vostres drets d'accés, rectificació, supressió, oposició, limitació i portabilitat enviant un correu a contacte{'@'}healthcaresuite.com. Teniu dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades."
     },
     "s7": {
       "title": "7. Seguretat",
