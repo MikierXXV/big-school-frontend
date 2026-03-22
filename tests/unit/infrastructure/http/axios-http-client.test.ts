@@ -54,13 +54,13 @@ describe('AxiosHttpClient', () => {
       );
     });
 
-    it('should create axios instance with 10 second timeout', () => {
+    it('should create axios instance with 60 second timeout', () => {
       const baseURL = 'http://localhost:3000';
       httpClient = new AxiosHttpClient(baseURL);
 
       expect(axios.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          timeout: 10000,
+          timeout: 60000,
         })
       );
     });
