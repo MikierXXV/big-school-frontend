@@ -20,7 +20,7 @@ export class AxiosHttpClient implements IHttpClient {
   constructor(baseURL: string) {
     this.axiosInstance = axios.create({
       baseURL,
-      timeout: 10000, // 10 seconds
+      timeout: 60000, // 60 seconds (allows for Render free tier cold start)
       headers: {
         'Content-Type': 'application/json',
       },
