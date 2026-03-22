@@ -20,6 +20,7 @@
 16. [Testing](#16-testing)
 17. [Configuración del proyecto](#17-configuración-del-proyecto)
 18. [Scripts npm](#18-scripts-npm)
+19. [Producción](#19-producción)
 
 ---
 
@@ -1201,6 +1202,76 @@ Ejecutar desde `/frontend`:
 | Admin Permissions | 4 |
 | Organization Types | 7 |
 | Organization Roles | 6 |
+
+---
+
+---
+
+## 19. Producción
+
+### Plataformas
+
+| Componente | Plataforma | Plan |
+|-----------|-----------|------|
+| Frontend (este proyecto) | Vercel | Hobby |
+| API / Backend | Render | Free |
+| Base de datos | Neon PostgreSQL | Free |
+
+### URLs
+
+| Recurso | URL |
+|---------|-----|
+| Frontend | `https://health-care-suite-frontend.vercel.app` |
+| OAuth callback | `https://health-care-suite-frontend.vercel.app/oauth/callback` |
+| API | `https://health-care-suite-backend.onrender.com` |
+
+### Limitaciones del Free Tier
+
+#### Vercel Hobby
+
+- **Deployments:** ilimitados desde GitHub (auto-deploy en cada push a `main`)
+- **Ancho de banda:** 100 GB/mes
+- **Build time:** hasta 45 min por deploy
+- **Dominio personalizado:** se puede añadir dominio propio; la URL por defecto es `*.vercel.app`
+- **SPA routing:** requiere `vercel.json` con rewrite `/(.*) → /index.html` para que `createWebHistory()` funcione correctamente en rutas directas (ya configurado).
+
+#### Render Free (backend)
+
+- **Cold start:** el backend se duerme tras 15 min de inactividad; la primera petición tarda ~30-50 s.
+- **Mitigación aplicada:** el cliente Axios usa timeout de **60 000 ms** (`axios-http-client.ts`) para absorber el cold start.
+- **UptimeRobot:** configurar monitor HTTP gratuito cada **5 min** apuntando a `https://health-care-suite-backend.onrender.com/health` para mantener el backend activo.
+
+> **Nota:** estas limitaciones desaparecen al desplegar en servidores propios de la empresa.
+
+#### Neon PostgreSQL Free (base de datos del backend)
+
+- **Storage:** 0,5 GB | **Compute hours:** ~192 h/mes
+- **Compute:** se pausa tras 5 min de inactividad; su arranque se suma al cold start del backend.
+
+### Ajustes aplicados al código para producción
+
+| Archivo | Ajuste |
+|---------|--------|
+| `src/infrastructure/http/axios-http-client.ts` | Timeout aumentado a **60 000 ms** |
+| `vercel.json` | Rewrite `/(.*) → /index.html` para SPA routing |
+
+### Variables de entorno en Vercel
+
+Configurar en Vercel → Settings → Environment Variables:
+
+| Variable | Valor |
+|----------|-------|
+| `VITE_API_BASE_URL` | `https://health-care-suite-backend.onrender.com` |
+| `VITE_SENTRY_DSN` | DSN del proyecto en Sentry (opcional) |
+
+### OAuth — Redirect URIs registradas
+
+Las siguientes URIs deben estar autorizadas en los proveedores OAuth:
+
+| Proveedor | URI registrada |
+|-----------|---------------|
+| Google Cloud Console | `https://health-care-suite-frontend.vercel.app/oauth/callback` |
+| Azure / Microsoft Entra | `https://health-care-suite-frontend.vercel.app/oauth/callback` |
 
 ---
 
