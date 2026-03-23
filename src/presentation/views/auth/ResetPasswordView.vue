@@ -24,7 +24,7 @@ const hasToken = computed(() => !!token.value);
     <BaseCard class="max-w-md mx-auto">
       <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-gray-100 mb-6">Reset Password</h1>
       <!-- No Token Error -->
-      <div v-if="!hasToken" class="text-center py-8">
+      <div v-if="!hasToken" data-testid="no-token-error" class="text-center py-8">
         <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

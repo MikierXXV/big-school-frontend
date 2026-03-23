@@ -142,6 +142,27 @@ export const useAdminStore = defineStore('admin', () => {
     await Promise.allSettled(userIds.map((id) => useCases.hardDeleteUserUseCase.execute(id)));
   }
 
+  async function bulkUpdateUserStatus(userIds: string[], status: 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED'): Promise<{ succeeded: number; failed: number }> {
+    const results = await Promise.allSettled(
+      userIds.map((id) => useCases.updateUserStatusUseCase.execute({ userId: id, status }))
+    );
+    const succeeded = results.filter((r) => r.status === 'fulfilled').length;
+    return { succeeded, failed: results.length - succeeded };
+  }
+
+  async function updateUserStatus(userId: string, status: 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED'): Promise<void> {
+    isLoading.value = true;
+    try {
+      await useCases.updateUserStatusUseCase.execute({ userId, status });
+      if (usersList.value) {
+        const user = usersList.value.users.find((u) => u.id === userId);
+        if (user) (user as Record<string, unknown>).status = status;
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   function clearError(): void {
     error.value = null;
   }
@@ -164,6 +185,8 @@ export const useAdminStore = defineStore('admin', () => {
     deleteUser,
     deleteUsers,
     hardDeleteUsers,
+    bulkUpdateUserStatus,
+    updateUserStatus,
     fetchPermissions,
     grantPermissions,
     revokePermission,

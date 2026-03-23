@@ -69,6 +69,16 @@ export interface PaginatedUsersDTO {
   readonly hasPrevious: boolean;
 }
 
+export interface UpdateUserStatusDTO {
+  readonly userId: string;
+  readonly status: 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED';
+}
+
+export interface UpdateUserStatusResponseDTO {
+  readonly id: string;
+  readonly status: string;
+}
+
 export interface UserStatsDTO {
   readonly total: number;
   readonly emailVerified: number;

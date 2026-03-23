@@ -109,7 +109,20 @@
       "bulkDeactivateMessage": "You are about to deactivate {count} user(s). They will be marked as inactive.",
       "deleteSelected": "Delete selected",
       "bulkDeleteTitle": "Delete users",
-      "bulkDeleteMessage": "You are about to permanently delete {count} user(s). This action cannot be undone."
+      "bulkDeleteMessage": "You are about to permanently delete {count} user(s). This action cannot be undone.",
+      "confirmStatusChange": "Change user status",
+      "confirmStatusChangeMsg": "Are you sure you want to change {name}'s status to {status}?",
+      "bulkStatusTitle": "Change status of selected users",
+      "bulkStatusMessage": "You are about to change the status of {count} user(s) to {status}.",
+      "applyStatus": "Apply status",
+      "statusChangeSuccess": "Status of {name} changed to {status}",
+      "statusChangeError": "Failed to change status of {name}",
+      "bulkStatusSuccess": "Status of {count} user(s) changed to {status}",
+      "bulkStatusError": "Some status changes could not be applied",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "statusDeactivated": "Deactivated",
+      "statusPending": "Pending verification"
     },
     "organizations": {
       "title": "Organization Management",

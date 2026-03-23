@@ -119,11 +119,12 @@ test.describe('Password Reset Flow', () => {
     });
 
     test('should show error when token is missing', async ({ page }) => {
-      // Navigate without token
+      // Navigate without token and wait for Vue + auth guard to settle
       await page.goto('/reset-password');
+      await page.waitForLoadState('networkidle');
 
       // Should show error message
-      await expect(page.locator('text=/token.*missing|invalid.*link/i')).toBeVisible();
+      await expect(page.locator('[data-testid="no-token-error"]')).toBeVisible();
 
       // Form should not be visible
       await expect(page.locator('button[type="submit"]')).not.toBeVisible();

@@ -23,6 +23,9 @@ const { mockRouterPush, mockAdminStore, mockIsSuperAdmin } = vi.hoisted(() => {
     fetchUsers: mockFetchUsers,
     demoteUser: mockDemoteUser,
     deleteUsers: vi.fn(),
+    hardDeleteUsers: vi.fn(),
+    bulkUpdateUserStatus: vi.fn().mockResolvedValue({ succeeded: 0, failed: 0 }),
+    updateUserStatus: vi.fn(),
   };
 
   return {
@@ -72,6 +75,18 @@ vi.mock('@presentation/stores/admin.store.js', () => ({
   useAdminStore: () => mockAdminStore,
 }));
 
+vi.mock('@presentation/stores/auth.store.js', () => ({
+  useAuthStore: () => ({ user: { id: 'current-user-id' } }),
+}));
+
+vi.mock('@presentation/stores/notification.store.js', () => ({
+  useNotificationStore: () => ({
+    success: vi.fn(),
+    error: vi.fn(),
+    warning: vi.fn(),
+  }),
+}));
+
 const mockUsersList = {
   users: [
     { id: 'admin-1', email: 'admin@test.com', firstName: 'Admin', lastName: 'One', systemRole: 'admin', status: 'ACTIVE', emailVerified: true, createdAt: '', fullName: 'Admin One' },
@@ -95,7 +110,15 @@ const i18n = createI18n({
   messages: {
     en: {
       admin: {
-        users: { title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User', confirmDemote: 'Are you sure?', search: 'Search users...', selected: 'selected', deleteSelected: 'Delete selected', bulkDeleteTitle: 'Delete users', bulkDeleteMessage: 'Delete {count} users?' },
+        users: {
+          title: 'User Management', promote: 'Promote to Admin', demote: 'Demote to User',
+          confirmDemote: 'Are you sure?', search: 'Search users...', selected: 'selected',
+          deleteSelected: 'Delete selected', bulkDeleteTitle: 'Delete users', bulkDeleteMessage: 'Delete {count} users?',
+          bulkStatusTitle: 'Change status', bulkStatusMessage: 'Change {count} users to {status}',
+          applyStatus: 'Apply status',
+          statusActive: 'Active', statusSuspended: 'Suspended', statusDeactivated: 'Deactivated', statusPending: 'Pending',
+          bulkStatusSuccess: 'Status changed', bulkStatusError: 'Error changing status',
+        },
         permissions: { title: 'Permissions' },
       },
       common: {
@@ -108,6 +131,7 @@ const i18n = createI18n({
         status: 'Status',
         active: 'Active',
         inactive: 'Inactive',
+        cancel: 'Cancel',
       },
       roles: { super_admin: 'Super Admin', admin: 'Administrator', user: 'User' },
       permissions: { manage_users: 'Manage Users', manage_organizations: 'Manage Organizations', assign_members: 'Assign Members', view_all_data: 'View All Data' },

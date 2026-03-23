@@ -13,6 +13,8 @@ import type {
   DemoteUserDTO,
   PaginatedUsersDTO,
   UserStatsDTO,
+  UpdateUserStatusDTO,
+  UpdateUserStatusResponseDTO,
 } from '@application/dtos/admin/admin.dto.js';
 
 export interface IAdminRepository {
@@ -27,4 +29,5 @@ export interface IAdminRepository {
   getUserStats(): Promise<UserStatsDTO>;
   deleteUser(userId: string): Promise<void>;
   hardDeleteUser(userId: string): Promise<void>;
+  updateUserStatus(data: UpdateUserStatusDTO): Promise<UpdateUserStatusResponseDTO>;
 }

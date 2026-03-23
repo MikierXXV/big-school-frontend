@@ -114,7 +114,20 @@
       "bulkDeactivateMessage": "Desactivaràs {count} usuari(s). Quedaran marcats com a inactius.",
       "deleteSelected": "Eliminar seleccionats",
       "bulkDeleteTitle": "Eliminar usuaris",
-      "bulkDeleteMessage": "Eliminaràs permanentment {count} usuari(s). Aquesta acció no es pot desfer."
+      "bulkDeleteMessage": "Eliminaràs permanentment {count} usuari(s). Aquesta acció no es pot desfer.",
+      "confirmStatusChange": "Canviar estat de l'usuari",
+      "confirmStatusChangeMsg": "Esteu segur que voleu canviar l'estat de {name} a {status}?",
+      "bulkStatusTitle": "Canviar estat dels usuaris seleccionats",
+      "bulkStatusMessage": "Canviaràs l'estat de {count} usuari(s) a {status}.",
+      "applyStatus": "Aplicar estat",
+      "statusChangeSuccess": "Estat de {name} canviat a {status}",
+      "statusChangeError": "No s'ha pogut canviar l'estat de {name}",
+      "bulkStatusSuccess": "Estat de {count} usuari(s) canviat a {status}",
+      "bulkStatusError": "Alguns canvis d'estat no s'han pogut aplicar",
+      "statusActive": "Actiu",
+      "statusSuspended": "Suspès",
+      "statusDeactivated": "Desactivat",
+      "statusPending": "Pendent de verificació"
     },
     "organizations": {
       "title": "Gestió d'Organitzacions",
