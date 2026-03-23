@@ -17,13 +17,18 @@ import BaseSelect from '@presentation/components/ui/BaseSelect.vue';
 import ConfirmDialog from '@presentation/components/ui/ConfirmDialog.vue';
 import PromoteUserModal from '@presentation/components/admin/PromoteUserModal.vue';
 import { useAdminStore } from '@presentation/stores/admin.store.js';
+import { useAuthStore } from '@presentation/stores/auth.store.js';
+import { useNotificationStore } from '@presentation/stores/notification.store.js';
 import { useRBAC } from '@presentation/composables/useRBAC.js';
-import { ShieldCheckIcon, KeyIcon, UserMinusIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ShieldCheckIcon, KeyIcon, UserMinusIcon, TrashIcon, CheckCircleIcon, PauseIcon, NoSymbolIcon } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
 const router = useRouter();
 const adminStore = useAdminStore();
+const authStore = useAuthStore();
+const notificationStore = useNotificationStore();
 const { isSuperAdmin, hasPermission } = useRBAC();
+const currentUserId = computed(() => authStore.user?.id ?? '');
 
 const PAGE_SIZE = 20;
 
@@ -35,8 +40,9 @@ const demotingUserId = ref<string | null>(null);
 
 // Bulk selection
 const selectedIds = ref<Set<string>>(new Set());
-const showBulkDeactivateConfirm = ref(false);
 const showBulkHardDeleteConfirm = ref(false);
+const bulkTargetStatus = ref<'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED'>('ACTIVE');
+const showBulkStatusConfirm = ref(false);
 
 const canDeleteUsers = computed(() => isSuperAdmin.value || hasPermission('manage_users'));
 
@@ -67,14 +73,6 @@ function toggleSelect(id: string): void {
   selectedIds.value = next;
 }
 
-async function handleBulkDeactivate(): Promise<void> {
-  const ids = Array.from(selectedIds.value);
-  await adminStore.deleteUsers(ids);
-  selectedIds.value = new Set();
-  showBulkDeactivateConfirm.value = false;
-  await loadUsers();
-}
-
 async function handleBulkHardDelete(): Promise<void> {
   const ids = Array.from(selectedIds.value);
   await adminStore.hardDeleteUsers(ids);
@@ -83,12 +81,56 @@ async function handleBulkHardDelete(): Promise<void> {
   await loadUsers();
 }
 
+async function handleBulkStatusApply(): Promise<void> {
+  const ids = Array.from(selectedIds.value);
+  const statusLabel = getStatusLabel(bulkTargetStatus.value);
+  const { succeeded, failed } = await adminStore.bulkUpdateUserStatus(ids, bulkTargetStatus.value);
+  selectedIds.value = new Set();
+  showBulkStatusConfirm.value = false;
+  await loadUsers();
+  if (failed === 0) {
+    notificationStore.success(t('admin.users.bulkStatusSuccess', { count: succeeded, status: statusLabel }));
+  } else if (succeeded === 0) {
+    notificationStore.error(t('admin.users.bulkStatusError'));
+  } else {
+    notificationStore.warning(t('admin.users.bulkStatusError') + ` (${succeeded}/${ids.length})`);
+  }
+}
+
 const roleOptions = [
   { value: '', label: t('common.all') },
   { value: 'user', label: t('roles.user') },
   { value: 'admin', label: t('roles.admin') },
   { value: 'super_admin', label: t('roles.super_admin') },
 ];
+
+const statusButtonOptions = [
+  {
+    value: 'ACTIVE' as const,
+    label: t('admin.users.statusActive'),
+    icon: CheckCircleIcon,
+    activeClass: 'bg-green-600 dark:bg-green-700 text-white',
+  },
+  {
+    value: 'SUSPENDED' as const,
+    label: t('admin.users.statusSuspended'),
+    icon: PauseIcon,
+    activeClass: 'bg-amber-500 dark:bg-amber-600 text-white',
+  },
+  {
+    value: 'DEACTIVATED' as const,
+    label: t('admin.users.statusDeactivated'),
+    icon: NoSymbolIcon,
+    activeClass: 'bg-gray-500 dark:bg-gray-600 text-white',
+  },
+];
+
+function getStatusLabel(status: string): string {
+  if (status === 'ACTIVE') return t('admin.users.statusActive');
+  if (status === 'SUSPENDED') return t('admin.users.statusSuspended');
+  if (status === 'DEACTIVATED') return t('admin.users.statusDeactivated');
+  return t('admin.users.statusPending');
+}
 
 async function loadUsers(): Promise<void> {
   await Promise.all([
@@ -215,19 +257,45 @@ onMounted(() => {
         <div
           v-if="canDeleteUsers && selectedIds.size > 0"
           data-testid="bulk-action-bar"
-          class="mb-4 flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg"
+          class="mb-4 flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg flex-wrap"
         >
-          <span class="text-sm text-gray-700 dark:text-gray-200 font-medium">
+          <span class="text-sm text-gray-700 dark:text-gray-200 font-medium shrink-0">
             {{ selectedIds.size }} {{ t('admin.users.selected') }}
           </span>
+
+          <!-- Status toggle group -->
+          <div class="inline-flex rounded-md border border-gray-300 dark:border-gray-600 divide-x divide-gray-300 dark:divide-gray-600 overflow-hidden">
+            <button
+              v-for="opt in statusButtonOptions"
+              :key="opt.value"
+              :data-testid="`bulk-status-${opt.value.toLowerCase()}`"
+              :class="[
+                'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors',
+                bulkTargetStatus === opt.value
+                  ? opt.activeClass
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
+              ]"
+              @click="bulkTargetStatus = opt.value"
+            >
+              <component :is="opt.icon" class="w-4 h-4" />
+              {{ opt.label }}
+            </button>
+          </div>
+
+          <!-- Apply button -->
           <button
-            data-testid="bulk-deactivate-users-btn"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 transition-colors"
-            @click="showBulkDeactivateConfirm = true"
+            data-testid="bulk-apply-status-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors"
+            @click="showBulkStatusConfirm = true"
           >
-            <UserMinusIcon class="w-4 h-4" />
-            {{ t('admin.users.deactivateSelected') }}
+            <CheckCircleIcon class="w-4 h-4" />
+            {{ t('admin.users.applyStatus') }}
           </button>
+
+          <!-- Spacer pushes delete to the right -->
+          <div class="flex-1" />
+
+          <!-- Delete — visually separated -->
           <button
             data-testid="bulk-delete-users-btn"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
@@ -344,8 +412,11 @@ onMounted(() => {
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <BaseBadge :variant="user.status === 'ACTIVE' ? 'success' : 'neutral'" size="sm">
-                  {{ user.status === 'ACTIVE' ? t('common.active') : t('common.inactive') }}
+                <BaseBadge
+                  :variant="user.status === 'ACTIVE' ? 'success' : (user.status === 'SUSPENDED' ? 'warning' : 'neutral')"
+                  size="sm"
+                >
+                  {{ getStatusLabel(user.status) }}
                 </BaseBadge>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
@@ -397,6 +468,15 @@ onMounted(() => {
         @promoted="handlePromoted"
       />
 
+      <!-- Bulk Status Change Confirm -->
+      <ConfirmDialog
+        :open="showBulkStatusConfirm"
+        :title="t('admin.users.bulkStatusTitle')"
+        :message="t('admin.users.bulkStatusMessage', { count: selectedIds.size, status: bulkTargetStatus })"
+        @confirm="handleBulkStatusApply"
+        @cancel="showBulkStatusConfirm = false"
+      />
+
       <!-- Demote Confirm -->
       <ConfirmDialog
         :open="demotingUserId !== null"
@@ -405,16 +485,6 @@ onMounted(() => {
         confirm-variant="danger"
         @confirm="handleDemote"
         @cancel="demotingUserId = null"
-      />
-
-      <!-- Bulk Deactivate Confirm -->
-      <ConfirmDialog
-        :open="showBulkDeactivateConfirm"
-        :title="t('admin.users.bulkDeactivateTitle')"
-        :message="t('admin.users.bulkDeactivateMessage', { count: selectedIds.size })"
-        confirm-variant="danger"
-        @confirm="handleBulkDeactivate"
-        @cancel="showBulkDeactivateConfirm = false"
       />
 
       <!-- Bulk Hard Delete Confirm -->

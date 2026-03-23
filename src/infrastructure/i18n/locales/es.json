@@ -109,7 +109,20 @@
       "bulkDeactivateMessage": "Vas a desactivar {count} usuario(s). Quedarán marcados como inactivos.",
       "deleteSelected": "Eliminar seleccionados",
       "bulkDeleteTitle": "Eliminar usuarios",
-      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} usuario(s). Esta acción no se puede deshacer."
+      "bulkDeleteMessage": "Vas a eliminar permanentemente {count} usuario(s). Esta acción no se puede deshacer.",
+      "confirmStatusChange": "Cambiar estado del usuario",
+      "confirmStatusChangeMsg": "¿Estás seguro de que deseas cambiar el estado de {name} a {status}?",
+      "bulkStatusTitle": "Cambiar estado de los usuarios seleccionados",
+      "bulkStatusMessage": "Vas a cambiar el estado de {count} usuario(s) a {status}.",
+      "applyStatus": "Aplicar estado",
+      "statusChangeSuccess": "Estado de {name} cambiado a {status}",
+      "statusChangeError": "No se pudo cambiar el estado de {name}",
+      "bulkStatusSuccess": "Estado de {count} usuario(s) cambiado a {status}",
+      "bulkStatusError": "Algunos cambios de estado no se pudieron aplicar",
+      "statusActive": "Activo",
+      "statusSuspended": "Suspendido",
+      "statusDeactivated": "Desactivado",
+      "statusPending": "Pendiente de verificación"
     },
     "organizations": {
       "title": "Gestión de Organizaciones",
