@@ -48,6 +48,7 @@ import { ListUsersUseCase } from '@application/use-cases/admin/list-users.use-ca
 import { GetUserStatsUseCase } from '@application/use-cases/admin/get-user-stats.use-case.js';
 import { DeleteUserUseCase } from '@application/use-cases/admin/delete-user.use-case.js';
 import { HardDeleteUserUseCase } from '@application/use-cases/admin/hard-delete-user.use-case.js';
+import { UpdateUserStatusUseCase } from '@application/use-cases/admin/update-user-status.use-case.js';
 
 /**
  * Container interface
@@ -88,6 +89,7 @@ export interface Container {
     getUserStatsUseCase: GetUserStatsUseCase;
     deleteUserUseCase: DeleteUserUseCase;
     hardDeleteUserUseCase: HardDeleteUserUseCase;
+    updateUserStatusUseCase: UpdateUserStatusUseCase;
   };
 }
 
@@ -186,6 +188,7 @@ export function createContainer(): Container {
   const getUserStatsUseCase = new GetUserStatsUseCase({ adminRepository });
   const deleteUserUseCase = new DeleteUserUseCase({ adminRepository });
   const hardDeleteUserUseCase = new HardDeleteUserUseCase({ adminRepository });
+  const updateUserStatusUseCase = new UpdateUserStatusUseCase(adminRepository);
 
   // Create container
   containerInstance = {
@@ -220,6 +223,7 @@ export function createContainer(): Container {
       getUserStatsUseCase,
       deleteUserUseCase,
       hardDeleteUserUseCase,
+      updateUserStatusUseCase,
     },
   };
 

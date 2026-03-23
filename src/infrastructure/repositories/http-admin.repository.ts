@@ -17,6 +17,8 @@ import type {
   DemoteUserDTO,
   PaginatedUsersDTO,
   UserStatsDTO,
+  UpdateUserStatusDTO,
+  UpdateUserStatusResponseDTO,
 } from '@application/dtos/admin/admin.dto.js';
 
 export class HttpAdminRepository implements IAdminRepository {
@@ -77,5 +79,10 @@ export class HttpAdminRepository implements IAdminRepository {
 
   async hardDeleteUser(userId: string): Promise<void> {
     await this.httpClient.delete(`/api/users/${userId}/permanent`);
+  }
+
+  async updateUserStatus(data: UpdateUserStatusDTO): Promise<UpdateUserStatusResponseDTO> {
+    const response = await this.httpClient.patch<any>(`/api/users/${data.userId}/status`, { status: data.status });
+    return response.data.data;
   }
 }
