@@ -232,6 +232,7 @@ frontend/
 │   │   │   │   ├── get-admin-permissions.use-case.ts
 │   │   │   │   ├── get-my-permissions.use-case.ts
 │   │   │   │   ├── list-users.use-case.ts
+│   │   │   │   ├── update-user-status.use-case.ts
 │   │   │   │   ├── delete-user.use-case.ts
 │   │   │   │   ├── hard-delete-user.use-case.ts
 │   │   │   │   └── get-user-stats.use-case.ts
@@ -483,7 +484,7 @@ frontend/
 
 **Responsabilidad**: Orquestación de casos de uso
 
-**Use Cases — tabla completa (32)**:
+**Use Cases — tabla completa (33)**:
 
 | Módulo | Use Case |
 |--------|----------|
@@ -491,7 +492,7 @@ frontend/
 | auth | `verify-email`, `request-password-reset`, `confirm-password-reset`, `oauth-login` |
 | admin | `list-admins`, `promote-admin`, `demote-admin` |
 | admin | `grant-permissions`, `revoke-permission`, `get-admin-permissions`, `get-my-permissions` |
-| admin | `list-users`, `delete-user`, `hard-delete-user`, `get-user-stats` |
+| admin | `list-users`, `update-user-status`, `delete-user`, `hard-delete-user`, `get-user-stats` |
 | organization | `create-organization`, `get-organization`, `list-organizations` |
 | organization | `update-organization`, `delete-organization`, `hard-delete-organization` |
 | membership | `assign-member`, `change-member-role`, `list-members` |
@@ -522,7 +523,7 @@ frontend/
 | `HttpAdminRepository` | usuarios, admins, permisos, estadísticas |
 
 **DI Container** (`infrastructure/di/container.ts`):
-Singleton que instancia todos los repositorios y use cases al arrancar la app. Registra los 32 use cases.
+Singleton que instancia todos los repositorios y use cases al arrancar la app. Registra los 33 use cases.
 
 **i18n** — 3 locales:
 - `es.json`: Español (por defecto)

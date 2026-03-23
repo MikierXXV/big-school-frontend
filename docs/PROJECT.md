@@ -180,7 +180,7 @@ Representa la membresía de un usuario en una organización con un rol específi
 | **IUserRepository** | `getCurrentUser`, `getUserById` |
 | **IOrganizationRepository** | `create`, `list`, `get`, `update`, `delete`, `hardDelete` |
 | **IMembershipRepository** | `assignMember`, `removeMember`, `listMembers`, `changeMemberRole`, `getUserOrganizations` |
-| **IAdminRepository** | `listUsers`, `getUserStats`, `deleteUser`, `hardDeleteUser`, `promoteAdmin`, `demoteAdmin`, `listAdmins`, `getAdminPermissions`, `getMyPermissions`, `grantPermissions`, `revokePermission` |
+| **IAdminRepository** | `listUsers`, `getUserStats`, `updateUserStatus`, `deleteUser`, `hardDeleteUser`, `promoteAdmin`, `demoteAdmin`, `listAdmins`, `getAdminPermissions`, `getMyPermissions`, `grantPermissions`, `revokePermission` |
 
 ---
 
@@ -221,7 +221,7 @@ Todos heredan de `DomainError` (abstracto).
 
 **Ubicación:** `src/application/`
 
-### 5.1 Use Cases (32 total)
+### 5.1 Use Cases (33 total)
 
 #### Auth (8)
 
@@ -257,7 +257,7 @@ Todos heredan de `DomainError` (abstracto).
 | **RemoveMemberUseCase** | Elimina miembro de organización |
 | **GetUserOrganizationsUseCase** | Lista las organizaciones de un usuario |
 
-#### Admin (13)
+#### Admin (14)
 
 | Use Case | Descripción |
 |----------|-------------|
@@ -270,6 +270,7 @@ Todos heredan de `DomainError` (abstracto).
 | **RevokePermissionUseCase** | Revoca un permiso de admin |
 | **ListUsersUseCase** | Lista todos los usuarios (super admin) |
 | **GetUserStatsUseCase** | Estadísticas de usuarios |
+| **UpdateUserStatusUseCase** | Cambia el estado de un usuario (ACTIVE / SUSPENDED / DEACTIVATED) |
 | **DeleteUserUseCase** | Soft-delete de usuario |
 | **HardDeleteUserUseCase** | Eliminación permanente |
 | **GetAdminDashboardStatsUseCase** | Estadísticas del panel de admin |
@@ -397,7 +398,7 @@ container.authStore
 - Storage Service (LocalStorage)
 - Logger
 - Todos los repositorios HTTP (4)
-- Los 32 use cases con sus dependencias inyectadas
+- Los 33 use cases con sus dependencias inyectadas
 - Registra el interceptor de errores (conecta auth store + router + error handler)
 
 ---
@@ -535,6 +536,8 @@ Gestión de organizaciones. CRUD completo.
 #### AdminStore (`stores/admin.store.ts`)
 
 Gestión de usuarios y admins para el panel de administración.
+
+**Actions principales:** `fetchUsers`, `fetchUserStats`, `updateUserStatus(userId, status)`, `bulkUpdateUserStatus(userIds, status)`, `deleteUser`, `hardDeleteUsers`, `promoteAdmin`, `demoteAdmin`, `fetchAdmins`, `fetchAdminPermissions`, `grantPermission`, `revokePermission`
 
 #### UserStore (`stores/user.store.ts`)
 
@@ -1191,7 +1194,7 @@ Ejecutar desde `/frontend`:
 | Stores (Pinia) | 7 |
 | Composables | 9 |
 | Rutas | 25 |
-| Use Cases | 32 |
+| Use Cases | 33 |
 | Domain Entities | 3 |
 | Value Objects | 11 |
 | Repository Interfaces | 5 |
