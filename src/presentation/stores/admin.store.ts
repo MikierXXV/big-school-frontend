@@ -10,6 +10,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { createContainer } from '@infrastructure/di/container.js';
 import type { AdminDTO, AdminPermissionsDTO, PaginatedUsersDTO, UserStatsDTO } from '@application/dtos/admin/admin.dto.js';
+import type { UserOrganizationDTO, MembershipDTO } from '@application/dtos/organization/membership.dto.js';
 
 const { useCases } = createContainer();
 
@@ -21,6 +22,8 @@ export const useAdminStore = defineStore('admin', () => {
   const adminPermissions = ref<AdminPermissionsDTO | null>(null);
   const usersList = ref<PaginatedUsersDTO | null>(null);
   const userStats = ref<UserStatsDTO | null>(null);
+  const myOrgs = ref<UserOrganizationDTO[]>([]);
+  const myOrgMembers = ref<Record<string, MembershipDTO[]>>({});
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
@@ -163,6 +166,26 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
+  async function fetchMyOrganizationsWithMembers(userId: string): Promise<void> {
+    try {
+      isLoading.value = true;
+      error.value = null;
+      const orgs = await useCases.getUserOrganizationsUseCase.execute(userId);
+      myOrgs.value = orgs;
+      const membersEntries = await Promise.all(
+        orgs.map(async (org) => {
+          const members = await useCases.listMembersUseCase.execute(org.organizationId);
+          return [org.organizationId, members] as [string, MembershipDTO[]];
+        }),
+      );
+      myOrgMembers.value = Object.fromEntries(membersEntries);
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch organization analytics';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   function clearError(): void {
     error.value = null;
   }
@@ -173,6 +196,8 @@ export const useAdminStore = defineStore('admin', () => {
     adminPermissions,
     usersList,
     userStats,
+    myOrgs,
+    myOrgMembers,
     isLoading,
     error,
 
@@ -190,6 +215,7 @@ export const useAdminStore = defineStore('admin', () => {
     fetchPermissions,
     grantPermissions,
     revokePermission,
+    fetchMyOrganizationsWithMembers,
     clearError,
   };
 });

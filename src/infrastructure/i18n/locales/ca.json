@@ -216,6 +216,33 @@
         "title": "Verificació d'Email",
         "verified": "Verificats",
         "unverified": "Sense verificar"
+      },
+      "scoped": {
+        "title": "Les Meves Organitzacions — Analítiques",
+        "description": "Dades de les organitzacions a les quals pertanys",
+        "banner": "Estàs veient dades de les organitzacions a les quals pertanys",
+        "kpis": {
+          "myOrgs": "Les meves organitzacions",
+          "totalMembers": "Total de membres",
+          "orgTypes": "Tipus d'organització",
+          "activeOrgs": "Organitzacions actives"
+        },
+        "members": {
+          "title": "Distribució de Membres",
+          "byRole": "Per rol"
+        },
+        "empty": {
+          "title": "Sense organitzacions assignades",
+          "description": "Encara no pertanys a cap organització. Un cop assignat, veuràs aquí les seves analítiques."
+        },
+        "orgRoles": {
+          "org_admin": "Administrador",
+          "doctor": "Doctor",
+          "nurse": "Infermer/a",
+          "specialist": "Especialista",
+          "staff": "Personal",
+          "guest": "Convidat"
+        }
       }
     }
   },
