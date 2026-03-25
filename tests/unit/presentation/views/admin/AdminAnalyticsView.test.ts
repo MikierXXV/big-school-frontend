@@ -9,7 +9,7 @@ import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import AdminAnalyticsView from '@presentation/views/admin/AdminAnalyticsView.vue';
 
-const { mockAdminStore, mockOrgStore } = vi.hoisted(() => {
+const { mockAdminStore, mockOrgStore, mockAuthStore } = vi.hoisted(() => {
   const mockFetchUserStats = vi.fn();
   const mockFetchAdmins = vi.fn();
   const mockFetchUsers = vi.fn();
@@ -18,11 +18,14 @@ const { mockAdminStore, mockOrgStore } = vi.hoisted(() => {
     admins: [] as any[],
     usersList: null as any,
     userStats: null as any,
+    myOrgs: [] as any[],
+    myOrgMembers: {} as Record<string, any[]>,
     isLoading: false,
     error: null as string | null,
     fetchUserStats: mockFetchUserStats,
     fetchAdmins: mockFetchAdmins,
     fetchUsers: mockFetchUsers,
+    fetchMyOrganizationsWithMembers: vi.fn(),
   };
 
   const mockOrgStore = {
@@ -31,7 +34,11 @@ const { mockAdminStore, mockOrgStore } = vi.hoisted(() => {
     fetchOrganizations: vi.fn(),
   };
 
-  return { mockAdminStore, mockOrgStore };
+  const mockAuthStore = {
+    user: { id: 'super-admin-id', systemRole: 'super_admin' },
+  };
+
+  return { mockAdminStore, mockOrgStore, mockAuthStore };
 });
 
 vi.mock('vue-router', () => ({
@@ -45,6 +52,10 @@ vi.mock('@presentation/stores/admin.store.js', () => ({
 
 vi.mock('@presentation/stores/organization.store.js', () => ({
   useOrganizationStore: () => mockOrgStore,
+}));
+
+vi.mock('@presentation/stores/auth.store.js', () => ({
+  useAuthStore: () => mockAuthStore,
 }));
 
 vi.mock('@presentation/components/layout/AdminLayout.vue', () => ({
@@ -101,6 +112,15 @@ const i18n = createI18n({
           orgs: { title: 'Organizations', byType: 'By Type', byStatus: 'By Status', count: 'Count' },
           admins: { title: 'Admins', search: 'Search admins', name: 'Name', email: 'Email', permissions: 'Permissions', noResults: 'No results' },
           email: { title: 'Email Verification', verified: 'Verified', unverified: 'Unverified' },
+          scoped: {
+            title: 'My Organizations — Analytics',
+            description: 'Data from your organizations',
+            banner: 'Viewing data from your organizations',
+            kpis: { myOrgs: 'My Orgs', totalMembers: 'Total Members', orgTypes: 'Org Types', activeOrgs: 'Active Orgs' },
+            members: { title: 'Member Distribution', byRole: 'By Role' },
+            empty: { title: 'No organizations', description: 'No organizations assigned.' },
+            orgRoles: { org_admin: 'Admin', doctor: 'Doctor', nurse: 'Nurse', specialist: 'Specialist', staff: 'Staff', guest: 'Guest' },
+          },
         },
       },
     },

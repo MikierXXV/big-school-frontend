@@ -211,6 +211,33 @@
         "title": "Email Verification",
         "verified": "Verified",
         "unverified": "Unverified"
+      },
+      "scoped": {
+        "title": "My Organizations — Analytics",
+        "description": "Data from the organizations you belong to",
+        "banner": "You are viewing data from the organizations you belong to",
+        "kpis": {
+          "myOrgs": "My organizations",
+          "totalMembers": "Total members",
+          "orgTypes": "Organization types",
+          "activeOrgs": "Active organizations"
+        },
+        "members": {
+          "title": "Member Distribution",
+          "byRole": "By role"
+        },
+        "empty": {
+          "title": "No organizations assigned",
+          "description": "You don't belong to any organization yet. Once assigned, you'll see their analytics here."
+        },
+        "orgRoles": {
+          "org_admin": "Administrator",
+          "doctor": "Doctor",
+          "nurse": "Nurse",
+          "specialist": "Specialist",
+          "staff": "Staff",
+          "guest": "Guest"
+        }
       }
     }
   },

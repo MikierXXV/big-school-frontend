@@ -211,6 +211,33 @@
         "title": "Verificación de Email",
         "verified": "Verificados",
         "unverified": "Sin verificar"
+      },
+      "scoped": {
+        "title": "Mis Organizaciones — Analíticas",
+        "description": "Datos de las organizaciones en las que participas",
+        "banner": "Estás viendo datos de las organizaciones en las que participas",
+        "kpis": {
+          "myOrgs": "Mis organizaciones",
+          "totalMembers": "Total de miembros",
+          "orgTypes": "Tipos de organización",
+          "activeOrgs": "Organizaciones activas"
+        },
+        "members": {
+          "title": "Distribución de Miembros",
+          "byRole": "Por rol"
+        },
+        "empty": {
+          "title": "Sin organizaciones asignadas",
+          "description": "No perteneces a ninguna organización. Cuando seas asignado a una, verás aquí sus analíticas."
+        },
+        "orgRoles": {
+          "org_admin": "Administrador",
+          "doctor": "Doctor",
+          "nurse": "Enfermero/a",
+          "specialist": "Especialista",
+          "staff": "Personal",
+          "guest": "Invitado"
+        }
       }
     }
   },
