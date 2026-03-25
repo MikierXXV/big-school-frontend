@@ -73,13 +73,28 @@ npm run test:coverage
 npm run test:e2e
 ```
 
+## Estructura del proyecto
+
+Clean Architecture en 5 capas con la regla de dependencia apuntando hacia adentro:
+
+| Capa | Carpeta | Contenido |
+|------|---------|-----------|
+| **Domain** | `src/domain/` | Entidades, Value Objects, interfaces de repositorios, errores de dominio |
+| **Application** | `src/application/` | 31 casos de uso, DTOs, puertos (`IHttpClient`, `IStorageService`) |
+| **Infrastructure** | `src/infrastructure/` | Repositorios HTTP (Axios), localStorage, i18n, Sentry, contenedor DI |
+| **Presentation** | `src/presentation/` | 24 Views, 33+ Components, 7 Stores Pinia, Router, Composables |
+| **Shared** | `src/shared/` | Constantes de API/rutas, utilidades de validación, tipos comunes |
+
+El **DI Container** (`src/infrastructure/di/container.ts`) es el único punto de ensamblaje: instancia repositorios, use cases y conecta todas las dependencias.
+
 ## Características
 
 - Registro, login y verificación de email
 - Recuperación de contraseña
 - OAuth2 con Google y Microsoft
 - Panel de administración (usuarios, organizaciones, permisos)
-- RBAC con 3 niveles: USER / ADMIN / SUPER_ADMIN
+- RBAC con 3 niveles: USER / ADMIN / SUPER_ADMIN; permisos de admin persistidos en PostgreSQL
+- Vista de analíticas dual: Super Admin ve datos globales; Admin con `view_all_data` ve sus organizaciones y distribución de miembros
 - Gestión de organizaciones sanitarias y membresías
 - Soporte multiidioma: **Español**, **Inglés**, **Catalán**
 - Modo oscuro / claro (dark mode)
@@ -90,3 +105,10 @@ El frontend está desplegado en **Vercel Hobby**:
 `https://health-care-suite-frontend.vercel.app`
 
 Ver [docs/PROJECT.md — Sección 19](docs/PROJECT.md) para detalles del entorno de producción, limitaciones del free tier y variables de entorno requeridas.
+
+## Documentación adicional
+
+| Documento | Contenido |
+|-----------|-----------|
+| [docs/PROJECT.md](docs/PROJECT.md) | Referencia completa: capas, stores, views, componentes, i18n, testing, producción |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Diagramas de arquitectura, estructura de carpetas, convenciones y decisiones de diseño |

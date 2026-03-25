@@ -221,7 +221,7 @@ Todos heredan de `DomainError` (abstracto).
 
 **Ubicación:** `src/application/`
 
-### 5.1 Use Cases (33 total)
+### 5.1 Use Cases (31 total)
 
 #### Auth (8)
 
@@ -257,7 +257,7 @@ Todos heredan de `DomainError` (abstracto).
 | **RemoveMemberUseCase** | Elimina miembro de organización |
 | **GetUserOrganizationsUseCase** | Lista las organizaciones de un usuario |
 
-#### Admin (14)
+#### Admin (12 registrados en container)
 
 | Use Case | Descripción |
 |----------|-------------|
@@ -273,8 +273,6 @@ Todos heredan de `DomainError` (abstracto).
 | **UpdateUserStatusUseCase** | Cambia el estado de un usuario (ACTIVE / SUSPENDED / DEACTIVATED) |
 | **DeleteUserUseCase** | Soft-delete de usuario |
 | **HardDeleteUserUseCase** | Eliminación permanente |
-| **GetAdminDashboardStatsUseCase** | Estadísticas del panel de admin |
-| **GetMyOrganizationsUseCase** | Organizaciones del usuario actual |
 
 ---
 
@@ -398,7 +396,7 @@ container.authStore
 - Storage Service (LocalStorage)
 - Logger
 - Todos los repositorios HTTP (4)
-- Los 33 use cases con sus dependencias inyectadas
+- Los 31 use cases con sus dependencias inyectadas
 - Registra el interceptor de errores (conecta auth store + router + error handler)
 
 ---
@@ -537,7 +535,11 @@ Gestión de organizaciones. CRUD completo.
 
 Gestión de usuarios y admins para el panel de administración.
 
-**Actions principales:** `fetchUsers`, `fetchUserStats`, `updateUserStatus(userId, status)`, `bulkUpdateUserStatus(userIds, status)`, `deleteUser`, `hardDeleteUsers`, `promoteAdmin`, `demoteAdmin`, `fetchAdmins`, `fetchAdminPermissions`, `grantPermission`, `revokePermission`
+**State adicional (modo scoped):**
+- `myOrgs: UserOrganizationDTO[]` — organizaciones del admin autenticado
+- `myOrgMembers: Record<string, MembershipDTO[]>` — miembros indexados por `organizationId`
+
+**Actions principales:** `fetchUsers`, `fetchUserStats`, `updateUserStatus(userId, status)`, `bulkUpdateUserStatus(userIds, status)`, `deleteUser`, `hardDeleteUsers`, `promoteAdmin`, `demoteAdmin`, `fetchAdmins`, `fetchAdminPermissions`, `grantPermission`, `revokePermission`, `fetchMyOrganizationsWithMembers(userId)` (carga orgs + miembros en paralelo para la vista scoped)
 
 #### UserStore (`stores/user.store.ts`)
 
@@ -608,7 +610,7 @@ Estado del tema (dark/light).
 | Vista | Ruta | Requiere |
 |-------|------|----------|
 | `AdminDashboardView.vue` | `/admin` | ADMIN/SUPER_ADMIN |
-| `AdminAnalyticsView.vue` | `/admin/analytics` | ADMIN + view_all_data |
+| `AdminAnalyticsView.vue` | `/admin/analytics` | ADMIN + view_all_data. **Dual-mode**: Super Admin ve stats globales (usuarios, orgs, admins); Admin ve vista scoped con sus orgs, distribución de miembros por rol, KPIs acotados y empty state si no pertenece a ninguna org |
 | `OrganizationListView.vue` | `/admin/organizations` | ADMIN + manage_organizations |
 | `OrganizationDetailView.vue` | `/admin/organizations/:id` | ADMIN |
 | `AdminUserListView.vue` | `/admin/users` | SUPER_ADMIN |
@@ -844,7 +846,7 @@ El `state` es un JWT firmado de 5 minutos que contiene un nonce aleatorio. Se ve
 |---------|-------------------|
 | `manage_organizations` | CRUD de organizaciones |
 | `assign_members` | Gestión de membresías |
-| `view_all_data` | Analytics y datos globales |
+| `view_all_data` | Habilita `/admin/analytics`. Admin ve orgs propias + miembros (scoped); Super Admin ve datos globales |
 | `manage_users` | (reservado para uso futuro en frontend) |
 
 ### Cómo funciona en el frontend
